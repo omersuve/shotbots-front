@@ -1,0 +1,10 @@
+.navbar {
+    background-color: rgba(131, 64, 40, 0.19);
+    color: #333333;
+}
+
+@media (max-width: 768px) {
+    .navbar {
+        background-color: rgba(131, 64, 40, 0.19);
+    }
+}
