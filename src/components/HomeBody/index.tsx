@@ -35,10 +35,9 @@ const HomeBody: React.FC = ({children}) => {
 
     return (
         <div>
-            {JSON.stringify(data)}
             <div className={`${styles["news-count"]}`}>
-                <div className={`${styles["news-box"]}`}>
-                    <h2 className="text-xl font-bold relative text-black mb-6">
+                <div className={`${styles["news-box"]} shadow`}>
+                    <h2 className="text-xl font-bold relative text-black mb-6 border-bottom">
                         News
                     </h2>
                     <table>
@@ -69,33 +68,33 @@ const HomeBody: React.FC = ({children}) => {
                 </div>
             </div>
             <div className={`${styles["box-with-graph"]}`}>
-                <div className={`${styles["box-container"]}`}>
-                    <div className={`${styles["box"]}`}>
-                        <h3 className="text-xl font-bold relative text-black">
+                <div className={`${styles["box-container"]} shadow  `}>
+                    <div className={`${styles["box"]} shadow`}>
+                        <h3 className="text-xl font-bold relative text-black border-bottom">
                             Bitcoin
                         </h3>
                         <h6 className="font-bold relative text-black pt-4">
                             Todays score:{btcScore} 10
                         </h6>
                     </div>
-                    <div className={`${styles["box"]}`}>
-                        <h3 className="text-xl font-bold relative text-black">
+                    <div className={`${styles["box"]} shadow`}>
+                        <h3 className="text-xl font-bold relative text-black border-bottom">
                             Ethereum
                         </h3>
                         <h6 className="font-bold relative text-black pt-4">
                             Todays score:{ethScore} 10
                         </h6>
                     </div>
-                    <div className={`${styles["box"]}`}>
-                        <h3 className="text-xl font-bold relative text-black">
+                    <div className={`${styles["box"]} shadow`}>
+                        <h3 className="text-xl font-bold relative text-black border-bottom">
                             NFTs
                         </h3>
                         <h6 className="font-bold relative text-black pt-4">
                             Todays score:{nftScore} 10
                         </h6>
                     </div>
-                    <div className={`${styles["box"]}`}>
-                        <h3 className="text-xl font-bold relative text-black">
+                    <div className={`${styles["box"]} shadow`}>
+                        <h3 className="text-xl font-bold relative text-black border-bottom">
                             Altcoins
                         </h3>
                         <h6 className="font-bold relative text-black pt-4">
@@ -103,7 +102,7 @@ const HomeBody: React.FC = ({children}) => {
                         </h6>
                     </div>
                 </div>
-                <div className={`${styles["graph-container"]}`}>
+                <div className={`${styles["graph-container"]} p-4 shadow`}>
                     <LineGraph/>
                 </div>
             </div>

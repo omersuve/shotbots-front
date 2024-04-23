@@ -7,7 +7,7 @@ export const HomeView: FC = ({}) => {
     const {publicKey} = useWallet();
 
     return (
-        <div className="container mx-auto p-4 2xl:px-0">
+        <div className="mt-20">
             <Navbar/>
             <HomeBody/>
         </div>
