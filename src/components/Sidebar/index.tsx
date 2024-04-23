@@ -15,15 +15,15 @@ const Sidebar: React.FC = ({ children }) => {
   return (
     <div className={`container ${isSidebarOpen ? styles.sidebar : styles["sidebar-closed"]}`}>
       <button
-        className="outline-none w-full p-6 hover:bg-base-100 rounded-xl text-center">
+        className="outline-none w-full p-6 hover:bg-yellow-50 rounded-xl text-center">
         <Link href="/">
           <a className={`font-bold  ${styles.link}`}>{isSidebarOpen ? <span>Home</span> :
             <span><FontAwesomeIcon icon={faHome} /></span>}</a>
         </Link>
       </button>
       <button
-        className="outline-none w-full p-6 hover:bg-base-100 rounded-xl text-center">
-        <Link href="/portfolio">
+        className="outline-none w-full p-6 hover:bg-yellow-50 rounded-xl text-center">
+        <Link href="/src/pages">
           <a className={`font-bold ${styles.link}`}>{isSidebarOpen ? <span>Portfolio</span> :
             <span><FontAwesomeIcon icon={faFile} /></span>}</a>
         </Link>

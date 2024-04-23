@@ -13,8 +13,8 @@
 .sidebar-closed {
     width: 70px;
     height: 100vh;
-    background: linear-gradient(to left, rgba(231, 213, 183, 0.29), rgba(110, 42, 11, 0.42));
-    color: rgba(121, 76, 10, 0.71);
+    background: linear-gradient(to left, rgba(252, 252, 252, 0.29), rgba(211, 197, 189, 0.42));
+    color: rgba(220, 220, 220, 0.71);
     top: 0;
     padding-top: 80px;
     position: fixed;
@@ -25,8 +25,8 @@
 .sidebar {
     width: 140px;
     height: 100vh;
-    background: linear-gradient(to left, rgba(231, 213, 183, 0.29), rgba(110, 42, 11, 0.42));
-    color: rgba(121, 76, 10, 0.71);
+    background: linear-gradient(to left, rgba(255, 255, 255, 0.44), rgba(255, 255, 255, 0.58));
+    color: rgba(220, 220, 220, 0.71);
     top: 0;
     padding-top: 80px;
     position: fixed;
@@ -49,7 +49,8 @@
     right: -15px;
     width: 35px;
     height: 35px;
-    background: rgba(129, 109, 81, 0.57);
+    background: rgb(255, 255, 255);
+    color: rgb(0, 0, 0);
     padding: 4px;
     border-radius: 100%;
 }

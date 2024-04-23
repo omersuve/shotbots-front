@@ -6,3 +6,49 @@
     padding-top: 1rem;
     padding-bottom: 1rem;
 }
+
+.box {
+    margin: 1rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, 0.59);
+    padding: 2rem /* 32px */;
+    border-radius: var(--rounded-box, 1rem /* 16px */);
+    width: 150px;
+}
+
+.box-container {
+    display: inline-flex;
+    flex-wrap: wrap;
+    text-align: center;
+    padding-top: 1rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.graph-container {
+    display: flex;
+    text-align: center;
+    padding-top: 2rem;
+    justify-content: center;
+    align-items: center;
+    place-items: center;
+}
+
+.box-with-graph{
+    place-items: center;
+    text-align: center;
+}
+
+.news-count {
+    position: relative;
+    float: right;
+}
+
+.news-box {
+    margin: 2rem;
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, 0.59);
+    border-radius: var(--rounded-box, 1rem /* 16px */);
+    padding: 20px;
+    text-align: center;
+}
