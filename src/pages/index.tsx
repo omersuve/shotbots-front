@@ -3,11 +3,11 @@ import MainBody from "../components/MainBody";
 
 // Main Body SECTION
 const mainBody = {
-    gradientColors: "#365D8B, #267369, #9B6419, #523060, #A22C2C, #303B3E",
-    firstName: "X",
-    middleName: "",
-    lastName: "Bots",
+    gradientColors: "#5D421A, #7E611E, #5D421A, #7E611E",
+    title: "X",
+    name: "BOTS",
     message: " Your Market Insight Tool ",
+    message2: " Empower Your Decisions towards Crypto ",
     icons: [
         {
             image: "fa-twitter",
@@ -21,8 +21,10 @@ const Home = React.forwardRef((props, ref) => {
         <>
             <MainBody
                 gradient={mainBody.gradientColors}
-                title={`${mainBody.firstName} ${mainBody.middleName} ${mainBody.lastName}`}
+                title={mainBody.title}
+                name={mainBody.name}
                 message={mainBody.message}
+                message2={mainBody.message2}
                 icons={mainBody.icons}
             />
         </>

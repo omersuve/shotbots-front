@@ -3,6 +3,8 @@ import Container from "react-bootstrap/Container";
 import Typist from "react-typist-component";
 import styles from "./index.module.css";
 import Mask from "../../../public/Mask.png"
+import logo from "../../../public/logo.jpeg"
+import logo4 from "../../../public/logo4.jpg"
 import Mask2 from "../../../public/Mask2.png"
 import Image from 'next/image';
 
@@ -18,7 +20,7 @@ export const Jumbotron = (props: any) => {
 }
 
 const MainBody = React.forwardRef(
-    ({gradient, title, message, icons, pic}: any) => {
+    ({gradient, title, name, message, message2, icons}: any) => {
         return (
             <Jumbotron
                 fluid
@@ -30,30 +32,42 @@ const MainBody = React.forwardRef(
                 className="title bg-transparent bgstyle text-light min-vh-100 d-flex align-content-center align-items-center flex-wrap m-0"
             >
                 <div id="stars"></div>
+                <div className="position-relative">
+                    <Image className="object-cover btn-circle opacity-80"
+                           src={logo4}
+                           width={120}
+                           height={120}
+                           alt="Logo"/>
+                </div>
                 <div className="float-right position-relative">
-                    <Image className={`${styles["img-rectangular-left"]} object-cover`}
+                    <Image className={`${styles["img-rectangular-left"]} object-cover opacity-60`}
                            src={Mask2}
                            width={300}
                            height={300}
                            alt="Picture of a Mask2"/>
                 </div>
                 <div className="float-left position-relative">
-                    <Image className={`${styles["img-rectangular-right"]} object-cover`}
+                    <Image className={`${styles["img-rectangular-right"]} object-cover opacity-60`}
                            src={Mask}
                            width={300}
                            height={300}
                            alt="Picture of a Mask"/>
                 </div>
                 <Container className="text-center">
-                    <h1 className="display-1">
-                        {title}
+                    <h1 className="display-1 text-6xl fw-bold fs-16 text-yellow-200 mb-4">
+                        <span className="text-yellow-200 m-2 text-9xl fw-bolder">{title}</span>{name}
                     </h1>
                     <Typist>
-                        <div className="lead typist">
-                            {message}
+                        <div className="text-center h-24">
+                            <div className="lead typist fs-3">
+                                {message}
+                            </div>
+                            <div className="lead typist fs-4">
+                                {message2}
+                            </div>
                         </div>
                     </Typist>
-                    <div className="p-5">
+                    <div className="p-4">
                         {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
                             <a
                                 key={`social-icon-${index}`}
