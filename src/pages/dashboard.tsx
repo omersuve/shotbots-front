@@ -1,7 +1,6 @@
 import type {NextPage} from "next";
 import Head from "next/head";
 import {HomeView} from "../views";
-import Sidebar from "../components/Sidebar";
 
 const Dashboard: NextPage = (props) => {
     return (
@@ -10,7 +9,6 @@ const Dashboard: NextPage = (props) => {
                 <title>Dashboard</title>
             </Head>
             <HomeView/>
-            {/*<Sidebar/>*/}
         </div>
     );
 };

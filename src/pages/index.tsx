@@ -3,7 +3,7 @@ import MainBody from "../components/MainBody";
 
 // Main Body SECTION
 const mainBody = {
-    gradientColors: "#5D421A, #7E611E, #5D421A, #7E611E",
+    gradientColors: "#1f1c19, #33291c, #2b1f07, #3d270a",
     title: "X",
     name: "BOTS",
     message: " Your Market Insight Tool ",

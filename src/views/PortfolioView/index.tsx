@@ -19,7 +19,7 @@ export const PortfolioView: FC = ({}) => {
 
   return (
     <div className="container mx-auto max-w-6xl p-8 2xl:px-0">
-      <Navbar connectedWallets={connectedWallets} />
+      <Navbar />
       <div className={styles.container}>
         <div className="text-center pt-2">
           <div className="hero min-h-16 py-4">
