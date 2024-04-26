@@ -3,6 +3,7 @@ import React, {FC, useEffect, useState} from "react";
 import styles from "./index.module.css";
 import Navbar from "../../components/Navbar";
 import NewsCard from "../../components/NewsCard";
+import NewsBody from "../../components/NewsBody";
 
 const tags = ['Bitcoin', 'Ethereum', 'Solana', 'Altcoins', 'NFT']
 
@@ -42,12 +43,19 @@ export const NewsView: FC = ({}) => {
                         )
                     })}
                 </ul>
-                {
-                    news &&
-                    news.map((n, i) => {
-                        return (<NewsCard title={n["title"]}/>)
-                    })
-                }
+                <div className="flex overflow-y-scroll">
+                    <div className="block">
+                        {
+                            news &&
+                            news.map((n, i) => {
+                                return (<NewsCard title={n["title"]}/>)
+                            })
+                        }
+                    </div>
+                    {
+                        news && news.length && <NewsBody body={news[0]["body"]}/>
+                    }
+                </div>
             </div>
         </div>
     );

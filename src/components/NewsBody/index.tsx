@@ -4,19 +4,19 @@ import ReactHtmlParser from 'react-html-parser';
 import styles from "./index.module.css";
 
 
-interface NewsCardProps {
-    title: string;
+interface NewsBodyProps {
+    body: string;
 }
 
-function NewsCard({title}: NewsCardProps) {
+function NewsBody({body}: NewsBodyProps) {
     return (
         <div className={`${styles["box"]} shadow`}>
             <h3 className="relative text-black">
-                {ReactHtmlParser(title)}
+                {ReactHtmlParser(body)}
             </h3>
         </div>
     )
 }
 
-export default NewsCard;
+export default NewsBody;
 

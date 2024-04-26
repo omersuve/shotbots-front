@@ -41,7 +41,7 @@ module.exports = {
       // "valentine",
       // "halloween",
       // "garden",
-      "forest",
+      // "forest",
       // "aqua",
       // "lofi",
       // "pastel",

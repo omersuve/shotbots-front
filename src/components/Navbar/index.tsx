@@ -9,14 +9,14 @@ const Navbar: React.FC = () => {
         <nav
             className="bg-white dark:bg-gray-900 fixed w-full z-20 top-0 start-0 border-b border-gray-200 dark:border-gray-200">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-                <div className="w-18 flex text-center items-center">
+                <a className="w-18 flex text-center items-center" href="/">
                     <Image className="object-cover btn-circle"
                            src={logo}
                            width={70}
                            height={70}
                            alt="logo"/>
                     <p className="ml-5 fw-bolder fs-4">X BOTS</p>
-                </div>
+                </a>
                 <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
                                    style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}
                                    disabled={true}/>

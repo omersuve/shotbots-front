@@ -7,15 +7,6 @@
     padding-bottom: 1rem;
 }
 
-.box {
-    margin: 1rem;
-    --tw-bg-opacity: 1;
-    background-color: rgba(255, 255, 255, 0.59);
-    padding: 2rem /* 32px */;
-    border-radius: var(--rounded-box, 1rem /* 16px */);
-    width: 150px;
-}
-
 .box-container {
     display: inline-flex;
     flex-wrap: wrap;
