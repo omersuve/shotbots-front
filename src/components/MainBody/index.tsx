@@ -20,7 +20,7 @@ export const Jumbotron = (props: any) => {
 }
 
 const MainBody = React.forwardRef(
-    ({gradient, title, name, message, message2, icons}: any) => {
+    ({gradient, title, name, message, message2, XXX, message3, icons}: any) => {
         return (
             <Jumbotron
                 fluid
@@ -58,13 +58,23 @@ const MainBody = React.forwardRef(
                     <h1 className="display-1 text-6xl fw-bold fs-16 text-yellow-200 mb-4">
                         <span className="text-yellow-200 m-2 text-9xl fw-bolder">{title}</span>{name}
                     </h1>
-                    <Typist>
+                    <Typist typingDelay={30} backspaceDelay={50}>
                         <div className="text-center h-24">
-                            <div className="lead typist fs-3">
+                            <div className="lead typist fs-5">
                                 {message}
                             </div>
-                            <div className="lead typist fs-4">
+                            <Typist.Delay ms={250}/>
+                            <div className="lead typist fs-5">
                                 {message2}
+                            </div>
+                            <Typist.Delay ms={250}/>
+                            <div className="lead typist fs-4 fw-bolder">
+                                {XXX}
+                                <Typist.Backspace count={10}/>
+                            </div>
+                            <Typist.Delay ms={250}/>
+                            <div className="lead typist fs-6 fw-bolder">
+                                {message3}
                             </div>
                         </div>
                     </Typist>

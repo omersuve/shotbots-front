@@ -7,8 +7,16 @@ import NewsBody from "../../components/NewsBody";
 
 const tags = ['Bitcoin', 'Ethereum', 'Solana', 'Altcoins', 'NFT']
 
+interface News {
+    title: string,
+    body: string,
+    timestamp: string,
+    tag: string
+}
+
 export const NewsView: FC = ({}) => {
     const [news, setNews] = useState([])
+    const [selectedNew, setSelectedNew] = useState(-1)
 
     useEffect(() => {
         async function fetchData() {
@@ -48,12 +56,18 @@ export const NewsView: FC = ({}) => {
                         {
                             news &&
                             news.map((n, i) => {
-                                return (<NewsCard title={n["title"]}/>)
+                                return (
+                                    <button
+                                        className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
+                                        onClick={() => setSelectedNew(i)}>
+                                        <NewsCard title={n["title"]}/>
+                                    </button>
+                                )
                             })
                         }
                     </div>
                     {
-                        news && news.length && <NewsBody body={news[0]["body"]}/>
+                        news && news.length && selectedNew > -1 && <NewsBody body={news[selectedNew]["body"]}/>
                     }
                 </div>
             </div>
