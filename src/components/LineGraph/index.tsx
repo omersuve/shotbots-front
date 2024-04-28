@@ -5,31 +5,53 @@ import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 const LineGraph = () => {
-    const sampleData = [3, 4, 5, 4, 7, 4, 4, 3, 4, 6];
-    const sampleData2 = [1, 3, 7, 2, 1, 2, 1, 3, 8, 4];
+    const btc = [3, 4, 5, 4, 7, 4, 7];
+    const ethereum = [1, 6, 3, 2, 3, 3, 6];
+    const solana = [4, 2, 4, 3, 5, 2, 5];
+    const nfts = [5, 1, 7, 6, 1, 1, 2];
 
     const canvasData = {
         datasets: [
             {
-                label: "Home",
-                borderColor: "red",
-                pointRadius: 0,
+                label: "BTC",
+                borderColor: "orange",
+                pointRadius: 2,
                 fill: false,
-                backgroundColor: 'red',
-                lineTension: 0.3,
-                data: sampleData,
+                backgroundColor: 'orange',
+                lineTension: 0.2,
+                data: btc,
                 borderWidth: 2,
             },
             {
-                label: "Home",
-                borderColor: "yellow",
-                pointRadius: 0,
+                label: "ETH",
+                borderColor: "blue",
+                pointRadius: 2,
                 fill: false,
-                backgroundColor: 'yellow',
-                lineTension: 0.3,
-                data: sampleData2,
+                backgroundColor: 'blue',
+                lineTension: 0.2,
+                data: ethereum,
                 borderWidth: 2,
             },
+            {
+                label: "SOL",
+                borderColor: "purple",
+                pointRadius: 2,
+                fill: false,
+                backgroundColor: 'purple',
+                lineTension: 0.2,
+                data: solana,
+                borderWidth: 2,
+            },
+            {
+                label: "NFTs",
+                borderColor: "black",
+                pointRadius: 2,
+                fill: false,
+                backgroundColor: 'black',
+                lineTension: 0.2,
+                data: nfts,
+                borderWidth: 2,
+            }
         ],
     };
 
@@ -37,32 +59,32 @@ const LineGraph = () => {
         scales: {
             x: {
                 grid: {
-                    display: false,
+                    display: true,
                 },
-                labels: [1, 2, 3, 4, 5, 6, 7, 8, 9, 10],
+                labels: ["21/4/24", "22/4/24", "23/4/24", "24/4/24", "25/4/24", "26/4/24", "27/4/24"],
                 ticks: {
-                    color: "red",
+                    color: "gray",
                     font: {
                         family: "Nunito",
-                        size: 18,
+                        size: 15,
                     },
                 },
             },
             y: {
                 grid: {
-                    display: false,
+                    display: true,
                 },
                 border: {
                     display: false,
                 },
                 min: 0,
-                max: 8,
+                max: 10,
                 ticks: {
                     stepSize: 1,
-                    color: "green",
+                    color: "black",
                     font: {
                         family: "Nunito",
-                        size: 18,
+                        size: 12,
                     },
                 },
             },
@@ -71,7 +93,15 @@ const LineGraph = () => {
         responsive: true,
         plugins: {
             legend: {
-                display: false,
+                display: true, // Set to true to show the legend
+                labels: {
+                    boxWidth: 12, // Adjust the size of the legend box
+                    color: 'black', // Set the text color
+                    font: {
+                        family: 'Nunito',
+                        size: 12, // Adjust the font size of the legend labels
+                    }
+                }
             },
             title: {
                 display: false,
@@ -80,9 +110,8 @@ const LineGraph = () => {
     };
 
     const graphStyle = {
-        minHeight: "16rem",
-        maxWidth: "700px",
-        width: "100%",
+        height: "16rem",
+        width: "50rem",
         border: "1px solid #C4C4C4",
         borderRadius: "0.375rem",
         padding: "0.5rem",

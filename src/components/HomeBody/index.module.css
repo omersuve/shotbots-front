@@ -11,9 +11,9 @@
     display: inline-flex;
     flex-wrap: wrap;
     text-align: center;
-    padding-top: 1rem;
     justify-content: center;
     align-items: center;
+    margin-top: 1rem;
 }
 
 .graph-container {

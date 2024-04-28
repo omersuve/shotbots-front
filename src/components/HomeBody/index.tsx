@@ -35,14 +35,15 @@ const HomeBody: React.FC = ({children}) => {
     }, []);
 
     return (
-        <div className={`${styles["box-with-graph"]}`}>
-            <div className={`${styles["box-container"]} shadow  `}>
-                <ScoreCard score={10} tag={'Bitcoin'}/>
-                <ScoreCard score={10} tag={'Ethereum'}/>
-                <ScoreCard score={10} tag={'Solana'}/>
-                <ScoreCard score={10} tag={'NFT'}/>
+        <div className={`${styles["box-with-graph"]} flex flex-col items-center`}>
+            <div className={`${styles["box-container"]} shadow`}>
+                <ScoreCard score={0.7 * 10} tag={'Bitcoin'}/>
+                <ScoreCard score={0.6 * 10} tag={'Ethereum'}/>
+                <ScoreCard score={0.5 * 10} tag={'Solana'}/>
+                <ScoreCard score={0.2 * 10} tag={'NFTs'}/>
             </div>
-            <div className={`${styles["graph-container"]} p-4 shadow`}>
+            <div className={`${styles["graph-container"]} p-4 shadow`}
+                 style={{width: 'fit-content'}}>
                 <LineGraph/>
             </div>
         </div>
