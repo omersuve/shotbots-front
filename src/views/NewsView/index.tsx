@@ -17,9 +17,11 @@ interface News {
 export const NewsView: FC = ({}) => {
     const [news, setNews] = useState([])
     const [selectedNew, setSelectedNew] = useState(-1)
+    const [loading, setLoading] = useState(true); // Loading state
 
     useEffect(() => {
         async function fetchData() {
+            setLoading(true);
             try {
                 const response = await fetch('/api/news');
                 const result = await response.json();
@@ -30,6 +32,8 @@ export const NewsView: FC = ({}) => {
                 }
             } catch (err) {
                 console.log("failed to fetch data")
+            } finally {
+                setLoading(false); // Set loading state to false after data is fetched
             }
         }
 
@@ -51,25 +55,32 @@ export const NewsView: FC = ({}) => {
                         )
                     })}
                 </ul>
-                <div className="flex overflow-y-scroll">
-                    <div className="block">
+                {loading ? (
+                    // Display a loading spinner while data is being fetched
+                    <div className="flex justify-center items-center w-full h-full">
+                        <div className="loader">Loading...</div>
+                    </div>
+                ) : (
+                    <div className="flex overflow-y-scroll">
+                        <div className="block">
+                            {
+                                news &&
+                                news.map((n, i) => {
+                                    return (
+                                        <button
+                                            className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
+                                            onClick={() => setSelectedNew(i)}>
+                                            <NewsCard title={n["title"]}/>
+                                        </button>
+                                    )
+                                })
+                            }
+                        </div>
                         {
-                            news &&
-                            news.map((n, i) => {
-                                return (
-                                    <button
-                                        className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
-                                        onClick={() => setSelectedNew(i)}>
-                                        <NewsCard title={n["title"]}/>
-                                    </button>
-                                )
-                            })
+                            news && news.length && selectedNew > -1 && <NewsBody body={news[selectedNew]["body"]}/>
                         }
                     </div>
-                    {
-                        news && news.length && selectedNew > -1 && <NewsBody body={news[selectedNew]["body"]}/>
-                    }
-                </div>
+                )}
             </div>
         </div>
     );
