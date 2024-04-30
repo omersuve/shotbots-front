@@ -82,9 +82,9 @@ function ScoreCard({tag, score}: ScoreCardProps) {
             </h6>
             <div>
                 <div
-                    className={`inline-block mb-2 ms-[calc(25%-1.25rem)] py-0.5 px-1.5 border border-blue-200 text-xs font-medium rounded-lg dark:bg-blue-800/30 dark:border-blue-800 ${textColor}`}>{`%${scores[tag] * 100}`}
+                    className={`inline-block mb-2 ms-[calc(25%-1.25rem)] py-0.5 px-1.5 border border-blue-200 text-xs font-medium rounded-lg ${textColor}`}>{`%${scores[tag] * 100}`}
                 </div>
-                <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden dark:bg-neutral-700"
+                <div className="flex w-full h-2 bg-gray-200 rounded-full overflow-hidden"
                      role="progressbar">
                     <div
                         className={`flex flex-col justify-center rounded-full overflow-hidden ${progressBarColor} text-xs text-white text-center whitespace-nowrap transition duration-500`}

@@ -44,12 +44,12 @@ export const NewsView: FC = ({}) => {
     return (
         <div className="mt-20">
             <div className={styles.container}>
-                <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400">
+                <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500">
                     {tags.map((t) => {
                         return (
                             <li className="me-2">
                                 <a href="#"
-                                   className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100 dark:hover:bg-gray-800 dark:hover:text-white">{t}</a>
+                                   className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100">{t}</a>
                             </li>
                         )
                     })}
