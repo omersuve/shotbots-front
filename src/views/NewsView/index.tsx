@@ -43,7 +43,6 @@ export const NewsView: FC = ({}) => {
 
     return (
         <div className="mt-20">
-            <Navbar/>
             <div className={styles.container}>
                 <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500 dark:text-gray-400">
                     {tags.map((t) => {

@@ -3,6 +3,8 @@ import type {AppProps} from "next/app";
 import dynamic from "next/dynamic";
 import {ConnectionProvider} from "@solana/wallet-adapter-react";
 import "../../src/scss/custom.scss";
+import Navbar from "../components/Navbar"
+import {useRouter} from 'next/router';
 
 
 import "tailwindcss/tailwind.css";
@@ -19,6 +21,7 @@ const WalletProvider = dynamic(
 );
 
 function MyApp({Component, pageProps}: AppProps) {
+    const router = useRouter()
     const network = WalletAdapterNetwork.Devnet;
 
 // You can also provide a custom RPC endpoint.
@@ -27,6 +30,7 @@ function MyApp({Component, pageProps}: AppProps) {
     return (
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider>
+                {router.pathname != "/" && <Navbar/>}
                 <Component {...pageProps} />
             </WalletProvider>
         </ConnectionProvider>
