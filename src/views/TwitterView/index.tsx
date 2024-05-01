@@ -1,21 +1,36 @@
 import React, {FC, useEffect, useState} from "react";
-import Navbar from "../../components/Navbar";
 import styles from "../NewsView/index.module.css";
 import TweetCard from "../../components/TweetCard";
 
-const tags = ['Bitcoin', 'Ethereum', 'Solana', 'Solana NFTs', 'Solana Memecoins', 'Runes']
+const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'SOLANA NFT', 'ETHEREUM NFT', 'SOLANA MEMECOIN', 'RUNES']
+const collections = ['bitcoin-tweets', 'ethereum-tweets', 'solana-tweets', 'solana-nft-tweets', 'ethereum-nft-tweets', 'bitcoin-nft-tweets', 'solana-memecoin-tweets', 'runes-tweets']
+
+interface ResponseData {
+    [collectionName: string]: any[]; // Define the type of data returned for each collection
+}
+
 
 export const TwitterView: FC = ({}) => {
-    const [tweets, setTweets] = useState([])
+    const [tweets, setTweets] = useState<ResponseData>({})
     const [loading, setLoading] = useState(true); // Loading state
+    const [selectedTab, setSelectedTab] = useState('bitcoin-tweets')
 
 
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
             try {
-                const response = await fetch('/api/tweets');
-                const result = await response.json();
+                // Prepare request options
+                const requestOptions = {
+                    method: 'POST', // Specify POST method
+                    headers: {
+                        'Content-Type': 'application/json', // Specify JSON content type
+                    },
+                    body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
+                };
+                const response = await fetch('/api/tweets', requestOptions);
+                const result: ResponseData = await response.json();
+                console.log(result)
                 if (response.ok) {
                     setTweets(result);
                 } else {
@@ -39,8 +54,10 @@ export const TwitterView: FC = ({}) => {
                     {tags.map((t) => {
                         return (
                             <li className="me-2">
-                                <a href={`#${t}`}
-                                   className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100">{t}</a>
+                                <button
+                                    className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100"
+                                    onClick={() => setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)}
+                                >{t}</button>
                             </li>
                         )
                     })}
@@ -54,8 +71,8 @@ export const TwitterView: FC = ({}) => {
                     <div className="flex overflow-y-scroll">
                         <div className="block">
                             {
-                                tweets &&
-                                tweets.map((t, i) => {
+                                tweets[selectedTab] &&
+                                tweets[selectedTab].map((t, i) => {
                                     return (
                                         <div
                                             className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2">
