@@ -3,13 +3,12 @@ import MainBody from "../components/MainBody";
 
 // Main Body SECTION
 const mainBody = {
-    gradientColors: "#1f1c19, #33291c, #2b1f07, #3d270a",
-    title: "X",
+    gradientColors: "#1f1c19, #2C1E11, #1C0F0A, #2d270a",
+    title: "SHOT",
     name: "BOTS",
-    message: "Market Insight Tool",
-    message2: "Empower Your Decisions towards Crypto",
-    XXX: "XXXXXXXXXX",
-    message3: "in a Rewarding and Fun way",
+    message: " From Artificial ",
+    message2: " to Natural ",
+    rights: "© Shot Bots. All Rights Reserved.",
     icons: [
         {
             image: "fa-twitter",
@@ -27,8 +26,7 @@ const Home = React.forwardRef((props, ref) => {
                 name={mainBody.name}
                 message={mainBody.message}
                 message2={mainBody.message2}
-                XXX={mainBody.XXX}
-                message3={mainBody.message3}
+                rights={mainBody.rights}
                 icons={mainBody.icons}
             />
         </>

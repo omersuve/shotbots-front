@@ -20,7 +20,6 @@ export const HomeView: FC = ({}) => {
                 const response = await fetch('/api/scores');
                 const result = await response.json();
                 if (response.ok) {
-                    console.log(result)
                     setScores(result);
                 } else {
                     console.log("failed to fetch data")

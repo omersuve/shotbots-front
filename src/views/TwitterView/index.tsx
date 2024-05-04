@@ -1,6 +1,7 @@
 import React, {FC, useEffect, useState} from "react";
 import styles from "../NewsView/index.module.css";
 import TweetCard from "../../components/TweetCard";
+import MyLoader from "../../components/MyLoader";
 
 const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'SOLANA NFT', 'ETHEREUM NFT', 'SOLANA MEMECOIN', 'RUNES']
 const collections = ['bitcoin-tweets', 'ethereum-tweets', 'solana-tweets', 'solana-nft-tweets', 'ethereum-nft-tweets', 'bitcoin-nft-tweets', 'solana-memecoin-tweets', 'runes-tweets']
@@ -8,7 +9,6 @@ const collections = ['bitcoin-tweets', 'ethereum-tweets', 'solana-tweets', 'sola
 interface ResponseData {
     [collectionName: string]: any[]; // Define the type of data returned for each collection
 }
-
 
 export const TwitterView: FC = ({}) => {
     const [tweets, setTweets] = useState<ResponseData>({})
@@ -28,9 +28,8 @@ export const TwitterView: FC = ({}) => {
                     },
                     body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
                 };
-                const response = await fetch('/api/tweets', requestOptions);
+                const response = await fetch('/api/news', requestOptions);
                 const result: ResponseData = await response.json();
-                console.log(result)
                 if (response.ok) {
                     setTweets(result);
                 } else {
@@ -64,9 +63,7 @@ export const TwitterView: FC = ({}) => {
                 </ul>
                 {loading ? (
                     // Display a loading spinner while data is being fetched
-                    <div className="flex justify-center items-center w-full h-full">
-                        <div className="loader">Loading...</div>
-                    </div>
+                    <MyLoader/>
                 ) : (
                     <div className="flex overflow-y-scroll">
                         <div className="block">
@@ -76,7 +73,7 @@ export const TwitterView: FC = ({}) => {
                                     return (
                                         <div
                                             className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2">
-                                            <TweetCard text={t["text"]}/>
+                                            <TweetCard text={t["text"]} url={t["url"]}/>
                                         </div>
                                     )
                                 })

@@ -7,4 +7,5 @@
     border-radius: var(--rounded-box, 1rem /* 16px */);
     width: 50%;
     float: right;
+    font-size: small;
 }

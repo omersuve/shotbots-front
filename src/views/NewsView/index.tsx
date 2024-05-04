@@ -1,11 +1,16 @@
 import React, {FC, useEffect, useState} from "react";
-
 import styles from "./index.module.css";
-import Navbar from "../../components/Navbar";
 import NewsCard from "../../components/NewsCard";
 import NewsBody from "../../components/NewsBody";
+import MyLoader from "../../components/MyLoader";
 
-const tags = ['Bitcoin', 'Ethereum', 'Solana', 'Altcoins', 'NFT']
+
+const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'ALTCOINS', 'NFT']
+const collections = ['bitcoin-news', 'ethereum-news', 'solana-news', 'altcoins-news', 'nft-news']
+
+interface ResponseData {
+    [collectionName: string]: News[]; // Define the type of data returned for each collection
+}
 
 interface News {
     title: string,
@@ -15,15 +20,24 @@ interface News {
 }
 
 export const NewsView: FC = ({}) => {
-    const [news, setNews] = useState([])
+    const [news, setNews] = useState<ResponseData>({})
     const [selectedNew, setSelectedNew] = useState(-1)
     const [loading, setLoading] = useState(true); // Loading state
+    const [selectedTab, setSelectedTab] = useState('bitcoin-news')
 
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
             try {
-                const response = await fetch('/api/news');
+                // Prepare request options
+                const requestOptions = {
+                    method: 'POST', // Specify POST method
+                    headers: {
+                        'Content-Type': 'application/json', // Specify JSON content type
+                    },
+                    body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
+                };
+                const response = await fetch('/api/news', requestOptions);
                 const result = await response.json();
                 if (response.ok) {
                     setNews(result);
@@ -48,23 +62,26 @@ export const NewsView: FC = ({}) => {
                     {tags.map((t) => {
                         return (
                             <li className="me-2">
-                                <a href="#"
-                                   className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100">{t}</a>
+                                <button
+                                    className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100"
+                                    onClick={() => {
+                                        setSelectedNew(-1)
+                                        setSelectedTab(`${t.toLowerCase()}-news`)
+                                    }}
+                                >{t}</button>
                             </li>
                         )
                     })}
                 </ul>
                 {loading ? (
                     // Display a loading spinner while data is being fetched
-                    <div className="flex justify-center items-center w-full h-full">
-                        <div className="loader">Loading...</div>
-                    </div>
+                    <MyLoader/>
                 ) : (
                     <div className="flex overflow-y-scroll">
                         <div className="block">
                             {
-                                news &&
-                                news.map((n, i) => {
+                                news[selectedTab] &&
+                                news[selectedTab].map((n, i) => {
                                     return (
                                         <button
                                             className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
@@ -76,7 +93,8 @@ export const NewsView: FC = ({}) => {
                             }
                         </div>
                         {
-                            news && news.length && selectedNew > -1 && <NewsBody body={news[selectedNew]["body"]}/>
+                            news && selectedNew > -1 &&
+                            <NewsBody body={news[selectedTab][selectedNew]["body"]}/>
                         }
                     </div>
                 )}

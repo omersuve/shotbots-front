@@ -20,7 +20,7 @@ export const Jumbotron = (props: any) => {
 }
 
 const MainBody = React.forwardRef(
-    ({gradient, title, name, message, message2, XXX, message3, icons}: any) => {
+    ({gradient, title, name, message, message2, rights, icons}: any) => {
         return (
             <Jumbotron
                 fluid
@@ -33,13 +33,13 @@ const MainBody = React.forwardRef(
                 className="title bg-transparent bgstyle text-light min-vh-100 d-flex align-content-center align-items-center flex-wrap m-0"
             >
                 <div id="stars"></div>
-                <div className="position-relative">
-                    <Image className="object-cover btn-circle opacity-80"
-                           src={logo4}
-                           width={120}
-                           height={120}
-                           alt="Logo"/>
-                </div>
+                {/*<div className="position-relative">*/}
+                {/*    <Image className="object-cover btn-circle opacity-80"*/}
+                {/*           src={logo4}*/}
+                {/*           width={120}*/}
+                {/*           height={120}*/}
+                {/*           alt="Logo"/>*/}
+                {/*</div>*/}
                 <div className="float-right position-relative">
                     <Image className={`${styles["img-rectangular-left"]} object-cover opacity-60`}
                            src={Mask2}
@@ -55,27 +55,14 @@ const MainBody = React.forwardRef(
                            alt="Picture of a Mask"/>
                 </div>
                 <Container className="text-center">
-                    <h1 className="display-1 text-6xl fw-bold fs-16 text-yellow-200 mb-4">
-                        <span className="text-yellow-200 m-2 text-9xl fw-bolder">{title}</span>{name}
+                    <h1 className="display-1 text-5xl fw-bold fs-16 text-yellow-200 mb-8">
+                        <span className="text-yellow-200 m-4 text-5xl fw-bolder">{title}</span>{name}
                     </h1>
-                    <Typist typingDelay={30} backspaceDelay={50}>
-                        <div className="text-center h-24">
-                            <div className="lead typist fs-5">
-                                {message}
-                            </div>
-                            <Typist.Delay ms={250}/>
-                            <div className="lead typist fs-5">
-                                {message2}
-                            </div>
-                            <Typist.Delay ms={250}/>
-                            <div className="lead typist fs-4 fw-bolder">
-                                {XXX}
-                                <Typist.Backspace count={10}/>
-                            </div>
-                            <Typist.Delay ms={250}/>
-                            <div className="lead typist fs-6 fw-bolder">
-                                {message3}
-                            </div>
+                    <Typist typingDelay={60} backspaceDelay={100}>
+                        <div className="text-center h-20 fs-4">
+                            <p>{message}</p>
+                            <Typist.Delay ms={150}/>
+                            <p>{message2}</p>
                         </div>
                     </Typist>
                     <div className="p-4">
@@ -87,18 +74,14 @@ const MainBody = React.forwardRef(
                                 href={icon.url}
                                 aria-label={`My ${icon.image.split("-")[1]}`}
                             >
-                                <i className={`fab ${icon.image}  fa-3x socialicons`}/>
+                                <i className={`fab ${icon.image}  fa-2x socialicons`}/>
                             </a>
                         ))}
                     </div>
-                    <a
-                        className={`btn bg-transparent border-white text-white hover:bg-black ${styles["btn-outline-light"]}`}
-                        href="/dashboard/"
-                        role="button"
-                        aria-label="Learn more about me"
-                    >
-                        Stay tuned
-                    </a>
+                    <button className="btn border-white text-white hover:bg-yellow-900">
+                        <a href="/dashboard/">Stay tuned</a>
+                    </button>
+                    <p className="absolute inset-x-10 bottom-10">{rights}</p>
                 </Container>
             </Jumbotron>
         );

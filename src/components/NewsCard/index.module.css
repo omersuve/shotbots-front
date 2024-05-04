@@ -4,6 +4,7 @@
     padding: 1rem /* 32px */;
     border-radius: var(--rounded-box, 1rem /* 16px */);
     width: 600px;
+    font-size: smaller;
     @media (max-width: 768px) {
         width: 150px;
     }

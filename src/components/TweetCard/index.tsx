@@ -4,14 +4,17 @@ import styles from "./index.module.css";
 
 interface TweetCardProps {
     text: string;
+    url: string
 }
 
-function TweetCard({text}: TweetCardProps) {
+function TweetCard({text, url}: TweetCardProps) {
     return (
         <div className={`${styles["box"]} shadow`}>
-            <h3 className="relative text-black">
-                {text}
-            </h3>
+            <a href={url} target="_blank">
+                <p className="relative text-black">
+                    {text}
+                </p>
+            </a>
         </div>
     )
 }
