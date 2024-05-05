@@ -63,7 +63,7 @@ const MainBody = React.forwardRef(
                             <p>{message2}</p>
                         </div>
                     </Typist>
-                    <button className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
+                    <button disabled={true} className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
                         <a href="/dashboard/">Stay tuned</a>
                     </button>
                     <div className="p-4 mt-10">

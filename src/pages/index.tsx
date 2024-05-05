@@ -12,7 +12,7 @@ const mainBody = {
     icons: [
         {
             image: "fa-twitter",
-            url: "https://twitter.com/XbotsOnSol",
+            url: "https://twitter.com/TheShotBots",
         },
     ],
 };
