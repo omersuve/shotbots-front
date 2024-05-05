@@ -2,8 +2,42 @@
     font-size: medium;
 }
 
+.typist-font {
+    font-family: "jersey", serif;
+    color: black;
+    opacity: 60%;
+    min-height: 100px;
+}
+
+.rights {
+    font-family: "jersey", serif;
+    color: black;
+    opacity: 60%;
+}
+
+.stay-tuned {
+    font-family: "jersey", serif;
+    color: black;
+    border-width: 2px;
+    opacity: 50%;
+    font-size: large;
+    width: 120px;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
+    padding: 1px;
+    margin-top: 60px;
+}
+
+
 .img-rectangular-left {
     transform-origin: left top;
+    animation: scale 5000ms ease-in-out infinite alternate;
+}
+
+.img-rectangular-top {
+    margin-bottom: 50px;
+    transform-origin: top;
     animation: scale 5000ms ease-in-out infinite alternate;
 }
 

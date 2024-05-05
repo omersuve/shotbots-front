@@ -3,7 +3,7 @@ import MainBody from "../components/MainBody";
 
 // Main Body SECTION
 const mainBody = {
-    gradientColors: "#1f1c19, #2C1E11, #1C0F0A, #2d270a",
+    gradientColors: "#CDBAA6, #CDC1A6, #CBBCA5, #CBB2A5",
     title: "SHOT",
     name: "BOTS",
     message: " From Artificial ",

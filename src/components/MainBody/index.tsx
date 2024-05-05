@@ -6,6 +6,7 @@ import Mask from "../../../public/Mask.png"
 import logo from "../../../public/logo.jpeg"
 import logo4 from "../../../public/logo4.jpg"
 import Mask2 from "../../../public/Mask2.png"
+import TextLogo from "../../../public/text-logo.png"
 import Image from 'next/image';
 
 export const Jumbotron = (props: any) => {
@@ -33,13 +34,13 @@ const MainBody = React.forwardRef(
                 className="title bg-transparent bgstyle text-light min-vh-100 d-flex align-content-center align-items-center flex-wrap m-0"
             >
                 <div id="stars"></div>
-                {/*<div className="position-relative">*/}
-                {/*    <Image className="object-cover btn-circle opacity-80"*/}
-                {/*           src={logo4}*/}
-                {/*           width={120}*/}
-                {/*           height={120}*/}
-                {/*           alt="Logo"/>*/}
-                {/*</div>*/}
+                <div className={`${styles["img-rectangular-top"]} object-cover opacity-80`}>
+                    <Image className="object-cover opacity-80"
+                           src={TextLogo}
+                           width={300}
+                           height={150}
+                           alt="Logo"/>
+                </div>
                 <div className="float-right position-relative">
                     <Image className={`${styles["img-rectangular-left"]} object-cover opacity-60`}
                            src={Mask2}
@@ -55,17 +56,17 @@ const MainBody = React.forwardRef(
                            alt="Picture of a Mask"/>
                 </div>
                 <Container className="text-center">
-                    <h1 className="display-1 text-5xl fw-bold fs-16 text-yellow-200 mb-8">
-                        <span className="text-yellow-200 m-4 text-5xl fw-bolder">{title}</span>{name}
-                    </h1>
                     <Typist typingDelay={60} backspaceDelay={100}>
-                        <div className="text-center h-20 fs-4">
+                        <div className={`${styles['typist-font']} text-center fs-3`}>
                             <p>{message}</p>
                             <Typist.Delay ms={150}/>
                             <p>{message2}</p>
                         </div>
                     </Typist>
-                    <div className="p-4">
+                    <button className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
+                        <a href="/dashboard/">Stay tuned</a>
+                    </button>
+                    <div className="p-4 mt-10">
                         {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
                             <a
                                 key={`social-icon-${index}`}
@@ -78,10 +79,7 @@ const MainBody = React.forwardRef(
                             </a>
                         ))}
                     </div>
-                    <button className="btn border-white text-white hover:bg-yellow-900">
-                        <a href="/dashboard/">Stay tuned</a>
-                    </button>
-                    <p className="absolute inset-x-10 bottom-10">{rights}</p>
+                    <p className={`${styles['rights']} absolute inset-x-10 bottom-5 text-center fs-3`}>{rights}</p>
                 </Container>
             </Jumbotron>
         );
