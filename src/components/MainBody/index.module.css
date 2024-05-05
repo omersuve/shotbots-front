@@ -39,6 +39,10 @@
     margin-bottom: 50px;
     transform-origin: top;
     animation: scale 5000ms ease-in-out infinite alternate;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    display: flex;
 }
 
 .img-rectangular-right {

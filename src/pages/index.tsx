@@ -4,8 +4,6 @@ import MainBody from "../components/MainBody";
 // Main Body SECTION
 const mainBody = {
     gradientColors: "#CDBAA6, #CDC1A6, #CBBCA5, #CBB2A5",
-    title: "SHOT",
-    name: "BOTS",
     message: " From Artificial ",
     message2: " to Natural ",
     rights: "© Shot Bots. All Rights Reserved.",
@@ -17,13 +15,11 @@ const mainBody = {
     ],
 };
 
-const Home = React.forwardRef((props, ref) => {
+const Home = () => {
     return (
         <>
             <MainBody
                 gradient={mainBody.gradientColors}
-                title={mainBody.title}
-                name={mainBody.name}
                 message={mainBody.message}
                 message2={mainBody.message2}
                 rights={mainBody.rights}
@@ -31,6 +27,8 @@ const Home = React.forwardRef((props, ref) => {
             />
         </>
     );
-});
+};
+
+Home.displayName = "Home";
 
 export default Home;

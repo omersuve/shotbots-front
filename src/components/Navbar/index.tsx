@@ -21,33 +21,35 @@ const Navbar: React.FC = () => {
                         </div>
                     </Link>
                 </button>
-                <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-                                   style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}
-                                   disabled={true}/>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
                      id="navbar-sticky">
                     <ul className="flex flex-col md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 items-center">
                         <li className="block text-blue-500 bg-blue-700 md:bg-transparent md:text-blue-700 md:p-0">
-                            <Link href="/dashboard">
-                                <a className="rounded py-2 px-3 hover:bg-gray-100">Home</a>
+                            <Link href="/dashboard" className="rounded py-2 px-3 hover:bg-gray-100">
+                                Home
                             </Link>
                         </li>
                         <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/twitter">
-                                <a className="rounded py-1 px-3 fs-3 fw-bold hover:bg-gray-100">X</a>
+                            <Link href="/twitter" className="rounded py-1 px-3 fs-3 fw-bold hover:bg-gray-100">
+                                X
                             </Link>
                         </li>
                         <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/news">
-                                <a className="rounded py-2 px-3 hover:bg-gray-100">News</a>
+                            <Link href="/news" className="rounded py-2 px-3 hover:bg-gray-100">
+                                News
                             </Link>
                         </li>
                         <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/news">
-                                <a className="rounded py-2 px-3 hover:bg-gray-100">Profile</a>
+                            <Link href="/news" className="rounded py-2 px-3 hover:bg-gray-100">
+                                Profile
                             </Link>
                         </li>
                     </ul>
+                    <div className="ml-24">
+                        <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
+                                           style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}
+                                           disabled={true}/>
+                    </div>
                 </div>
             </div>
         </nav>
