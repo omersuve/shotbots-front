@@ -10,7 +10,7 @@ interface TweetCardProps {
 function TweetCard({text, url}: TweetCardProps) {
     return (
         <div className={`${styles["box"]} shadow`}>
-            <a href={url} target="_blank">
+            <a href={url} target="_blank" rel="noreferrer noopener">
                 <p className="relative text-black">
                     {text}
                 </p>

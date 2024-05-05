@@ -17,13 +17,11 @@ const mainBody = {
     ],
 };
 
-const Home = React.forwardRef((props, ref) => {
+const Home = () => {
     return (
         <>
             <MainBody
                 gradient={mainBody.gradientColors}
-                title={mainBody.title}
-                name={mainBody.name}
                 message={mainBody.message}
                 message2={mainBody.message2}
                 rights={mainBody.rights}
@@ -31,6 +29,8 @@ const Home = React.forwardRef((props, ref) => {
             />
         </>
     );
-});
+};
+
+Home.displayName = "Home";
 
 export default Home;

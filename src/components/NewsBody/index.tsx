@@ -1,6 +1,5 @@
 import React from "react";
-// @ts-ignore
-import ReactHtmlParser from 'react-html-parser';
+import parse from 'html-react-parser';
 import styles from "./index.module.css";
 
 
@@ -12,7 +11,7 @@ function NewsBody({body}: NewsBodyProps) {
     return (
         <div className={`${styles["box"]} shadow`}>
             <h3 className="relative text-black">
-                {ReactHtmlParser(body)}
+                {parse(body)}
             </h3>
         </div>
     )

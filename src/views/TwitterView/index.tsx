@@ -50,9 +50,9 @@ export const TwitterView: FC = ({}) => {
         <div className="mt-20">
             <div className={styles.container}>
                 <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500">
-                    {tags.map((t) => {
+                    {tags.map((t, i) => {
                         return (
-                            <li className="me-2">
+                            <li key={i} className="me-2">
                                 <button
                                     className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100"
                                     onClick={() => setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)}
@@ -71,7 +71,7 @@ export const TwitterView: FC = ({}) => {
                                 tweets[selectedTab] &&
                                 tweets[selectedTab].map((t, i) => {
                                     return (
-                                        <div
+                                        <div key={i}
                                             className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2">
                                             <TweetCard text={t["text"]} url={t["url"]}/>
                                         </div>

@@ -1,12 +1,12 @@
 import React, {FC, useEffect, useState} from "react";
-import {useConnection, useWallet} from "@solana/wallet-adapter-react";
+// import {useConnection, useWallet} from "@solana/wallet-adapter-react";
 import styles from "./index.module.css";
 import LineGraph from "../../components/LineGraph"
 import ScoreCard from "../../components/ScoreCard";
 
 export const HomeView: FC = ({}) => {
-    const {publicKey} = useWallet();
-    const {connection} = useConnection();
+    // const {publicKey} = useWallet();
+    // const {connection} = useConnection();
     const [btcScore, setBtcScore] = useState();
     const [ethScore, setEthScore] = useState();
     const [nftScore, setNftScore] = useState();
