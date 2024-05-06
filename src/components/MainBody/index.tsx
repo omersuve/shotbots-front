@@ -6,6 +6,7 @@ import Mask from "../../../public/Mask.png"
 import logo from "../../../public/logo.jpeg"
 import logo4 from "../../../public/logo4.jpg"
 import Mask2 from "../../../public/Mask2.png"
+import Pistol from "../../../public/pistol.png"
 import TextLogo from "../../../public/text-logo.png"
 import Image from 'next/image';
 import Link from "next/link";
@@ -50,10 +51,10 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
             </div>
             <div className="float-left position-relative">
                 <Image className={`${styles["img-rectangular-right"]} object-cover opacity-60`}
-                       src={Mask}
+                       src={Pistol}
                        width={300}
                        height={300}
-                       alt="Picture of a Mask"/>
+                       alt="Picture of a Pistol"/>
             </div>
             <Container className="text-center">
                 <Typist typingDelay={60} backspaceDelay={100}>
