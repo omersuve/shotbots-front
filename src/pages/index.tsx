@@ -4,8 +4,6 @@ import MainBody from "../components/MainBody";
 // Main Body SECTION
 const mainBody = {
     gradientColors: "#CDBAA6, #CDC1A6, #CBBCA5, #CBB2A5",
-    title: "SHOT",
-    name: "BOTS",
     message: " From Artificial ",
     message2: " to Natural ",
     rights: "© Shot Bots. All Rights Reserved.",

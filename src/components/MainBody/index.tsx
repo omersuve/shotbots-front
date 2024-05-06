@@ -58,9 +58,11 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
             <Container className="text-center">
                 <Typist typingDelay={60} backspaceDelay={100}>
                     <div className={`${styles['typist-font']} text-center fs-3`}>
-                        <p>{message}</p>
-                        <Typist.Delay ms={150}/>
-                        <p>{message2}</p>
+                        <p className="inline">
+                            <span>{message}</span>
+                            <Typist.Delay ms={150}/>
+                            <span>{message2}</span>
+                        </p>
                     </div>
                 </Typist>
                 <button disabled={true}
