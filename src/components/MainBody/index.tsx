@@ -6,6 +6,7 @@ import Mask from "../../../public/Mask.png"
 import logo from "../../../public/logo.jpeg"
 import logo4 from "../../../public/logo4.jpg"
 import Mask2 from "../../../public/Mask2.png"
+import Pistol from "../../../public/pistol.png"
 import TextLogo from "../../../public/text-logo.png"
 import Image from 'next/image';
 import Link from "next/link";
@@ -50,31 +51,28 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
             </div>
             <div className="float-left position-relative">
                 <Image className={`${styles["img-rectangular-right"]} object-cover opacity-60`}
-                       src={Mask}
+                       src={Pistol}
                        width={300}
                        height={300}
-                       alt="Picture of a Mask"/>
+                       alt="Picture of a Pistol"/>
             </div>
             <Container className="text-center">
                 <Typist typingDelay={60} backspaceDelay={100}>
                     <div className={`${styles['typist-font']} text-center fs-3`}>
-                        <p>{message}</p>
-                        <Typist.Delay ms={150}/>
-                        <p>{message2}</p>
+                        <p className="inline">
+                            <span>{message}</span>
+                            <Typist.Delay ms={150}/>
+                            <span>{message2}</span>
+                        </p>
                     </div>
                 </Typist>
-                <button className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
+                <button disabled={true}
+                        className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
                     <Link href="/dashboard">Stay tuned</Link>
                 </button>
                 <div className="p-4 mt-10">
                     {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
-                        <Link
-                            key={`social-icon-${index}`}
-                            target="_blank"
-                            rel="noopener noreferrer"
-                            href={icon.url!}
-                            aria-label={`My ${icon.image.split("-")[1]}`}
-                        >
+                        <Link href={icon.url!} key={`social-icon-${index}`} target="_blank">
                             <i className={`fab ${icon.image}  fa-2x socialicons`}/>
                         </Link>
                     ))}

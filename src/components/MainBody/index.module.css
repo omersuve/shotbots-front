@@ -6,7 +6,8 @@
     font-family: "jersey", serif;
     color: black;
     opacity: 60%;
-    min-height: 100px;
+    min-height: 40px;
+    margin-top: 80px;
 }
 
 .rights {
@@ -19,20 +20,20 @@
     font-family: "jersey", serif;
     color: black;
     border-width: 2px;
-    opacity: 50%;
+    opacity: 90%;
     font-size: large;
     width: 120px;
     text-align: center;
     justify-content: center;
     align-items: center;
     padding: 1px;
-    margin-top: 60px;
+    margin-top: 80px;
 }
 
 
 .img-rectangular-left {
     transform-origin: left top;
-    animation: scale 5000ms ease-in-out infinite alternate;
+    animation: scale 10000ms ease-in-out infinite alternate;
 }
 
 .img-rectangular-top {
@@ -47,7 +48,7 @@
 
 .img-rectangular-right {
     transform-origin: right top;
-    animation: scale 5000ms ease-in-out infinite alternate;
+    animation: scale 10000ms ease-in-out infinite alternate;
 }
 
 @keyframes scale {

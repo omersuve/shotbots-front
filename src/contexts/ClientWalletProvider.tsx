@@ -26,8 +26,4 @@ export function ClientWalletProvider(props: Omit<WalletProviderProps, "wallets">
             </WalletModalProvider>
         </WalletProvider>
     );
-
-
 }
-
-export default ClientWalletProvider;

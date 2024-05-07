@@ -1,6 +1,7 @@
 import React from "react";
 import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
 import logo from "../../../public/logo.jpeg";
+import TextLogo from "../../../public/text-logo.png";
 import Image from "next/image";
 import Link from 'next/link'
 
@@ -10,14 +11,18 @@ const Navbar: React.FC = () => {
             className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                 <button>
-                    <Link href="/">
+                    <Link href="/" passHref={true}>
                         <div className="w-18 flex text-center items-center">
-                            <Image className="object-cover btn-circle"
-                                   src={logo}
-                                   width={65}
-                                   height={65}
-                                   alt="logo"/>
-                            <p className="ml-5 fw-bolder fs-4">X BOTS</p>
+                            {/*<Image className="object-cover btn-circle"*/}
+                            {/*       src={logo}*/}
+                            {/*       width={65}*/}
+                            {/*       height={65}*/}
+                            {/*       alt="logo"/>*/}
+                            <Image className="object-cover m-1.5"
+                                   src={TextLogo}
+                                   width={100}
+                                   height={75}
+                                   alt="textlogo"/>
                         </div>
                     </Link>
                 </button>

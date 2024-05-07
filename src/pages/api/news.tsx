@@ -23,7 +23,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             return res.status(400).json({error: 'Invalid request body. Expected an array.'});
         }
         const client = await clientPromise;
-        console.log("db connected")
         const db = client.db("news");
         // Initialize a map to store the results
         const resultMap: ResponseData = {};
