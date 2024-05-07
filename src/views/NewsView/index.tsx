@@ -19,7 +19,7 @@ interface News {
     tag: string
 }
 
-export const NewsView: FC = ({}) => {
+export const NewsView: FC = () => {
     const [news, setNews] = useState<ResponseData>({})
     const [selectedNew, setSelectedNew] = useState(-1)
     const [loading, setLoading] = useState(true); // Loading state
@@ -83,7 +83,8 @@ export const NewsView: FC = ({}) => {
                                 news[selectedTab] &&
                                 news[selectedTab].map((n, i) => {
                                     return (
-                                        <button key={i}
+                                        <button
+                                            key={i}
                                             className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
                                             onClick={() => setSelectedNew(i)}>
                                             <NewsCard title={n["title"]}/>

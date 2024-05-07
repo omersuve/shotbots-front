@@ -2,7 +2,7 @@ import React, {useEffect, useState} from "react";
 import Chart from "chart.js/auto";
 import styles from "./index.module.css";
 
-const Tabs: React.FC = ({}) => {
+const Tabs: React.FC = () => {
     const [selectedTab, setSelectedTab] = useState(0);
 
     useEffect(() => {

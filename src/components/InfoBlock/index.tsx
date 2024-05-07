@@ -1,7 +1,7 @@
 import React from "react";
 import styles from './index.module.css';
 
-const InfoBlock: React.FC = ({}) => {
+const InfoBlock: React.FC = () => {
     return (
         <div className={`${styles["block"]} rounded-box shadow-lg`}>
             <div>

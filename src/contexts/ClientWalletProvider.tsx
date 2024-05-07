@@ -1,39 +1,29 @@
-// import type { WalletProviderProps } from "@solana/wallet-adapter-react";
-// import { WalletProvider } from "@solana/wallet-adapter-react";
-//
-// import {
-//   getPhantomWallet,
-//   getSolflareWallet,
-//   getSolletWallet,
-// } from '@solana/wallet-adapter-wallets'
-// import { useMemo } from "react";
-// import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
-//
-// import('@solana/wallet-adapter-react-ui/styles.css' as any) ;
+import type {WalletProviderProps} from "@solana/wallet-adapter-react";
+import {WalletProvider} from "@solana/wallet-adapter-react";
 
-export function ClientWalletProvider(): any {
-    return (<div></div>)
+import {
+    PhantomWalletAdapter,
+    SolflareWalletAdapter
+} from '@solana/wallet-adapter-wallets'
+import {type ReactNode, useMemo} from "react";
+import {WalletModalProvider} from "@solana/wallet-adapter-react-ui";
+
+import('@solana/wallet-adapter-react-ui/styles.css' as any);
+
+export function ClientWalletProvider(props: Omit<WalletProviderProps, "wallets">, children: ReactNode) {
+    const wallets = useMemo(
+        () => [
+            new PhantomWalletAdapter(),
+            new SolflareWalletAdapter()
+        ],
+        []
+    );
+
+    return (
+        <WalletProvider wallets={wallets} {...props}>
+            <WalletModalProvider {...props}>
+                {children}
+            </WalletModalProvider>
+        </WalletProvider>
+    );
 }
-
-// export function ClientWalletProvider(
-//   props: Omit<WalletProviderProps, "wallets">
-// ): JSX.Element {
-//   const wallets = useMemo(
-//     () => [
-//       getPhantomWallet(),
-//       getSolflareWallet(),
-//       getSolletWallet(),
-//     ],
-//     []
-//   );
-//
-//   return (
-//     <WalletProvider wallets={wallets} {...props}>
-//       <WalletModalProvider {...props} />
-//     </WalletProvider>
-//   );
-//
-//
-// }
-//
-// export default ClientWalletProvider;

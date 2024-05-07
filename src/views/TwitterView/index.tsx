@@ -10,7 +10,7 @@ interface ResponseData {
     [collectionName: string]: any[]; // Define the type of data returned for each collection
 }
 
-export const TwitterView: FC = ({}) => {
+export const TwitterView: FC = () => {
     const [tweets, setTweets] = useState<ResponseData>({})
     const [loading, setLoading] = useState(true); // Loading state
     const [selectedTab, setSelectedTab] = useState('bitcoin-tweets')

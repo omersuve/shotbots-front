@@ -1,5 +1,5 @@
 import React from "react";
-// import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
+import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
 import logo from "../../../public/logo.jpeg";
 import TextLogo from "../../../public/text-logo.png";
 import Image from "next/image";
@@ -26,12 +26,6 @@ const Navbar: React.FC = () => {
                         </div>
                     </Link>
                 </button>
-                {/*<WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"*/}
-                {/*                   style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}*/}
-                {/*                   disabled={true}/>*/}
-                <button className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse p-2.5 rounded fw-bold fs-6"
-                                   style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}
-                                   disabled={true}>Select Wallet</button>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
                      id="navbar-sticky">
                     <ul className="flex flex-col md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 items-center">
@@ -56,6 +50,11 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                     </ul>
+                    <div className="ml-24">
+                        <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
+                                           style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}
+                                           disabled={true}/>
+                    </div>
                 </div>
             </div>
         </nav>

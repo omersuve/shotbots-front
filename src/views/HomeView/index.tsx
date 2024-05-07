@@ -4,9 +4,9 @@ import styles from "./index.module.css";
 import LineGraph from "../../components/LineGraph"
 import ScoreCard from "../../components/ScoreCard";
 
-export const HomeView: FC = ({}) => {
-    // const {publicKey} = useWallet();
-    // const {connection} = useConnection();
+export const HomeView: FC = () => {
+    const {publicKey} = useWallet();
+    const {connection} = useConnection();
     const [btcScore, setBtcScore] = useState();
     const [ethScore, setEthScore] = useState();
     const [nftScore, setNftScore] = useState();
