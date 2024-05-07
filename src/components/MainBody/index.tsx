@@ -66,8 +66,8 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
                         </p>
                     </div>
                 </Typist>
-                <button disabled={true}
-                        className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
+                <button
+                    className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
                     <Link href="/dashboard">Stay tuned</Link>
                 </button>
                 <div className="p-4 mt-10">

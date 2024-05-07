@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from "react";
-// import {useConnection, useWallet} from "@solana/wallet-adapter-react";
+import {useConnection, useWallet} from "@solana/wallet-adapter-react";
 import styles from "./index.module.css";
 import LineGraph from "../../components/LineGraph"
 import ScoreCard from "../../components/ScoreCard";
