@@ -21,7 +21,8 @@ interface News {
 
 export const NewsView: FC = () => {
     const [news, setNews] = useState<ResponseData>({})
-    const [selectedNew, setSelectedNew] = useState(-1)
+    const [selectedNew, setSelectedNew] = useState(0)
+    const [selectedTabIdx, setSelectedTabIdx] = useState(0)
     const [loading, setLoading] = useState(true); // Loading state
     const [selectedTab, setSelectedTab] = useState('bitcoin-news')
 
@@ -63,10 +64,11 @@ export const NewsView: FC = () => {
                         return (
                             <li key={i} className="me-2">
                                 <button
-                                    className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100"
+                                    className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block px-4 py-3 rounded-lg`}
                                     onClick={() => {
-                                        setSelectedNew(-1)
+                                        setSelectedNew(0)
                                         setSelectedTab(`${t.toLowerCase()}-news`)
+                                        setSelectedTabIdx(i)
                                     }}
                                 >{t}</button>
                             </li>
@@ -85,16 +87,16 @@ export const NewsView: FC = () => {
                                     return (
                                         <button
                                             key={i}
-                                            className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2"
+                                            className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} rounded-box m-6`}
                                             onClick={() => setSelectedNew(i)}>
-                                            <NewsCard title={n["title"]}/>
+                                            <NewsCard title={n["title"]} isOpen={i === selectedNew}/>
                                         </button>
                                     )
                                 })
                             }
                         </div>
                         {
-                            news && selectedNew > -1 &&
+                            news && news[selectedTab].length > 0 &&
                             <NewsBody body={news[selectedTab][selectedNew]["body"]}/>
                         }
                     </div>

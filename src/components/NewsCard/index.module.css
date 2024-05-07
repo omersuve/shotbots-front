@@ -5,7 +5,19 @@
     border-radius: var(--rounded-box, 1rem /* 16px */);
     width: 600px;
     font-size: smaller;
+    display: inline-flex;
+    position: relative;
+    min-height: 100px;
     @media (max-width: 768px) {
         width: 150px;
     }
+}
+
+.toggle-btn {
+    text-align: center;
+    right: -10px;
+    border-radius: 100%;
+    font-size: larger;
+    position: absolute;
+    top: 36%;
 }
