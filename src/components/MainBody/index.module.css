@@ -51,6 +51,21 @@
     animation: scale 10000ms ease-in-out infinite alternate;
 }
 
+@media (max-width: 768px) {
+    .img-rectangular-right {
+        display: none;
+    }
+
+    .img-rectangular-left {
+        display: none;
+    }
+
+    .stay-tuned {
+        cursor: not-allowed;
+        pointer-events: none;
+    }
+}
+
 @keyframes scale {
     0% {
         transform: scale(1);
