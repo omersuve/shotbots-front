@@ -55,29 +55,33 @@ function ScoreCard({tag, score}: ScoreCardProps) {
                 alt="nft SVG"
                 width={20}
                 height={20}
+                style={{display: "inline-flex", marginBottom: "4px"}}
             />}
             {tag == "Solana" && <Image
                 src={solLogo}
                 alt="sol SVG"
-                width={20}
-                height={20}
+                width={24}
+                height={24}
+                style={{display: "inline-flex", marginBottom: "8px"}}
             />}
             {tag == "Bitcoin" && <Image
                 src={btcLogo}
                 alt="btc SVG"
-                width={20}
-                height={20}
+                width={24}
+                height={24}
+                style={{display: "inline-flex", marginBottom: "4px"}}
             />}
             {tag == "Ethereum" && <Image
                 src={ethLogo}
                 alt="eth SVG"
-                width={20}
-                height={20}
+                width={15}
+                height={15}
+                style={{display: "inline-flex", marginBottom: "4px"}}
             />}
             <h5 className="text-l font-bold relative text-black border-bottom mb-1">
                 {tag}
             </h5>
-            <h6 className="fs-6 relative text-black pt-1">
+            <h6 className="fs-6 relative text-black pt-1 m-1">
                 score : {score} / 10
             </h6>
             <div>
