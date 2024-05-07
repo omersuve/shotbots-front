@@ -1,5 +1,6 @@
 import React from "react";
 import MainBody from "../components/MainBody";
+import Head from "next/head";
 
 // Main Body SECTION
 const mainBody = {
@@ -18,6 +19,9 @@ const mainBody = {
 const Home = () => {
     return (
         <>
+            <Head>
+                <title>Shot Bots</title>
+            </Head>
             <MainBody
                 gradient={mainBody.gradientColors}
                 message={mainBody.message}
