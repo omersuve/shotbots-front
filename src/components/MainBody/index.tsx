@@ -68,7 +68,7 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
                 </Typist>
                 <button
                     className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
-                    <Link href="/dashboard">Stay tuned</Link>
+                    <Link href="/dashboard">Take a Shot!</Link>
                 </button>
                 <div className="p-4 mt-10">
                     {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
