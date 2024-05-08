@@ -58,50 +58,48 @@ export const NewsView: FC = () => {
 
     return (
         <div className="mt-20">
-            <div className={styles.container}>
-                <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500">
-                    {tags.map((t, i) => {
-                        return (
-                            <li key={i} className="me-2">
-                                <button
-                                    className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block px-4 py-3 rounded-lg`}
-                                    onClick={() => {
-                                        setSelectedNew(0)
-                                        setSelectedTab(`${t.toLowerCase()}-news`)
-                                        setSelectedTabIdx(i)
-                                    }}
-                                >{t}</button>
-                            </li>
-                        )
-                    })}
-                </ul>
-                {loading ? (
-                    // Display a loading spinner while data is being fetched
-                    <MyLoader/>
-                ) : (
-                    <div className="flex overflow-y-scroll">
-                        <div className="block">
-                            {
-                                news[selectedTab] &&
-                                news[selectedTab].map((n, i) => {
-                                    return (
-                                        <button
-                                            key={i}
-                                            className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} rounded-box m-6`}
-                                            onClick={() => setSelectedNew(i)}>
-                                            <NewsCard title={n["title"]} isOpen={i === selectedNew}/>
-                                        </button>
-                                    )
-                                })
-                            }
-                        </div>
+            <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
+                {tags.map((t, i) => {
+                    return (
+                        <li key={i}>
+                            <button
+                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block p-2 rounded-lg`}
+                                onClick={() => {
+                                    setSelectedNew(0)
+                                    setSelectedTab(`${t.toLowerCase()}-news`)
+                                    setSelectedTabIdx(i)
+                                }}
+                            >{t}</button>
+                        </li>
+                    )
+                })}
+            </ul>
+            {loading ? (
+                // Display a loading spinner while data is being fetched
+                <MyLoader/>
+            ) : (
+                <div className="flex overflow-y-scroll">
+                    <div className="block">
                         {
-                            news && news[selectedTab].length > 0 &&
-                            <NewsBody body={news[selectedTab][selectedNew]["body"]}/>
+                            news[selectedTab] &&
+                            news[selectedTab].map((n, i) => {
+                                return (
+                                    <button
+                                        key={i}
+                                        className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} rounded-box m-6`}
+                                        onClick={() => setSelectedNew(i)}>
+                                        <NewsCard title={n["title"]} isOpen={i === selectedNew}/>
+                                    </button>
+                                )
+                            })
                         }
                     </div>
-                )}
-            </div>
+                    {
+                        news && news[selectedTab].length > 0 &&
+                        <NewsBody body={news[selectedTab][selectedNew]["body"]}/>
+                    }
+                </div>
+            )}
         </div>
     );
 };

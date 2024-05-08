@@ -1,5 +1,5 @@
 import React, {FC, useEffect, useState} from "react";
-import styles from "../NewsView/index.module.css";
+import styles from "./index.module.css";
 import TweetCard from "../../components/TweetCard";
 import MyLoader from "../../components/MyLoader";
 
@@ -49,41 +49,39 @@ export const TwitterView: FC = () => {
 
     return (
         <div className="mt-20">
-            <div className={styles.container}>
-                <ul className="flex flex-wrap text-sm font-medium text-center text-gray-500">
-                    {tags.map((t, i) => {
-                        return (
-                            <li key={i} className="me-2">
-                                <button
-                                    className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100`}
-                                    onClick={() => {
-                                        setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)
-                                        setSelectedTabIdx(i)
-                                    }}
-                                >{t}</button>
-                            </li>
-                        )
-                    })}
-                </ul>
-                {loading ? (
-                    // Display a loading spinner while data is being fetched
-                    <MyLoader/>
-                ) : (
-                    <div className="flex flex-wrap gap-4 mb-0 justify-center">
-                        {
-                            tweets[selectedTab] &&
-                            tweets[selectedTab].map((t, i) => {
-                                return (
-                                    <div key={i}
-                                         className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-1 p-1">
-                                        <TweetCard text={t["text"]} url={t["url"]}/>
-                                    </div>
-                                )
-                            })
-                        }
-                    </div>
-                )}
-            </div>
+            <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
+                {tags.map((t, i) => {
+                    return (
+                        <li key={i}>
+                            <button
+                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100`}
+                                onClick={() => {
+                                    setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)
+                                    setSelectedTabIdx(i)
+                                }}
+                            >{t}</button>
+                        </li>
+                    )
+                })}
+            </ul>
+            {loading ? (
+                // Display a loading spinner while data is being fetched
+                <MyLoader/>
+            ) : (
+                <div className="flex flex-wrap gap-4 mt-3 justify-center">
+                    {
+                        tweets[selectedTab] &&
+                        tweets[selectedTab].map((t, i) => {
+                            return (
+                                <div key={i}
+                                     className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-1 p-1">
+                                    <TweetCard text={t["text"]} url={t["url"]}/>
+                                </div>
+                            )
+                        })
+                    }
+                </div>
+            )}
         </div>
     );
 }
