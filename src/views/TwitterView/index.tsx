@@ -14,6 +14,7 @@ export const TwitterView: FC = () => {
     const [tweets, setTweets] = useState<ResponseData>({})
     const [loading, setLoading] = useState(true); // Loading state
     const [selectedTab, setSelectedTab] = useState('bitcoin-tweets')
+    const [selectedTabIdx, setSelectedTabIdx] = useState(0)
 
 
     useEffect(() => {
@@ -54,8 +55,11 @@ export const TwitterView: FC = () => {
                         return (
                             <li key={i} className="me-2">
                                 <button
-                                    className="inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100"
-                                    onClick={() => setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)}
+                                    className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block px-4 py-3 rounded-lg hover:text-gray-900 hover:bg-gray-100`}
+                                    onClick={() => {
+                                        setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)
+                                        setSelectedTabIdx(i)
+                                    }}
                                 >{t}</button>
                             </li>
                         )
@@ -65,20 +69,18 @@ export const TwitterView: FC = () => {
                     // Display a loading spinner while data is being fetched
                     <MyLoader/>
                 ) : (
-                    <div className="flex overflow-y-scroll">
-                        <div className="block">
-                            {
-                                tweets[selectedTab] &&
-                                tweets[selectedTab].map((t, i) => {
-                                    return (
-                                        <div key={i}
-                                            className="flex text-center items-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-2">
-                                            <TweetCard text={t["text"]} url={t["url"]}/>
-                                        </div>
-                                    )
-                                })
-                            }
-                        </div>
+                    <div className="flex flex-wrap gap-4 mb-0 justify-center">
+                        {
+                            tweets[selectedTab] &&
+                            tweets[selectedTab].map((t, i) => {
+                                return (
+                                    <div key={i}
+                                         className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-1 p-1">
+                                        <TweetCard text={t["text"]} url={t["url"]}/>
+                                    </div>
+                                )
+                            })
+                        }
                     </div>
                 )}
             </div>
