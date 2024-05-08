@@ -35,22 +35,22 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
             className="title bg-transparent bgstyle text-light min-vh-100 d-flex align-content-center align-items-center flex-wrap m-0"
         >
             <div id="stars"></div>
-            <div className={`${styles["img-rectangular-top"]} object-cover opacity-80`}>
-                <Image className="object-cover opacity-80"
+            <div className={`${styles["img-rectangular-top"]} object-cover`}>
+                <Image className="object-cover"
                        src={TextLogo}
                        width={300}
                        height={150}
                        alt="Logo"/>
             </div>
             <div className="float-right position-relative">
-                <Image className={`${styles["img-rectangular-left"]} object-cover opacity-60`}
+                <Image className={`${styles["img-rectangular-left"]} object-cover`}
                        src={Mask2}
                        width={300}
                        height={300}
                        alt="Picture of a Mask2"/>
             </div>
             <div className="float-left position-relative">
-                <Image className={`${styles["img-rectangular-right"]} object-cover opacity-60`}
+                <Image className={`${styles["img-rectangular-right"]} object-cover`}
                        src={Pistol}
                        width={300}
                        height={300}
@@ -70,7 +70,7 @@ const MainBody = ({gradient, message, message2, rights, icons}: any) => {
                     className={`${styles['stay-tuned']} btn border-black text-black hover:bg-yellow-900`}>
                     <Link href="/dashboard">Take a Shot!</Link>
                 </button>
-                <div className="p-4 mt-10">
+                <div className="p-4 mt-10 opacity-75">
                     {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
                         <Link href={icon.url!} key={`social-icon-${index}`} target="_blank">
                             <i className={`fab ${icon.image}  fa-2x socialicons`}/>

@@ -1,11 +1,7 @@
-.btn-outline-light {
-    font-size: medium;
-}
-
 .typist-font {
     font-family: "jersey", serif;
     color: black;
-    opacity: 60%;
+    opacity: 75%;
     min-height: 40px;
     margin-top: 80px;
 }
@@ -13,14 +9,13 @@
 .rights {
     font-family: "jersey", serif;
     color: black;
-    opacity: 60%;
+    opacity: 75%;
 }
 
 .stay-tuned {
     font-family: "jersey", serif;
-    color: black;
-    border-width: 2px;
-    opacity: 60%;
+    border-width: 3px;
+    opacity: 75%;
     font-size: large;
     width: 120px;
     text-align: center;
@@ -34,6 +29,7 @@
 .img-rectangular-left {
     transform-origin: left top;
     animation: scale 10000ms ease-in-out infinite alternate;
+    opacity: 75%;
 }
 
 .img-rectangular-top {
@@ -44,11 +40,13 @@
     align-items: center;
     text-align: center;
     display: flex;
+    opacity: 75%;
 }
 
 .img-rectangular-right {
     transform-origin: right top;
     animation: scale 10000ms ease-in-out infinite alternate;
+    opacity: 75%;
 }
 
 @media (max-width: 768px) {
@@ -63,6 +61,7 @@
     .stay-tuned {
         cursor: not-allowed;
         pointer-events: none;
+        opacity: 75%;
     }
 }
 
