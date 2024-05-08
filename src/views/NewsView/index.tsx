@@ -5,8 +5,8 @@ import NewsBody from "../../components/NewsBody";
 import MyLoader from "../../components/MyLoader";
 
 
-const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'ALTCOINS', 'NFT']
-const collections = ['bitcoin-news', 'ethereum-news', 'solana-news', 'altcoins-news', 'nft-news']
+const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'NFT']
+const collections = ['bitcoin-news', 'ethereum-news', 'solana-news', 'nft-news']
 
 interface ResponseData {
     [collectionName: string]: News[]; // Define the type of data returned for each collection
