@@ -2,16 +2,13 @@ import React, {FC, useEffect, useState} from "react";
 import styles from "./index.module.css";
 import TweetCard from "../../components/TweetCard";
 import MyLoader from "../../components/MyLoader";
+import {twitterResponse} from "../../types";
 
 const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'SOLANA NFT', 'ETHEREUM NFT', 'SOLANA MEMECOIN', 'RUNES']
 const collections = ['bitcoin-tweets', 'ethereum-tweets', 'solana-tweets', 'solana-nft-tweets', 'ethereum-nft-tweets', 'bitcoin-nft-tweets', 'solana-memecoin-tweets', 'runes-tweets']
 
-interface ResponseData {
-    [collectionName: string]: any[]; // Define the type of data returned for each collection
-}
-
 export const TwitterView: FC = () => {
-    const [tweets, setTweets] = useState<ResponseData>({})
+    const [tweets, setTweets] = useState<twitterResponse>({})
     const [loading, setLoading] = useState(true); // Loading state
     const [selectedTab, setSelectedTab] = useState('bitcoin-tweets')
     const [selectedTabIdx, setSelectedTabIdx] = useState(0)
@@ -30,7 +27,7 @@ export const TwitterView: FC = () => {
                     body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
                 };
                 const response = await fetch('/api/news', requestOptions);
-                const result: ResponseData = await response.json();
+                const result: twitterResponse = await response.json();
                 if (response.ok) {
                     setTweets(result);
                 } else {
