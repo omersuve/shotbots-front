@@ -44,7 +44,7 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                         <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/news" className="rounded py-2 px-3 hover:bg-gray-100">
+                            <Link href="/news" className="rounded py-2 px-3 hover:bg-gray-100 pointer-events-none">
                                 Profile
                             </Link>
                         </li>

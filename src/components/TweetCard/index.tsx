@@ -9,13 +9,11 @@ interface TweetCardProps {
 
 function TweetCard({text, url}: TweetCardProps) {
     return (
-        <div className={`${styles["box"]} shadow`}>
-            <a href={url} target="_blank" rel="noreferrer noopener">
-                <p className="relative text-black">
-                    {text}
-                </p>
-            </a>
-        </div>
+        <a className={`${styles["box"]} shadow`} href={url} target="_blank" rel="noreferrer noopener">
+            <p className="relative text-black">
+                {text}
+            </p>
+        </a>
     )
 }
 

@@ -1,3 +1,15 @@
 .tabs {
-    font-size: small;
+    font-size: 12px;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+.tab-view {
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 2px;
+}
+
+.tweet-container {
+    margin-top: 78px;
 }

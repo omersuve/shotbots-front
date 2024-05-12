@@ -33,6 +33,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const data = await db
                 .collection(collectionName)
                 .find({})
+                .limit(5)
                 .toArray();
 
             // Store the data in the map using the collection name as the key
