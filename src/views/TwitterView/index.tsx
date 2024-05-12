@@ -61,17 +61,18 @@ export const TwitterView: FC = () => {
                     )
                 })}
             </ul>
+            <p className="text-center fs-6">RECENT HOT TWEETS</p>
             {loading ? (
                 // Display a loading spinner while data is being fetched
                 <MyLoader/>
             ) : (
-                <div className="flex flex-wrap gap-4 mt-3 justify-center">
+                <div className="flex flex-wrap gap-4 mt-4 justify-center">
                     {
                         tweets[selectedTab] &&
                         tweets[selectedTab].map((t, i) => {
                             return (
                                 <div key={i}
-                                     className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 m-1 p-1">
+                                     className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100">
                                     <TweetCard text={t["text"]} url={t["url"]}/>
                                 </div>
                             )
