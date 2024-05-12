@@ -24,7 +24,6 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
 
     useEffect(() => {
         isAlreadyVoted().then((r) => {
-            console.log(r);
             setVoted(r);
         });
     }, [publicKey]);
@@ -44,7 +43,6 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
                 body: JSON.stringify(body),
             };
             const response = await fetch("/api/isAlreadyVoted", request);
-            console.log(response);
             if (response.ok) {
                 const res = await response.json();
                 return res.voted;
@@ -78,9 +76,7 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
                 body: JSON.stringify(body),
             };
             const response = await fetch("/api/sendVote", requestOptions);
-            console.log(response);
             const result = await response.json();
-            console.log(result);
             if (response.ok) {
                 console.log("successfully sent vote");
                 setVoted(true);
