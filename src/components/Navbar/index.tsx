@@ -53,8 +53,8 @@ const Navbar: React.FC = () => {
                         <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
                                            style={{
                                                fontSize: "14px",
-                                               backgroundColor: "rgba(100, 65, 52, 0.19)",
-                                               color: "#333333"
+                                               backgroundColor: "#e8e8e8",
+                                               color: "black"
                                            }}/>
                     </div>
                 </div>

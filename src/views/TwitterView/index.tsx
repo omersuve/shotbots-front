@@ -71,7 +71,7 @@ export const TwitterView: FC = () => {
                         tweets[selectedTab].map((t, i) => {
                             return (
                                 <div key={i}
-                                     className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 rounded-box m-1 p-1">
+                                     className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100 m-1 p-1">
                                     <TweetCard text={t["text"]} url={t["url"]}/>
                                 </div>
                             )

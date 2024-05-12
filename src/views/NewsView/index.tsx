@@ -88,7 +88,7 @@ export const NewsView: FC = () => {
                                 return (
                                     <button
                                         key={i}
-                                        className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} rounded-box m-6`}
+                                        className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} m-6`}
                                         onClick={() => setSelectedNew(i)}>
                                         <NewsCard id={n["_id"]} title={n["title"]} isOpen={i === selectedNew}/>
                                     </button>
