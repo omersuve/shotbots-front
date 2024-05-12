@@ -15,6 +15,9 @@ import {WalletModalProvider} from "@solana/wallet-adapter-react-ui";
 
 import('@solana/wallet-adapter-react-ui/styles.css' as any);
 
+import {ToastContainer, toast} from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 function MyApp({Component, pageProps}: AppProps) {
     const router = useRouter()
     const network = WalletAdapterNetwork.Devnet;
@@ -33,6 +36,7 @@ function MyApp({Component, pageProps}: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
+                    <ToastContainer />
                     {router.pathname != "/" && <Navbar/>}
                     <Component {...pageProps} />
                 </WalletModalProvider>

@@ -3,6 +3,7 @@ import styles from "./index.module.css";
 import NewsCard from "../../components/NewsCard";
 import NewsBody from "../../components/NewsBody";
 import MyLoader from "../../components/MyLoader";
+import {ObjectId} from "mongodb"
 
 
 const tags = ['BITCOIN', 'ETHEREUM', 'SOLANA', 'NFT']
@@ -13,6 +14,7 @@ interface ResponseData {
 }
 
 interface News {
+    _id: ObjectId
     title: string,
     body: string,
     timestamp: string,
@@ -88,7 +90,7 @@ export const NewsView: FC = () => {
                                         key={i}
                                         className={`flex text-center items-center ${i !== selectedNew ? "active:bg-yellow-200" : ""} ${i !== selectedNew ? "hover:bg-yellow-100" : ""} ${i === selectedNew ? "bg-yellow-300" : ""} rounded-box m-6`}
                                         onClick={() => setSelectedNew(i)}>
-                                        <NewsCard title={n["title"]} isOpen={i === selectedNew}/>
+                                        <NewsCard id={n["_id"]} title={n["title"]} isOpen={i === selectedNew}/>
                                     </button>
                                 )
                             })
