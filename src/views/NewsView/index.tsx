@@ -57,13 +57,13 @@ export const NewsView: FC = () => {
     }, []);
 
     return (
-        <div className="mt-20">
+        <div className={styles["news-container"]}>
             <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
                 {tags.map((t, i) => {
                     return (
                         <li key={i}>
                             <button
-                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block p-2 rounded-lg`}
+                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
                                 onClick={() => {
                                     setSelectedNew(0)
                                     setSelectedTab(`${t.toLowerCase()}-news`)
@@ -78,7 +78,7 @@ export const NewsView: FC = () => {
                 // Display a loading spinner while data is being fetched
                 <MyLoader/>
             ) : (
-                <div className="flex overflow-y-scroll">
+                <div className="flex">
                     <div className="block">
                         {
                             news[selectedTab] &&

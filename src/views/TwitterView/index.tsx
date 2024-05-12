@@ -48,13 +48,13 @@ export const TwitterView: FC = () => {
     }, []);
 
     return (
-        <div className="mt-20">
+        <div className={styles["tweet-container"]}>
             <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
                 {tags.map((t, i) => {
                     return (
                         <li key={i}>
                             <button
-                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} inline-block p-2 rounded-lg hover:text-gray-900 hover:bg-gray-100`}
+                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-100" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
                                 onClick={() => {
                                     setSelectedTab(`${t.toLowerCase().replace(' ', '-')}-tweets`)
                                     setSelectedTabIdx(i)
