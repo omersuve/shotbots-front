@@ -1,6 +1,5 @@
 import React from "react";
 import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
-import logo from "../../../public/logo.jpeg";
 import TextLogo from "../../../public/text-logo.png";
 import Image from "next/image";
 import Link from 'next/link'
@@ -26,9 +25,9 @@ const Navbar: React.FC = () => {
                         </div>
                     </Link>
                 </button>
-                <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1"
+                <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 relative"
                      id="navbar-sticky">
-                    <ul className="flex flex-col md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 items-center">
+                    <ul className="flex flex-col md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 absolute items-center right-72">
                         <li className="block text-blue-500 bg-blue-700 md:bg-transparent md:text-blue-700 md:p-0">
                             <Link href="/dashboard" className="rounded py-2 px-3 hover:bg-gray-100">
                                 Home
@@ -52,7 +51,11 @@ const Navbar: React.FC = () => {
                     </ul>
                     <div className="ml-24">
                         <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-                                           style={{backgroundColor: "rgba(100, 65, 52, 0.19)", color: "#333333"}}/>
+                                           style={{
+                                               fontSize: "14px",
+                                               backgroundColor: "rgba(100, 65, 52, 0.19)",
+                                               color: "#333333"
+                                           }}/>
                     </div>
                 </div>
             </div>
