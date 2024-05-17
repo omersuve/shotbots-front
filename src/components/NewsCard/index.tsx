@@ -90,7 +90,7 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
 
     return (
         <div className={`${styles["box"]} shadow`}>
-            <h3 className="relative text-black">
+            <h3 className="relative text-black text-left">
                 {parse(title)}
             </h3>
             <div className={styles["toggle-btn"]}>
