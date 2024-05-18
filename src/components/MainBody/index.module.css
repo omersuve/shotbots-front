@@ -3,7 +3,12 @@
     color: black;
     opacity: 75%;
     min-height: 40px;
-    margin-top: 80px;
+    justify-content: center;
+    text-align: center;
+    width: 100%;
+    display: flex;
+    font-style: italic;
+    margin-top: 100px;
 }
 
 .rights {
@@ -16,12 +21,11 @@
     font-family: "jersey", serif;
     border-width: 3px;
     opacity: 75%;
-    font-size: large;
+    font-size: medium;
     width: 120px;
     text-align: center;
     justify-content: center;
     align-items: center;
-    padding: 1px;
     margin-top: 80px;
 }
 
@@ -29,7 +33,7 @@
 .img-rectangular-left {
     transform-origin: left top;
     animation: scale 10000ms ease-in-out infinite alternate;
-    opacity: 75%;
+    opacity: 60%;
 }
 
 .img-rectangular-top {
@@ -46,10 +50,10 @@
 .img-rectangular-right {
     transform-origin: right top;
     animation: scale 10000ms ease-in-out infinite alternate;
-    opacity: 75%;
+    opacity: 60%;
 }
 
-@media (max-width: 768px) {
+@media (max-width: 960px) {
     .img-rectangular-right {
         display: none;
     }

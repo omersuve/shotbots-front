@@ -4,7 +4,7 @@ import Head from "next/head";
 
 // Main Body SECTION
 const mainBody = {
-    gradientColors: "#CA7C4A, #CB8638, #B26C00, #C67E0F",
+    gradientColors: "#974b04, #af5c2c, #c2794e, #ad8f64",
     message: " From Artificial ",
     message2: " to Natural ",
     rights: "© Shot Bots. All Rights Reserved.",
