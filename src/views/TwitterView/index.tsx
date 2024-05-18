@@ -26,7 +26,7 @@ export const TwitterView: FC = () => {
                     },
                     body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
                 };
-                const response = await fetch('/api/news', requestOptions);
+                const response = await fetch('/api/tweets', requestOptions);
                 const result: twitterResponse = await response.json();
                 if (response.ok) {
                     setTweets(result);
