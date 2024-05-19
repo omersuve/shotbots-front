@@ -81,7 +81,7 @@ export const NewsView: FC = () => {
                 // Display a loading spinner while data is being fetched
                 <MyLoader />
             ) : (
-                <div className="flex">
+                <div className="flex mx-12">
                     <div className="block">
                         {
                             news[selectedTab] &&
