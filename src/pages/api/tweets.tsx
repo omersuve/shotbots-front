@@ -34,7 +34,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 .collection(collectionName)
                 .find({})
                 .sort({ timestamp: -1 })
-                .limit(5)
+                .limit(10)
                 .toArray();
 
             // Store the data in the map using the collection name as the key
