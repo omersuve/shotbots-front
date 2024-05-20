@@ -1,14 +1,37 @@
 import React from "react";
 import { Line } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler } from "chart.js";
+import {
+    Chart as ChartJS,
+    CategoryScale,
+    LinearScale,
+    PointElement,
+    LineElement,
+    Title,
+    Tooltip,
+    Legend,
+    Filler,
+} from "chart.js";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
-const LineGraph = () => {
-    const btc = [3, 4, 5, 4, 7, 4, 7];
-    const ethereum = [1, 6, 3, 2, 3, 3, 6];
-    const solana = [4, 2, 4, 3, 5, 2, 5];
-    const nfts = [5, 1, 7, 6, 1, 1, 2];
+interface ScoreHistory {
+    score: number;
+    date: string;
+}
+
+interface ResponseHistoryData {
+    [collectionName: string]: ScoreHistory[];
+}
+
+interface LineGraphProps {
+    scoresHistory: ResponseHistoryData;
+}
+
+const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
+    const btc = scoresHistory["bitcoin-scores"];
+    const ethereum = scoresHistory["ethereum-scores"];
+    const solana = scoresHistory["solana-scores"];
+    const nfts = scoresHistory["nft-scores"];
 
     const canvasData = {
         datasets: [
@@ -17,9 +40,9 @@ const LineGraph = () => {
                 borderColor: "orange",
                 pointRadius: 2,
                 fill: false,
-                backgroundColor: 'orange',
-                lineTension: 0.2,
-                data: btc,
+                backgroundColor: "orange",
+                lineTension: 0.3,
+                data: btc.map((r) => r.score),
                 borderWidth: 2,
             },
             {
@@ -27,9 +50,9 @@ const LineGraph = () => {
                 borderColor: "blue",
                 pointRadius: 2,
                 fill: false,
-                backgroundColor: 'blue',
-                lineTension: 0.2,
-                data: ethereum,
+                backgroundColor: "blue",
+                lineTension: 0.3,
+                data: ethereum.map((r) => r.score),
                 borderWidth: 2,
             },
             {
@@ -37,9 +60,9 @@ const LineGraph = () => {
                 borderColor: "purple",
                 pointRadius: 2,
                 fill: false,
-                backgroundColor: 'purple',
-                lineTension: 0.2,
-                data: solana,
+                backgroundColor: "purple",
+                lineTension: 0.3,
+                data: solana.map((r) => r.score),
                 borderWidth: 2,
             },
             {
@@ -47,11 +70,11 @@ const LineGraph = () => {
                 borderColor: "black",
                 pointRadius: 2,
                 fill: false,
-                backgroundColor: 'black',
-                lineTension: 0.2,
-                data: nfts,
+                backgroundColor: "black",
+                lineTension: 0.3,
+                data: nfts.map((r) => r.score),
                 borderWidth: 2,
-            }
+            },
         ],
     };
 
@@ -61,7 +84,7 @@ const LineGraph = () => {
                 grid: {
                     display: true,
                 },
-                labels: ["21/4/24", "22/4/24", "23/4/24", "24/4/24", "25/4/24", "26/4/24", "27/4/24"],
+                labels: btc.map((r) => r.date),
                 ticks: {
                     color: "gray",
                     font: {
@@ -78,7 +101,7 @@ const LineGraph = () => {
                     display: false,
                 },
                 min: 0,
-                max: 10,
+                max: 11,
                 ticks: {
                     stepSize: 1,
                     color: "black",
@@ -96,12 +119,12 @@ const LineGraph = () => {
                 display: true, // Set to true to show the legend
                 labels: {
                     boxWidth: 12, // Adjust the size of the legend box
-                    color: 'black', // Set the text color
+                    color: "black", // Set the text color
                     font: {
-                        family: 'Nunito',
+                        family: "Nunito",
                         size: 12, // Adjust the font size of the legend labels
-                    }
-                }
+                    },
+                },
             },
             title: {
                 display: false,

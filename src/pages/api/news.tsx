@@ -2,9 +2,6 @@ import clientPromise from "../../../lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { load } from "cheerio";
 
-interface RequestBody {
-    [collectionName: string]: string[];
-}
 
 interface ResponseData {
     [collectionName: string]: any[]; // Define the type of data returned for each collection
@@ -18,22 +15,17 @@ const cleanHtmlContent = (html: string): string | null => {
     const removeSelectors = [
         ".unmute-button-container",
         ".SvgIcon__StyledSvgIcon-sc-2tb2y8-0",
-        ".video-durationstyles__VideoDurationBox-sc-ss22i6-0",
-        "svg",
+        "figcaption",
         "img[alt=\"VolumeMute\"]",
-        "img[loading=\"lazy\"]",
-        ".videos-playliststyles__VideoCard-sc-1ox8ip1-5",
         ".jwplaylist-custom-embedstyles__Wrapper-sc-czmf2o-2",
         ".social-sharestyles__StyledWrapper-sc-x6f9xi-1",
         ".social-urlstyles__StyledWrapper-sc-qwjbib-0",
         ".editor-custom-embedstyles__Wrapper-sc-9uzxe8-0",
         ".videos-playliststyles__PlayIcon-sc-1ox8ip1-2",
         ".jwplayer-video",
-        "li",
         ".headingstyles__StyledWrapper-sc-l955mv-0:has(h2.dYiraS:contains(\"Latest Prices\"))", // Latest Prices heading
         ".headingstyles__StyledWrapper-sc-l955mv-0:has(h2.dYiraS:contains(\"Top Stories\"))", // Top Stories heading
         ".headingstyles__StyledWrapper-sc-l955mv-0:has(h2.dYiraS:contains(\"Chart of the Day\"))", // Chart of the Day heading
-        ".imagestyles__StyledWrapper-sc-18f23w7-0", // Image section
         "#primis_player", // Primis player
         ".liststyles__StyledWrapper-sc-13iatdm-0", // Empty list sections
         ".common-textstyles__StyledWrapper-sc-18pd49k-0.eSbCkN:has(p i)", // Generic italic text within a paragraph, usually for author names
@@ -47,13 +39,25 @@ const cleanHtmlContent = (html: string): string | null => {
     });
 
     // Add <br> after every <p> tag and remove <p> tags that already have <br> tags
-    $('p').each((index, element) => {
+    $("p").each((index, element) => {
         const $element = $(element);
-        if ($element.find('br').length > 0) {
+        if ($element.find("br").length > 0) {
             $element.remove();
         } else {
-            $element.after('<br>');
+            $element.after("<br>");
         }
+    });
+
+    // Ensure images are full width
+    $("img").each((index, element) => {
+        const $element = $(element);
+        $element.css({
+            "width": "60%",
+            "display": "block",
+            "margin-left": "auto",
+            "margin-right": "auto",
+        });
+        $element.after("<br>");
     });
 
     return $("body").html();
@@ -84,7 +88,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         // Get the request body
-        const requestBody: RequestBody = req.body;
+        const requestBody: string[] = req.body;
         // Ensure the request body is an array
         if (!Array.isArray(requestBody)) {
             return res.status(400).json({ error: "Invalid request body. Expected an array." });

@@ -8,15 +8,17 @@ import { isAlreadyVotedRequest, sendVoteBody } from "../../types";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { ObjectId } from "mongodb";
 import { toast } from "react-toastify";
+import { formatDate } from "../../utils";
 
 
 interface NewsCardProps {
     id: ObjectId;
     title: string;
     isOpen: boolean;
+    date: string;
 }
 
-function NewsCard({ id, title, isOpen }: NewsCardProps) {
+function NewsCard({ id, title, isOpen, date }: NewsCardProps) {
     const [vote, setVote] = useState(0);
     const [voted, setVoted] = useState<boolean>();
     const { publicKey } = useWallet();
@@ -27,6 +29,7 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
             setVoted(r);
         });
     }, [publicKey]);
+
 
     async function isAlreadyVoted(): Promise<boolean> {
         try {
@@ -93,6 +96,9 @@ function NewsCard({ id, title, isOpen }: NewsCardProps) {
             <h3 className="relative text-black text-left">
                 {parse(title)}
             </h3>
+            <div className="float-right">
+                {formatDate(date)}
+            </div>
             <div className={styles["toggle-btn"]}>
                 {isOpen &&
                   <FontAwesomeIcon

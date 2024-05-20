@@ -66,14 +66,14 @@ export const TwitterView: FC = () => {
                 // Display a loading spinner while data is being fetched
                 <MyLoader />
             ) : (
-                <div className="flex flex-wrap gap-4 mt-4 justify-center">
+                <div className="flex flex-wrap gap-4 mt-4 mx-20 justify-center">
                     {
                         tweets[selectedTab] &&
                         tweets[selectedTab].map((t, i) => {
                             return (
                                 <div key={i}
                                      className="flex text-center hover:bg-yellow-50 active:bg-yellow-200 focus:bg-yellow-100">
-                                    <TweetCard text={t["text"]} url={t["url"]} />
+                                    <TweetCard text={t["text"]} date={t["timestamp"]} url={t["url"]} />
                                 </div>
                             );
                         })
