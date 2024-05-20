@@ -58,7 +58,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
             // Store the array of averages in the result map
             resultMap[collectionName] = averages.reverse();
-            console.log(collectionName, averages);
         }
         res.json(resultMap);
     } catch (e) {
