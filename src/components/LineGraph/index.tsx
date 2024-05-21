@@ -15,8 +15,8 @@ import {
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
 interface ScoreHistory {
-    score: number;
-    date: string;
+    day_score: number;
+    timestamp: string;
 }
 
 interface ResponseHistoryData {
@@ -28,10 +28,17 @@ interface LineGraphProps {
 }
 
 const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
-    const btc = scoresHistory["bitcoin-scores"];
-    const ethereum = scoresHistory["ethereum-scores"];
-    const solana = scoresHistory["solana-scores"];
-    const nfts = scoresHistory["nft-scores"];
+    const btc = scoresHistory["bitcoin-day-scores"];
+    console.log(btc);
+    const ethereum = scoresHistory["ethereum-day-scores"];
+    const solana = scoresHistory["solana-day-scores"];
+    const nfts = scoresHistory["nft-day-scores"];
+
+    const formattedDate = (timestamp: string) => {
+        const date = new Date(timestamp);
+        return `${String(date.getDate()).padStart(2, "0")}/${String(date.getMonth() + 1).padStart(2, "0")}/${String(date.getFullYear()).substring(2)}`;
+    };
+
 
     const canvasData = {
         datasets: [
@@ -42,7 +49,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "orange",
                 lineTension: 0.3,
-                data: btc.map((r) => r.score),
+                data: btc.map(r => r.day_score * 10),
                 borderWidth: 2,
             },
             {
@@ -52,7 +59,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "blue",
                 lineTension: 0.3,
-                data: ethereum.map((r) => r.score),
+                data: ethereum.map(r => r.day_score * 10),
                 borderWidth: 2,
             },
             {
@@ -62,7 +69,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "purple",
                 lineTension: 0.3,
-                data: solana.map((r) => r.score),
+                data: solana.map(r => r.day_score * 10),
                 borderWidth: 2,
             },
             {
@@ -72,7 +79,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "black",
                 lineTension: 0.3,
-                data: nfts.map((r) => r.score),
+                data: nfts.map(r => r.day_score * 10),
                 borderWidth: 2,
             },
         ],
@@ -84,7 +91,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 grid: {
                     display: true,
                 },
-                labels: btc.map((r) => r.date),
+                labels: btc.map((r) => formattedDate(r.timestamp)),
                 ticks: {
                     color: "gray",
                     font: {

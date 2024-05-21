@@ -4,15 +4,15 @@ import LineGraph from "../../components/LineGraph";
 import ScoreCard from "../../components/ScoreCard";
 import MyLoader from "../../components/MyLoader";
 
-const collections = ["bitcoin-scores", "ethereum-scores", "solana-scores", "nft-scores"];
+const collectionsHistory = ["bitcoin-day-scores", "ethereum-day-scores", "solana-day-scores", "nft-day-scores"];
 
 interface ResponseData {
     [collectionName: string]: number; // Define the type of data returned for each collection
 }
 
 interface ScoreHistory {
-    score: number;
-    date: string; // Change to string for compatibility with labels
+    day_score: number;
+    timestamp: string; // Change to string for compatibility with labels
 }
 
 interface ResponseHistoryData {
@@ -20,12 +20,11 @@ interface ResponseHistoryData {
 }
 
 export const HomeView: FC = () => {
-    const [scores, setScores] = useState<ResponseData>({});
     const [scoresHistory, setScoresHistory] = useState<ResponseHistoryData>({});
     const [loading, setLoading] = useState(true); // Loading state
 
     useEffect(() => {
-        async function fetchData() {
+        async function fetchHistoryData() {
             setLoading(true);
             try {
                 // Prepare request options
@@ -34,19 +33,11 @@ export const HomeView: FC = () => {
                     headers: {
                         "Content-Type": "application/json", // Specify JSON content type
                     },
-                    body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
+                    body: JSON.stringify(collectionsHistory), // Convert collections array to JSON string and pass in body
                 };
-                const response = await fetch("/api/coindeskScores", requestOptions);
-                const responseHistory = await fetch("/api/coindeskScoresHistory", requestOptions);
-                const result = await response.json();
+                const responseHistory = await fetch("/api/getDayScores", requestOptions);
                 const resultHistory = await responseHistory.json();
-                if (response.ok) {
-                    setScores(result);
-                } else {
-                    console.log("failed to fetch data");
-                }
                 if (responseHistory.ok) {
-                    console.log("resultHistory", resultHistory);
                     setScoresHistory(resultHistory);
                 } else {
                     console.log("failed to fetch data");
@@ -56,10 +47,9 @@ export const HomeView: FC = () => {
             } finally {
                 setLoading(false); // Set loading state to false after data is fetched
             }
-
         }
 
-        fetchData().then(r => {
+        fetchHistoryData().then(r => {
         });
     }, []);
 
@@ -71,13 +61,13 @@ export const HomeView: FC = () => {
                 // Display a loading spinner while data is being fetched
                 <MyLoader />
             ) : (
-                scores && scores["bitcoin-scores"] && scores["ethereum-scores"] && scores["solana-scores"] && scores["nft-scores"] &&
+                scoresHistory &&
                 <>
                   <div className={`${styles["box-container"]} shadow`}>
-                    <ScoreCard score={scores["bitcoin-scores"]} tag={"Bitcoin"} />
-                    <ScoreCard score={scores["ethereum-scores"]} tag={"Ethereum"} />
-                    <ScoreCard score={scores["solana-scores"]} tag={"Solana"} />
-                    <ScoreCard score={scores["nft-scores"]} tag={"NFTs"} />
+                    <ScoreCard score={scoresHistory["bitcoin-day-scores"][6].day_score * 10} tag={"Bitcoin"} />
+                    <ScoreCard score={scoresHistory["ethereum-day-scores"][6].day_score * 10} tag={"Ethereum"} />
+                    <ScoreCard score={scoresHistory["solana-day-scores"][6].day_score * 10} tag={"Solana"} />
+                    <ScoreCard score={scoresHistory["nft-day-scores"][6].day_score * 10} tag={"NFTs"} />
                   </div>
                   <div className={`${styles["graph-container"]} p-4 shadow`}
                        style={{ width: "fit-content" }}>
