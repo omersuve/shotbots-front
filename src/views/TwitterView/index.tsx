@@ -61,12 +61,12 @@ export const TwitterView: FC = () => {
                     );
                 })}
             </ul>
-            <p className="text-center fs-6 fw-bold">RECENT HOT TWEETS</p>
+            <p className="text-center fs-6 fw-bold mt-4">RECENT HOT TWEETS</p>
             {loading ? (
                 // Display a loading spinner while data is being fetched
                 <MyLoader />
             ) : (
-                <div className="flex flex-wrap gap-4 mt-4 mx-20 justify-center">
+                <div className="flex flex-wrap gap-4 mt-8 mx-20 justify-center">
                     {
                         tweets[selectedTab] &&
                         tweets[selectedTab].map((t, i) => {

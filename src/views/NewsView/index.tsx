@@ -76,12 +76,12 @@ export const NewsView: FC = () => {
                     );
                 })}
             </ul>
-            <p className="text-center fs-6 fw-bold">RECENT HOT NEWS</p>
+            <p className="text-center fs-6 fw-bold mt-4">RECENT HOT NEWS</p>
             {loading ? (
                 // Display a loading spinner while data is being fetched
                 <MyLoader />
             ) : (
-                <div className="flex mx-12">
+                <div className="flex mx-12 mt-4">
                     <div className="block">
                         {
                             news[selectedTab] &&

@@ -6,10 +6,6 @@ import MyLoader from "../../components/MyLoader";
 
 const collectionsHistory = ["bitcoin-day-scores", "ethereum-day-scores", "solana-day-scores", "nft-day-scores"];
 
-interface ResponseData {
-    [collectionName: string]: number; // Define the type of data returned for each collection
-}
-
 interface ScoreHistory {
     day_score: number;
     timestamp: string; // Change to string for compatibility with labels
@@ -55,7 +51,7 @@ export const HomeView: FC = () => {
 
     return (
 
-        <div className={`${styles["box-with-graph"]} flex flex-col items-center mt-24`}>
+        <div className={`${styles["box-with-graph"]} flex flex-col items-center mt-28`}>
             <p className="text-center fs-6 fw-bold">TODAY&apos;S MARKET SENTIMENT SCORES</p>
             {loading ? (
                 // Display a loading spinner while data is being fetched

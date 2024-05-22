@@ -63,13 +63,13 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
                         </p>
                     </div>
                 </Typist>
-                <button
+                <div
                     className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}>
                     <Link href="/dashboard">Take a Shot!</Link>
-                </button>
+                </div>
                 <div className="p-4 mt-2 opacity-75 justify-items-center text-center items-center">
                     {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
-                        <Link href={icon.url!} key={`social-icon-${index}`} target="_blank">
+                        <Link href={icon.url!} passHref={true} key={`social-icon-${index}`} target="_blank">
                             <i className={`fab ${icon.image}  fa-2x socialicons`} />
                         </Link>
                     ))}

@@ -40,7 +40,7 @@ const Navbar: React.FC = () => {
 
     return (
         <nav
-            className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200">
+            className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-80">
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                 <div className="flex items-center space-x-12">
                     <button>
@@ -59,8 +59,8 @@ const Navbar: React.FC = () => {
                             </div>
                         </Link>
                     </button>
-                    <div className="inline-flex">
-                        <div className="flex flex-col items-center px-2">
+                    <div className="hidden lg:inline-flex">
+                        <div className="flex flex-col items-center px-2 w-28">
                             <h6 className="text-s font-bold">BTC</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"bitcoin" in prices ? prices["bitcoin"].price : "Loading..."}</p>
@@ -68,7 +68,7 @@ const Navbar: React.FC = () => {
                                     {"bitcoin" in prices ? prices["bitcoin"].change : ""}</p>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center px-2">
+                        <div className="flex flex-col items-center px-2 w-28">
                             <h6 className="text-s font-bold">ETH</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"ethereum" in prices ? prices["ethereum"].price : "Loading..."}</p>
@@ -77,7 +77,7 @@ const Navbar: React.FC = () => {
                                 </p>
                             </div>
                         </div>
-                        <div className="flex flex-col items-center px-2">
+                        <div className="flex flex-col items-center px-2 w-28">
                             <h6 className="text-s font-bold">SOL</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"solana" in prices ? prices["solana"].price : "Loading..."}</p>
