@@ -29,7 +29,6 @@ interface LineGraphProps {
 
 const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
     const btc = scoresHistory["bitcoin-day-scores"];
-    console.log(btc);
     const ethereum = scoresHistory["ethereum-day-scores"];
     const solana = scoresHistory["solana-day-scores"];
     const nfts = scoresHistory["nft-day-scores"];
