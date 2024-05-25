@@ -7,7 +7,6 @@ const mainBody = {
     gradientColors: "#a7937a, #d4bdb1, #ceb1a0, #d3bb98",
     message: " From Artificial ",
     message2: " to Natural ",
-    rights: "© Shot Bots. All Rights Reserved.",
     icons: [
         {
             image: "fa-twitter",
@@ -26,7 +25,6 @@ const Home = () => {
                 gradient={mainBody.gradientColors}
                 message={mainBody.message}
                 message2={mainBody.message2}
-                rights={mainBody.rights}
                 icons={mainBody.icons}
             />
         </>

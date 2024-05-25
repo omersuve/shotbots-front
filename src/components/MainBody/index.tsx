@@ -4,7 +4,6 @@ import Typist from "react-typist-component";
 import styles from "./index.module.css";
 import logo from "../../../public/target.webp";
 import news from "../../../public/newspaper.webp";
-import TextLogo from "../../../public/text-logo.png";
 import TextLogoBlack from "../../../public/black.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -20,7 +19,7 @@ export const Jumbotron = (props: any) => {
     );
 };
 
-const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
+const MainBody = ({ gradient, message, message2, icons }: any) => {
     return (
         <Jumbotron
             fluid
@@ -57,7 +56,7 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
             <Container className="text-center">
                 <Typist typingDelay={60} backspaceDelay={100}>
                     <div className={`${styles["typist-font"]} text-center fs-3`}>
-                        <p className="inline">
+                        <p className="inline pointer-events-none">
                             <span>{message}</span>
                             <Typist.Delay ms={150} />
                             <span>{message2}</span>
@@ -76,9 +75,9 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
                         </Link>
                     ))}
                 </div>
-                <p className={`${styles["rights"]} absolute right-10 bottom-10 text-center fs-6`}>&copy; {new Date().getFullYear()} Shot
+                <p className={`${styles["rights"]} md:absolute md:right-10 md:bottom-10 text-center fs-6`}>&copy; {new Date().getFullYear()} Shot
                     Bots. All rights reserved.</p>
-                <p className={`${styles["rights"]} absolute left-10 bottom-10 text-center fs-6 grid`}>
+                <p className={`${styles["rights"]} md:absolute md:left-10 md:bottom-8 text-center fs-6 grid`}>
                     <span className="fs-6 ml-2 fw-bolder">REACH OUT FOR INQUIRIES:</span><span
                     className="fs-6 ml-2">theshotbots@gmail.com</span>
                 </p>
