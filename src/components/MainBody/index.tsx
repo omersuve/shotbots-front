@@ -5,6 +5,7 @@ import styles from "./index.module.css";
 import logo from "../../../public/target.webp";
 import news from "../../../public/newspaper.webp";
 import TextLogo from "../../../public/text-logo.png";
+import TextLogoBlack from "../../../public/black.png";
 import Image from "next/image";
 import Link from "next/link";
 
@@ -34,7 +35,7 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
             <div id="stars"></div>
             <div className={`${styles["img-rectangular-top"]} object-cover`}>
                 <Image className="object-cover"
-                       src={TextLogo}
+                       src={TextLogoBlack}
                        width={300}
                        height={150}
                        alt="Logo" />
@@ -63,10 +64,11 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
                         </p>
                     </div>
                 </Typist>
-                <div
-                    className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}>
-                    <Link href="/dashboard">Take a Shot!</Link>
-                </div>
+                <Link href="/dashboard" passHref>
+                    <div className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}>
+                        Take a Shot!
+                    </div>
+                </Link>
                 <div className="p-4 mt-2 opacity-75 justify-items-center text-center items-center">
                     {icons.map((icon: { url: string | undefined; image: string; }, index: any) => (
                         <Link href={icon.url!} passHref={true} key={`social-icon-${index}`} target="_blank">
@@ -74,7 +76,8 @@ const MainBody = ({ gradient, message, message2, rights, icons }: any) => {
                         </Link>
                     ))}
                 </div>
-                <p className={`${styles["rights"]} absolute right-10 bottom-10 text-center fs-6`}>{rights}</p>
+                <p className={`${styles["rights"]} absolute right-10 bottom-10 text-center fs-6`}>&copy; {new Date().getFullYear()} Shot
+                    Bots. All rights reserved.</p>
                 <p className={`${styles["rights"]} absolute left-10 bottom-10 text-center fs-6 grid`}>
                     <span className="fs-6 ml-2 fw-bolder">REACH OUT FOR INQUIRIES:</span><span
                     className="fs-6 ml-2">theshotbots@gmail.com</span>

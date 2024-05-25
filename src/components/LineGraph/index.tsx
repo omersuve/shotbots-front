@@ -90,7 +90,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 grid: {
                     display: true,
                 },
-                labels: btc.map((r) => formattedDate(r.timestamp)),
+                labels: btc.map((r) => formattedDate(r.timestamp)).reverse(),
                 ticks: {
                     color: "gray",
                     font: {
@@ -107,7 +107,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                     display: false,
                 },
                 min: 0,
-                max: 11,
+                max: 10,
                 ticks: {
                     stepSize: 1,
                     color: "black",
@@ -147,8 +147,19 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
     };
 
     return (
-        <div style={graphStyle}>
-            <Line id="home" options={options} data={canvasData} />
+        <div style={{
+            position: "relative",
+            width: "50rem",
+            border: "1px solid #C4C4C4",
+            borderRadius: "0.375rem",
+            padding: "0.5rem"
+        }}>
+            <div style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}>
+                <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 20 UTC</p>
+            </div>
+            <div style={{ position: "relative", width: "100%", height: "16rem" }}>
+                <Line id="home" options={options} data={canvasData} />
+            </div>
         </div>
     );
 };

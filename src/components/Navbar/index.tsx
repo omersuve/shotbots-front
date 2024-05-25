@@ -1,8 +1,11 @@
 import React, { useEffect, useState } from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import TextLogo from "../../../public/text-logo.png";
+import TextLogoWhite from "../../../public/white.png";
+import TextLogoBlack from "../../../public/black.png";
 import Image from "next/image";
 import Link from "next/link";
+import styles from "./index.module.css";
 
 const Navbar: React.FC = () => {
     const [prices, setPrices] = useState<{ [key: string]: { price: string; change: string } }>({});
@@ -40,28 +43,23 @@ const Navbar: React.FC = () => {
 
     return (
         <nav
-            className="bg-white fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-80">
+            className={`${styles["navbar"]} fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-90`}>
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
                 <div className="flex items-center space-x-12">
                     <button>
                         <Link href="/" passHref={true}>
                             <div className="w-18 flex text-center items-center">
-                                {/*<Image className="object-cover btn-circle"*/}
-                                {/*       src={logo}*/}
-                                {/*       width={65}*/}
-                                {/*       height={65}*/}
-                                {/*       alt="logo"/>*/}
                                 <Image className="object-cover m-1.5"
-                                       src={TextLogo}
+                                       src={TextLogoBlack}
                                        width={100}
                                        height={75}
                                        alt="textlogo" />
                             </div>
                         </Link>
                     </button>
-                    <div className="hidden lg:inline-flex">
+                    <div className="hidden lg:inline-flex pointer-events-none">
                         <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="text-s font-bold">BTC</h6>
+                            <h6 className="fs-6 font-bold">BTC</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"bitcoin" in prices ? prices["bitcoin"].price : "Loading..."}</p>
                                 <p className={`text-xs px-1 ${"bitcoin" in prices ? getChangeClass(prices["bitcoin"].change) : ""}`}>
@@ -69,7 +67,7 @@ const Navbar: React.FC = () => {
                             </div>
                         </div>
                         <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="text-s font-bold">ETH</h6>
+                            <h6 className="fs-6 font-bold">ETH</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"ethereum" in prices ? prices["ethereum"].price : "Loading..."}</p>
                                 <p className={`text-xs px-1 ${"ethereum" in prices ? getChangeClass(prices["ethereum"].change) : ""}`}>
@@ -78,7 +76,7 @@ const Navbar: React.FC = () => {
                             </div>
                         </div>
                         <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="text-s font-bold">SOL</h6>
+                            <h6 className="fs-6 font-bold">SOL</h6>
                             <div className="inline-flex">
                                 <p className="text-xs px-1">{"solana" in prices ? prices["solana"].price : "Loading..."}</p>
                                 <p className={`text-xs px-1 ${"solana" in prices ? getChangeClass(prices["solana"].change) : ""}`}>

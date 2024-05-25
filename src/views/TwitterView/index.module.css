@@ -10,6 +10,24 @@
     border-bottom-width: 2px;
 }
 
-.tweet-container {
-    margin-top: 78px;
+.box {
+    --tw-bg-opacity: 1;
+    background-color: rgba(255, 255, 255, 0.59);
+    padding: 1rem /* 32px */;
+    font-size: smaller;
+    text-align: left;
+    min-height: 5rem;
+    position: relative;
+    @media (max-width: 768px) {
+        width: 150px;
+    }
+}
+
+.toggle-btn {
+    text-align: center;
+    right: -5px;
+    font-size: larger;
+    position: absolute;
+    top: 36%;
+    opacity: 60%;
 }

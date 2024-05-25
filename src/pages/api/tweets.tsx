@@ -30,15 +30,13 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         // Loop through each collection name in the request body
         for (const collectionName of requestBody) {
             // Query the collection and fetch all documents
-            const data = await db
+            // Store the data in the map using the collection name as the key
+            resultMap[collectionName] = await db
                 .collection(collectionName)
                 .find({})
                 .sort({ timestamp: -1 })
                 .limit(10)
                 .toArray();
-
-            // Store the data in the map using the collection name as the key
-            resultMap[collectionName] = data;
         }
         // Return the map as JSON
         res.json(resultMap);

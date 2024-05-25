@@ -23,6 +23,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             resultMap[collectionName] = await db
                 .collection(collectionName)
                 .find({})
+                .sort({timestamp: -1})
                 .limit(7)
                 .toArray();
         }
