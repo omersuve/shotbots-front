@@ -8,8 +8,8 @@ import { formatDate, handleSendVote } from "../../utils";
 import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 
-const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "SOLANA NFT", "ETHEREUM NFT", "SOLANA MEMECOIN", "RUNES"];
-const collections = ["bitcoin-tweets", "ethereum-tweets", "solana-tweets", "solana-nft-tweets", "ethereum-nft-tweets", "bitcoin-nft-tweets", "solana-memecoin-tweets", "runes-tweets"];
+const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "NFT", "MEMECOIN"];
+const collections = ["bitcoin-tweets", "ethereum-tweets", "solana-tweets", "nft-tweets", "memecoin-tweets"];
 
 interface ResponseData {
     [collectionName: string]: Tweet[]; // Define the type of data returned for each collection

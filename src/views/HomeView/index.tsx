@@ -60,10 +60,18 @@ export const HomeView: FC = () => {
                 scoresHistory &&
                 <>
                   <div className={`${styles["box-container"]} shadow`}>
-                    <ScoreCard score={scoresHistory["bitcoin-day-scores"][6].day_score * 10} tag={"Bitcoin"} />
-                    <ScoreCard score={scoresHistory["ethereum-day-scores"][6].day_score * 10} tag={"Ethereum"} />
-                    <ScoreCard score={scoresHistory["solana-day-scores"][6].day_score * 10} tag={"Solana"} />
-                    <ScoreCard score={scoresHistory["nft-day-scores"][6].day_score * 10} tag={"NFTs"} />
+                    <ScoreCard
+                      score={scoresHistory["bitcoin-day-scores"][0].day_score > 1 ? 10 : scoresHistory["bitcoin-day-scores"][0].day_score < 0 ? 0 : scoresHistory["bitcoin-day-scores"][0].day_score * 10}
+                      tag={"Bitcoin"} />
+                    <ScoreCard
+                      score={scoresHistory["ethereum-day-scores"][0].day_score > 1 ? 10 : scoresHistory["ethereum-day-scores"][0].day_score < 0 ? 0 : scoresHistory["ethereum-day-scores"][0].day_score * 10}
+                      tag={"Ethereum"} />
+                    <ScoreCard
+                      score={scoresHistory["solana-day-scores"][0].day_score > 1 ? 10 : scoresHistory["solana-day-scores"][0].day_score < 0 ? 0 : scoresHistory["solana-day-scores"][0].day_score * 10}
+                      tag={"Solana"} />
+                    <ScoreCard
+                      score={scoresHistory["nft-day-scores"][0].day_score > 1 ? 10 : scoresHistory["nft-day-scores"][0].day_score < 0 ? 0 : scoresHistory["nft-day-scores"][0].day_score * 10}
+                      tag={"NFTs"} />
                   </div>
                   <div className={`${styles["graph-container"]} p-4 shadow`}
                        style={{ width: "fit-content" }}>

@@ -48,7 +48,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "orange",
                 lineTension: 0.3,
-                data: btc.map(r => r.day_score * 10),
+                data: btc.map(r => r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10).reverse(),
                 borderWidth: 2,
             },
             {
@@ -58,7 +58,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "blue",
                 lineTension: 0.3,
-                data: ethereum.map(r => r.day_score * 10),
+                data: ethereum.map(r => r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10).reverse(),
                 borderWidth: 2,
             },
             {
@@ -68,7 +68,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "purple",
                 lineTension: 0.3,
-                data: solana.map(r => r.day_score * 10),
+                data: solana.map(r => r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10).reverse(),
                 borderWidth: 2,
             },
             {
@@ -78,7 +78,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                 fill: false,
                 backgroundColor: "black",
                 lineTension: 0.3,
-                data: nfts.map(r => r.day_score * 10),
+                data: nfts.map(r => r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10).reverse(),
                 borderWidth: 2,
             },
         ],
@@ -152,10 +152,11 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
             width: "50rem",
             border: "1px solid #C4C4C4",
             borderRadius: "0.375rem",
-            padding: "0.5rem"
+            padding: "0.5rem",
         }}>
             <div style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}>
-                <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 20 UTC</p>
+                <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 20
+                    UTC</p>
             </div>
             <div style={{ position: "relative", width: "100%", height: "16rem" }}>
                 <Line id="home" options={options} data={canvasData} />
