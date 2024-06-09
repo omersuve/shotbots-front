@@ -21,15 +21,13 @@ interface ResponseData {
 }
 
 export const NewsView: FC = () => {
-    const { newsData, loading } = useNews();
+    const { newsData, loading, timers } = useNews();
     const [selectedTabIdx, setSelectedTabIdx] = useState(0);
     const [selectedTab, setSelectedTab] = useState("bitcoin-news");
     const { publicKey } = useWallet();
     const [selectedNewsId, setSelectedNewsId] = useState<{ [key: string]: string }>({});
     const [votedNews, setVotedNews] = useState<string[]>([]);
     const [votesOfNews, setVotesOfNews] = useState<{ [key: string]: number }>({});
-    const intervalIds = useRef<{ [key: string]: NodeJS.Timeout }>({});
-    const [timers, setTimers] = useState<{ [key: string]: string }>({});
 
     const news = newsData[selectedTab] || [];
 
@@ -41,12 +39,6 @@ export const NewsView: FC = () => {
             }));
         }
     }, [newsData, selectedTab]);
-
-    useEffect(() => {
-        if (!loading) {
-            initializeTimers(newsData);
-        }
-    }, [loading, newsData]);
 
     const handleTabChange = (newTab: string, idx: number) => {
         setSelectedTab(newTab);
@@ -83,54 +75,6 @@ export const NewsView: FC = () => {
         }
     }, [publicKey]);
 
-    useEffect(() => {
-        return () => {
-            Object.values(intervalIds.current).forEach(clearInterval);
-        };
-    }, []);
-
-    function initializeTimers(newsData: ResponseData) {
-        const newTimers: { [key: string]: string } = {};
-
-        Object.entries(newsData).forEach(([collection, newsArr]) => {
-            newsArr.forEach((n) => {
-                if (!n.isVoteEnded) {
-                    const now = new Date();
-                    let endTime = new Date();
-                    endTime.setUTCHours(20, 0, 0, 0);
-
-                    if (now >= endTime) {
-                        endTime.setUTCDate(endTime.getUTCDate() + 1);
-                    }
-                    const timer = setInterval(() => {
-                        const currentTime = new Date().getTime();
-                        const distance = endTime.getTime() - currentTime;
-
-                        if (distance < 0) {
-                            clearInterval(intervalIds.current[n._id.toString()]);
-                            newTimers[n._id.toString()] = "Voting ended";
-                        } else {
-                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-                            newTimers[n._id.toString()] = `${hours}h ${minutes}m ${seconds}s`;
-                        }
-
-                        setTimers((prev) => ({
-                            ...prev,
-                            ...newTimers,
-                        }));
-                    }, 1000);
-
-                    intervalIds.current[n._id.toString()] = timer;
-                } else {
-                    newTimers[n._id.toString()] = "Voting ended";
-                }
-            });
-        });
-
-        setTimers(newTimers);
-    }
 
     function submitVote(newsId: string, vote: number) {
         setVotedNews(prevState => ([...prevState, newsId]));
