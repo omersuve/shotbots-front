@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
+import { useRouter } from "next/router";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
-import TextLogo from "../../../public/text-logo.png";
-import TextLogoWhite from "../../../public/white.png";
 import TextLogoBlack from "../../../public/black.png";
 import Image from "next/image";
 import Link from "next/link";
@@ -9,6 +8,7 @@ import styles from "./index.module.css";
 
 const Navbar: React.FC = () => {
     const [prices, setPrices] = useState<{ [key: string]: { price: string; change: string } }>({});
+    const router = useRouter();
 
     const fetchPrice = async () => {
         try {
@@ -87,24 +87,34 @@ const Navbar: React.FC = () => {
                 </div>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 relative"
                      id="navbar-sticky">
-                    <ul className="flex flex-col md:p-0 font-medium rounded-lg md:space-x-8 rtl:space-x-reverse md:flex-row md:mt-0 md:border-0 absolute items-center right-80">
-                        <li className="block text-blue-500 bg-blue-700 md:bg-transparent md:text-blue-700 md:p-0">
-                            <Link href="/dashboard" className="rounded py-2 px-2 hover:bg-gray-100">
+                    <ul className="flex flex-col md:flex-row items-center md:space-x-0 font-medium rounded-lg md:mt-0 md:border-0 absolute right-60 h-full">
+                        <li className="flex items-center h-full">
+                            <Link href="/dashboard"
+                                  className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/dashboard" ? "border-b-2 border-blue-500" : ""}`}>
                                 Home
                             </Link>
                         </li>
-                        <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/twitter" className="rounded py-1 px-2 fs-3 fw-bold hover:bg-gray-100">
+                        <li className="flex items-center h-full">
+                            <Link href="/twitter"
+                                  className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out fs-3 fw-bold ${router.pathname === "/twitter" ? "border-b-2 border-blue-500" : ""}`}>
                                 X
                             </Link>
                         </li>
-                        <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/news" className="rounded py-2 px-2 hover:bg-gray-100">
+                        <li className="flex items-center h-full">
+                            <Link href="/news"
+                                  className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/news" ? "border-b-2 border-blue-500" : ""}`}>
                                 News
                             </Link>
                         </li>
-                        <li className="block text-dark md:hover:text-blue-700 md:p-0">
-                            <Link href="/news" className="rounded py-2 px-2 hover:bg-gray-100 pointer-events-none">
+                        {/*<li className="flex items-center h-full">*/}
+                        {/*    <Link href="/memecoin"*/}
+                        {/*          className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/memecoin" ? "border-b-2 border-blue-500" : ""}`}>*/}
+                        {/*        Memecoins*/}
+                        {/*    </Link>*/}
+                        {/*</li>*/}
+                        <li className="flex items-center h-full">
+                            <Link href="/news"
+                                  className="flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-none">
                                 Profile
                             </Link>
                         </li>
