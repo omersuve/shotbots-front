@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
 import NewsBody from "../../components/NewsBody";
 import MyLoader from "../../components/MyLoader";
@@ -12,56 +12,52 @@ import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { toast } from "react-toastify";
 import { formatDate, handleSendVote } from "../../utils";
-
+import { useNews } from "../../contexts/NewsContext";
 
 const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "NFT"];
-const collections = ["bitcoin-news", "ethereum-news", "solana-news", "nft-news"];
 
 interface ResponseData {
     [collectionName: string]: News[]; // Define the type of data returned for each collection
 }
 
 export const NewsView: FC = () => {
-    const [news, setNews] = useState<ResponseData>({});
+    const { newsData, loading } = useNews();
     const [selectedTabIdx, setSelectedTabIdx] = useState(0);
-    const [loading, setLoading] = useState(true); // Loading state
     const [selectedTab, setSelectedTab] = useState("bitcoin-news");
     const { publicKey } = useWallet();
     const [selectedNewsId, setSelectedNewsId] = useState<{ [key: string]: string }>({});
     const [votedNews, setVotedNews] = useState<string[]>([]);
     const [votesOfNews, setVotesOfNews] = useState<{ [key: string]: number }>({});
+    const intervalIds = useRef<{ [key: string]: NodeJS.Timeout }>({});
+    const [timers, setTimers] = useState<{ [key: string]: string }>({});
+
+    const news = newsData[selectedTab] || [];
 
     useEffect(() => {
-        async function fetchData() {
-            setLoading(true);
-            try {
-                // Prepare request options
-                const requestOptions = {
-                    method: "POST", // Specify POST method
-                    headers: {
-                        "Content-Type": "application/json", // Specify JSON content type
-                    },
-                    body: JSON.stringify(collections), // Convert collections array to JSON string and pass in body
-                };
-                const response = await fetch("/api/news", requestOptions);
-                const result = await response.json();
-                if (response.ok) {
-                    setNews(result);
-                    const initialIndices = Object.fromEntries(collections.map(col => [col, result[col][0]._id.toString()]));
-                    setSelectedNewsId(initialIndices);
-                } else {
-                    console.log("failed to fetch data");
-                }
-            } catch (err) {
-                console.log("failed to fetch data");
-            } finally {
-                setLoading(false); // Set loading state to false after data is fetched
-            }
+        if (news.length > 0 && !selectedNewsId[selectedTab]) {
+            setSelectedNewsId(prevState => ({
+                ...prevState,
+                [selectedTab]: news[0]._id.toString(),
+            }));
         }
+    }, [newsData, selectedTab]);
 
-        fetchData().then(r => {
-        });
-    }, []);
+    useEffect(() => {
+        if (!loading) {
+            initializeTimers(newsData);
+        }
+    }, [loading, newsData]);
+
+    const handleTabChange = (newTab: string, idx: number) => {
+        setSelectedTab(newTab);
+        setSelectedTabIdx(idx);
+        if (!selectedNewsId[newTab] && newsData[newTab] && newsData[newTab].length > 0) {
+            setSelectedNewsId(prevState => ({
+                ...prevState,
+                [newTab]: newsData[newTab][0]._id.toString(),
+            }));
+        }
+    };
 
     useEffect(() => {
         async function fetchVotes() {
@@ -87,6 +83,55 @@ export const NewsView: FC = () => {
         }
     }, [publicKey]);
 
+    useEffect(() => {
+        return () => {
+            Object.values(intervalIds.current).forEach(clearInterval);
+        };
+    }, []);
+
+    function initializeTimers(newsData: ResponseData) {
+        const newTimers: { [key: string]: string } = {};
+
+        Object.entries(newsData).forEach(([collection, newsArr]) => {
+            newsArr.forEach((n) => {
+                if (!n.isVoteEnded) {
+                    const now = new Date();
+                    let endTime = new Date();
+                    endTime.setUTCHours(20, 0, 0, 0);
+
+                    if (now >= endTime) {
+                        endTime.setUTCDate(endTime.getUTCDate() + 1);
+                    }
+                    const timer = setInterval(() => {
+                        const currentTime = new Date().getTime();
+                        const distance = endTime.getTime() - currentTime;
+
+                        if (distance < 0) {
+                            clearInterval(intervalIds.current[n._id.toString()]);
+                            newTimers[n._id.toString()] = "Voting ended";
+                        } else {
+                            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+                            newTimers[n._id.toString()] = `${hours}h ${minutes}m ${seconds}s`;
+                        }
+
+                        setTimers((prev) => ({
+                            ...prev,
+                            ...newTimers,
+                        }));
+                    }, 1000);
+
+                    intervalIds.current[n._id.toString()] = timer;
+                } else {
+                    newTimers[n._id.toString()] = "Voting ended";
+                }
+            });
+        });
+
+        setTimers(newTimers);
+    }
+
     function submitVote(newsId: string, vote: number) {
         setVotedNews(prevState => ([...prevState, newsId]));
         setVotesOfNews(prev => ({
@@ -97,18 +142,16 @@ export const NewsView: FC = () => {
     return (
         <div>
             <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
-                {tags.map((t, i) => {
-                    return (
-                        <li key={i}>
-                            <button
-                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
-                                onClick={() => {
-                                    setSelectedTab(`${t.toLowerCase()}-news`);
-                                    setSelectedTabIdx(i);
-                                }}>{t}</button>
-                        </li>
-                    );
-                })}
+                {tags.map((t, i) => (
+                    <li key={i}>
+                        <button
+                            className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
+                            onClick={() => handleTabChange(`${t.toLowerCase()}-news`, i)}
+                        >
+                            {t}
+                        </button>
+                    </li>
+                ))}
             </ul>
             <p className="text-center fs-6 fw-bold mt-4">RECENT HOT NEWS</p>
             {loading ? (
@@ -118,87 +161,89 @@ export const NewsView: FC = () => {
                     <div className="block">
                         {
                             news &&
-                            Object.entries(news).map(([collection, newsArr], i) => {
-                                return newsArr.map((n, j) => {
-                                    if (selectedTab === `${n.tag}-news`) {
-                                        return (
-                                            <button
-                                                key={`${i}-${j}`}
-                                                className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-6`}
-                                                onClick={() => setSelectedNewsId(prevState => ({
-                                                    ...prevState,
-                                                    [selectedTab]: n._id.toString(), // Set the selected news index for the current tab
-                                                }))}>
-                                                <div className={`${styles["box"]} shadow`}>
-                                                    <h3 className="relative text-black mr-16">
-                                                        {parse(n.title)}
-                                                    </h3>
-                                                    <div className="absolute right-2 top-2">
-                                                        {formatDate(n["timestamp"])}
-                                                    </div>
-                                                    {/*{*/}
-                                                    {/*    publicKey && n._id.toString() === selectedNewsId[selectedTab] &&*/}
-                                                    {/*  <div*/}
-                                                    {/*    className="flex items-center justify-center content-center mt-2 mx-1">*/}
-                                                    {/*    <Box sx={{*/}
-                                                    {/*        display: "flex",*/}
-                                                    {/*        flex: 3,*/}
-                                                    {/*        justifyContent: "center",*/}
-                                                    {/*        textAlign: "center",*/}
-                                                    {/*    }}>*/}
-                                                    {/*      <Slider*/}
-                                                    {/*        key={`slider-${n._id.toString()}`}*/}
-                                                    {/*        aria-label="Vote"*/}
-                                                    {/*        defaultValue={votesOfNews[n._id.toString()] ?? 0}*/}
-                                                    {/*        valueLabelDisplay="auto"*/}
-                                                    {/*        shiftStep={1}*/}
-                                                    {/*        onChange={(event, newValue) => {*/}
-                                                    {/*            setVotesOfNews(prev => ({*/}
-                                                    {/*                ...prev, [n._id.toString()]: newValue as number,*/}
-                                                    {/*            }));*/}
-                                                    {/*        }}*/}
-                                                    {/*        step={1}*/}
-                                                    {/*        min={-3}*/}
-                                                    {/*        max={3}*/}
-                                                    {/*        disabled={votedNews.includes(n._id.toString())}*/}
-                                                    {/*        color={`${votesOfNews[n._id.toString()] > 1 ? "success" : votesOfNews[n._id.toString()] < -1 ? "error" : "info"}`}*/}
-                                                    {/*      />*/}
-                                                    {/*    </Box>*/}
-                                                    {/*    <p*/}
-                                                    {/*      className="ml-8 w-8 fs-5 font-bold">{votesOfNews[n._id.toString()] ?? 0}</p>*/}
-                                                    {/*    <div className="flex-1 items-center">*/}
-                                                    {/*      <button*/}
-                                                    {/*        className={`bg-gray-200 ${!votedNews.includes(n._id.toString()) ? "hover:bg-gray-300 active:bg-gray-400" : ""}  w-20 rounded px-2 py-1 ml-4`}*/}
-                                                    {/*        onClick={() => {*/}
-                                                    {/*            handleSendVote(n._id.toString(), votesOfNews[n._id.toString()], selectedTab, publicKey?.toString()).then((v) => {*/}
-                                                    {/*                if (v != undefined) submitVote(n._id.toString(), v);*/}
-                                                    {/*            });*/}
-                                                    {/*        }}*/}
-                                                    {/*        disabled={votedNews.includes(n._id.toString())}*/}
-                                                    {/*      > {votedNews.includes(n._id.toString()) ? "Submitted" : "Submit"}*/}
-                                                    {/*      </button>*/}
-                                                    {/*    </div>*/}
-                                                    {/*  </div>*/}
-                                                    {/*}*/}
-                                                    <div className={styles["toggle-btn"]}>
-                                                        {n._id.toString() === selectedNewsId[selectedTab] &&
-                                                          <FontAwesomeIcon
-                                                            icon={faArrowRight as IconProp}
-                                                            className="fa-l" />
-                                                        }
-                                                    </div>
-                                                </div>
-                                            </button>
-                                        );
-                                    }
-                                });
-                            })
+                            news.map((n, j) => (
+                                <button
+                                    key={`${selectedTab}-${j}`}
+                                    className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-6`}
+                                    onClick={() => setSelectedNewsId(prevState => ({
+                                        ...prevState,
+                                        [selectedTab]: n._id.toString(), // Set the selected news index for the current tab
+                                    }))}>
+                                    <div className={`${styles["box"]} shadow flex flex-col justify-between`}>
+                                        <div className="flex-1 flex">
+                                            <h3 className="relative text-black mr-16">
+                                                {parse(n.title)}
+                                            </h3>
+                                        </div>
+                                        {/*<div*/}
+                                        {/*    className="flex-1 flex items-center justify-center content-center mt-2 mx-1 min-h-8">*/}
+                                        {/*    {publicKey && n._id.toString() === selectedNewsId[selectedTab] && !n.isVoteEnded && (*/}
+                                        {/*        <>*/}
+                                        {/*            <Box sx={{*/}
+                                        {/*                display: "flex",*/}
+                                        {/*                flex: 3,*/}
+                                        {/*                justifyContent: "center",*/}
+                                        {/*                textAlign: "center",*/}
+                                        {/*            }}>*/}
+                                        {/*                <Slider*/}
+                                        {/*                    key={`slider-${n._id.toString()}`}*/}
+                                        {/*                    aria-label="Vote"*/}
+                                        {/*                    defaultValue={votesOfNews[n._id.toString()] ?? 0}*/}
+                                        {/*                    valueLabelDisplay="auto"*/}
+                                        {/*                    shiftStep={1}*/}
+                                        {/*                    onChange={(event, newValue) => {*/}
+                                        {/*                        setVotesOfNews(prev => ({*/}
+                                        {/*                            ...prev, [n._id.toString()]: newValue as number,*/}
+                                        {/*                        }));*/}
+                                        {/*                    }}*/}
+                                        {/*                    step={1}*/}
+                                        {/*                    min={-3}*/}
+                                        {/*                    max={3}*/}
+                                        {/*                    disabled={votedNews.includes(n._id.toString())}*/}
+                                        {/*                    color={`${votesOfNews[n._id.toString()] > 1 ? "success" : votesOfNews[n._id.toString()] < -1 ? "error" : "info"}`}*/}
+                                        {/*                />*/}
+                                        {/*            </Box>*/}
+                                        {/*            <p*/}
+                                        {/*                className="ml-8 w-8 fs-5 font-bold">{votesOfNews[n._id.toString()] ?? 0}</p>*/}
+                                        {/*            <div className="flex-1 items-center">*/}
+                                        {/*                <button*/}
+                                        {/*                    className={`bg-gray-200 ${!votedNews.includes(n._id.toString()) ? "hover:bg-gray-300 active:bg-gray-400" : ""}  w-20 rounded px-2 py-1 ml-4`}*/}
+                                        {/*                    onClick={() => {*/}
+                                        {/*                        handleSendVote(n._id.toString(), votesOfNews[n._id.toString()], selectedTab, publicKey?.toString()).then((v) => {*/}
+                                        {/*                            if (v != undefined) submitVote(n._id.toString(), v);*/}
+                                        {/*                        });*/}
+                                        {/*                    }}*/}
+                                        {/*                    disabled={votedNews.includes(n._id.toString())}*/}
+                                        {/*                > {votedNews.includes(n._id.toString()) ? "Submitted" : "Submit"}*/}
+                                        {/*                </button>*/}
+                                        {/*            </div>*/}
+                                        {/*        </>*/}
+                                        {/*    )}*/}
+                                        {/*</div>*/}
+                                        <div className="flex-1 mt-1 flex justify-between items-end">
+                                            <div className="text-sm text-gray-500 flex-1">
+                                                {n.isVoteEnded ? "Voting ended" : (timers[n._id.toString()] || "Calculating...")}
+                                            </div>
+                                        </div>
+                                        <div className={styles["toggle-btn"]}>
+                                            {n._id.toString() === selectedNewsId[selectedTab] &&
+                                              <FontAwesomeIcon
+                                                icon={faArrowRight as IconProp}
+                                                className="fa-l" />
+                                            }
+                                        </div>
+                                        <div className="absolute right-2 top-2">
+                                            {formatDate(n["timestamp"])}
+                                        </div>
+                                    </div>
+                                </button>
+                            ))
                         }
                     </div>
                     {
-                        news && news[selectedTab].length > 0 &&
+                        news.length > 0 &&
                       <NewsBody
-                        body={news[selectedTab].find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
+                        body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
                     }
                 </div>
             )}

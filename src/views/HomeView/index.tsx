@@ -1,56 +1,14 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC } from "react";
 import styles from "./index.module.css";
 import LineGraph from "../../components/LineGraph";
 import ScoreCard from "../../components/ScoreCard";
 import MyLoader from "../../components/MyLoader";
-
-const collectionsHistory = ["bitcoin-day-scores", "ethereum-day-scores", "solana-day-scores", "nft-day-scores"];
-
-interface ScoreHistory {
-    day_score: number;
-    timestamp: string; // Change to string for compatibility with labels
-}
-
-interface ResponseHistoryData {
-    [collectionName: string]: ScoreHistory[]; // Define the type of data returned for each collection
-}
+import { useScores } from "../../contexts/ScoresContext";
 
 export const HomeView: FC = () => {
-    const [scoresHistory, setScoresHistory] = useState<ResponseHistoryData>({});
-    const [loading, setLoading] = useState(true); // Loading state
-
-    useEffect(() => {
-        async function fetchHistoryData() {
-            setLoading(true);
-            try {
-                // Prepare request options
-                const requestOptions = {
-                    method: "POST", // Specify POST method
-                    headers: {
-                        "Content-Type": "application/json", // Specify JSON content type
-                    },
-                    body: JSON.stringify(collectionsHistory), // Convert collections array to JSON string and pass in body
-                };
-                const responseHistory = await fetch("/api/getDayScores", requestOptions);
-                const resultHistory = await responseHistory.json();
-                if (responseHistory.ok) {
-                    setScoresHistory(resultHistory);
-                } else {
-                    console.log("failed to fetch data");
-                }
-            } catch (err) {
-                console.log("failed to fetch data");
-            } finally {
-                setLoading(false); // Set loading state to false after data is fetched
-            }
-        }
-
-        fetchHistoryData().then(r => {
-        });
-    }, []);
+    const { scoresHistory, loading } = useScores();
 
     return (
-
         <div className={`${styles["box-with-graph"]} flex flex-col items-center`}>
             <p className="text-center fs-6 fw-bold">TODAY&apos;S MARKET SENTIMENT SCORES</p>
             {loading ? (

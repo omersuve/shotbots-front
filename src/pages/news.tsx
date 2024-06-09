@@ -1,6 +1,6 @@
-import type {NextPage} from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
-import {NewsView} from "../views";
+import { NewsView } from "../views";
 
 const News: NextPage = (props) => {
     return (
@@ -8,7 +8,7 @@ const News: NextPage = (props) => {
             <Head>
                 <title>News</title>
             </Head>
-            <NewsView/>
+            <NewsView />
         </div>
     );
 };

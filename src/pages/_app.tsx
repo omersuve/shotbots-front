@@ -17,6 +17,10 @@ import("@solana/wallet-adapter-react-ui/styles.css" as any);
 
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { NewsProvider } from "../contexts/NewsContext";
+import { TwitterProvider } from "../contexts/TwitterContext";
+import { ScoresProvider } from "../contexts/ScoresContext";
+import { PricesProvider } from "../contexts/PricesContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -36,14 +40,22 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <div className="flex flex-col min-h-screen">
-                        {router.pathname != "/" && <Navbar />}
-                        <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
-                            <Component {...pageProps} />
-                        </div>
-                        {router.pathname != "/" && <Footer />}
-                    </div>
-                    <ToastContainer />
+                    <NewsProvider>
+                        <TwitterProvider>
+                            <ScoresProvider>
+                                <PricesProvider>
+                                    <div className="flex flex-col min-h-screen">
+                                        {router.pathname != "/" && <Navbar />}
+                                        <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
+                                            <Component {...pageProps} />
+                                        </div>
+                                        {router.pathname != "/" && <Footer />}
+                                    </div>
+                                    <ToastContainer />
+                                </PricesProvider>
+                            </ScoresProvider>
+                        </TwitterProvider>
+                    </NewsProvider>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>

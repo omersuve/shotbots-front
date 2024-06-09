@@ -1,6 +1,6 @@
-import type {NextPage} from "next";
+import type { NextPage } from "next";
 import Head from "next/head";
-import {TwitterView} from "../views";
+import { TwitterView } from "../views";
 
 const Twitter: NextPage = (props) => {
     return (
@@ -8,7 +8,7 @@ const Twitter: NextPage = (props) => {
             <Head>
                 <title>Twitter</title>
             </Head>
-            <TwitterView/>
+            <TwitterView />
         </div>
     );
 };

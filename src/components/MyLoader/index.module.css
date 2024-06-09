@@ -4,3 +4,11 @@
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+
+.inlineLoader {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 24px; /* Adjust as needed for small size */
+}
