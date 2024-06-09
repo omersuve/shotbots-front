@@ -26,9 +26,9 @@
 
 .toggle-btn {
     text-align: center;
-    right: -5px;
+    right: -32px;
     font-size: larger;
     position: absolute;
-    top: 36%;
+    top: 45%;
     opacity: 60%;
 }

@@ -173,7 +173,7 @@ export const NewsView: FC = () => {
                                             {n._id.toString() === selectedNewsId[selectedTab] &&
                                               <FontAwesomeIcon
                                                 icon={faArrowRight as IconProp}
-                                                className="fa-l" />
+                                                className="fa-xl" />
                                             }
                                         </div>
                                         <div className="absolute right-2 top-2">
