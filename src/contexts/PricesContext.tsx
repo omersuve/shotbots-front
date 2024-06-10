@@ -22,8 +22,9 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
     const [loading, setLoading] = useState<boolean>(true);
 
     useEffect(() => {
+        setLoading(true);
+
         async function fetchPrices() {
-            setLoading(true);
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -36,14 +37,13 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
                 setPrices(data.prices);
             } catch (error) {
                 console.error("Error fetching the price:", error);
-            } finally {
-                setLoading(false);
             }
         }
 
         fetchPrices().then(r => {
+            setLoading(false);
         });
-        const interval = setInterval(fetchPrices, 60000); // Fetch every 1 minute
+        const interval = setInterval(fetchPrices, 30000); // Fetch every 1 minute
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
