@@ -164,11 +164,11 @@ export const NewsView: FC = () => {
                                         {/*        </>*/}
                                         {/*    )}*/}
                                         {/*</div>*/}
-                                        <div className="flex-1 mt-1 flex justify-between items-end">
-                                            <div className="text-sm text-gray-500 flex-1">
-                                                {n.isVoteEnded ? "Voting ended" : (timers[n._id.toString()] || "Calculating...")}
-                                            </div>
-                                        </div>
+                                        {/*<div className="flex-1 mt-1 flex justify-between items-end">*/}
+                                        {/*    <div className="text-sm text-gray-500 flex-1">*/}
+                                        {/*        {n.isVoteEnded ? "Voting ended" : (timers[n._id.toString()] || "Calculating...")}*/}
+                                        {/*    </div>*/}
+                                        {/*</div>*/}
                                         <div className={styles["toggle-btn"]}>
                                             {n._id.toString() === selectedNewsId[selectedTab] &&
                                               <FontAwesomeIcon
