@@ -44,6 +44,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
                 errorMessage = err.message;
             }
             setError(errorMessage);
+        } finally {
             setLoading(false);
         }
     };
