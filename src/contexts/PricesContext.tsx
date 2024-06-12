@@ -41,9 +41,10 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
         }
 
         fetchPrices().then(r => {
-            setLoading(false);
+            if (prices["solana"])
+                setLoading(false);
         });
-        const interval = setInterval(fetchPrices, 30000); // Fetch every 1 minute
+        const interval = setInterval(fetchPrices, 15000); // Fetch every 15 secs
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
