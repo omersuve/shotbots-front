@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import TextLogoBlack from "../../../public/black.png";
@@ -7,16 +7,42 @@ import Link from "next/link";
 import styles from "./index.module.css";
 import { usePrices } from "../../contexts/PricesContext";
 import MyLoader from "../../components/MyLoader";
+import { useWallet } from "@solana/wallet-adapter-react";
 
 const Navbar: React.FC = () => {
     const router = useRouter();
     const { prices, loading } = usePrices();
+    const { publicKey } = useWallet();
 
     const getChangeClass = (change: string) => {
         const value = parseFloat(change);
         if (isNaN(value)) return "";
         return value < 0 ? "text-red-500" : "text-green-500";
     };
+
+
+    const fetchProfile = async (publicKey: string) => {
+        try {
+            const response = await fetch("/api/getProfile", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({ publicKey }),
+            });
+            const data = await response.json();
+            // setProfileInfo(data);
+        } catch (error) {
+            console.error("Error fetching profile info:", error);
+        }
+    };
+
+    useEffect(() => {
+        if (publicKey) {
+            fetchProfile(publicKey.toString()).then(r => {
+            });
+        }
+    }, [publicKey]);
 
     return (
         <nav className={`${styles["navbar"]} fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-90`}>
