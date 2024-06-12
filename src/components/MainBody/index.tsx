@@ -54,6 +54,9 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
                        alt="Picture of a Pistol" />
             </div>
             <Container className="text-center">
+                <div className={`${styles["notice"]} p-2 mb-3`}>
+                    <p>Mobile Support TBA!</p>
+                </div>
                 <Typist typingDelay={60} backspaceDelay={100}>
                     <div className={`${styles["typist-font"]} text-center fs-3`}>
                         <p className="inline pointer-events-none">
