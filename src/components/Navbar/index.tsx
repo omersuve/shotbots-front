@@ -80,7 +80,7 @@ const Navbar: React.FC = () => {
                 </div>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 relative"
                      id="navbar-sticky">
-                    <ul className="flex flex-col md:flex-row items-center md:space-x-0 font-medium rounded-lg md:mt-0 md:border-0 absolute right-60 h-full">
+                    <ul className="flex flex-col md:flex-row items-center md:space-x-0 font-medium rounded-lg md:mt-0 md:border-0 absolute right-80 h-full">
                         <li className="flex items-center h-full">
                             <Link href="/dashboard"
                                   className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/dashboard" ? "border-b-2 border-blue-500" : ""}`}>
@@ -100,15 +100,31 @@ const Navbar: React.FC = () => {
                             </Link>
                         </li>
                         <li className="flex items-center h-full">
-                            <Link href="/news"
-                                  className="flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-none">
-                                Profile
+                            <Link href="/memecoin"
+                                  className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/memecoin" ? "border-b-2 border-blue-500" : ""}`}>
+                                Memecoins
                             </Link>
                         </li>
                     </ul>
-                    <div className="ml-24">
-                        <WalletMultiButton className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
-                                           style={{ fontSize: "14px", backgroundColor: "#e8e8e8", color: "black" }} />
+                    <div className="ml-auto flex items-center space-x-4">
+                        <button
+                            disabled={true}
+                            className="flex h-10 rounded-md items-center py-3 px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-none"
+                            style={{
+                                fontFamily: "DM Sans",
+                                backgroundColor: "rgb(233, 233, 233)",
+                            }}
+                        >
+                            Profile
+                        </button>
+                        <WalletMultiButton
+                            className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
+                            style={{
+                                fontSize: "14px",
+                                backgroundColor: "#e8e8e8",
+                                color: "black",
+                            }}
+                        />
                     </div>
                 </div>
             </div>

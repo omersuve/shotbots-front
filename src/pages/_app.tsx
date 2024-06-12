@@ -21,6 +21,7 @@ import { NewsProvider } from "../contexts/NewsContext";
 import { TwitterProvider } from "../contexts/TwitterContext";
 import { ScoresProvider } from "../contexts/ScoresContext";
 import { PricesProvider } from "../contexts/PricesContext";
+import { MemecoinProvider } from "../contexts/MemecoinContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -40,22 +41,24 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <NewsProvider>
-                        <TwitterProvider>
-                            <ScoresProvider>
-                                <PricesProvider>
-                                    <div className="flex flex-col min-h-screen">
-                                        {router.pathname != "/" && <Navbar />}
-                                        <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
-                                            <Component {...pageProps} />
+                    <MemecoinProvider>
+                        <ScoresProvider>
+                            <PricesProvider>
+                                <NewsProvider>
+                                    <TwitterProvider>
+                                        <div className="flex flex-col min-h-screen">
+                                            {router.pathname != "/" && <Navbar />}
+                                            <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
+                                                <Component {...pageProps} />
+                                            </div>
+                                            {router.pathname != "/" && <Footer />}
                                         </div>
-                                        {router.pathname != "/" && <Footer />}
-                                    </div>
-                                    <ToastContainer />
-                                </PricesProvider>
-                            </ScoresProvider>
-                        </TwitterProvider>
-                    </NewsProvider>
+                                        <ToastContainer />
+                                    </TwitterProvider>
+                                </NewsProvider>
+                            </PricesProvider>
+                        </ScoresProvider>
+                    </MemecoinProvider>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>
