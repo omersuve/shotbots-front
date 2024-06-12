@@ -41,9 +41,9 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <MemecoinProvider>
-                        <ScoresProvider>
-                            <PricesProvider>
+                    <PricesProvider>
+                        <MemecoinProvider>
+                            <ScoresProvider>
                                 <NewsProvider>
                                     <TwitterProvider>
                                         <div className="flex flex-col min-h-screen">
@@ -56,9 +56,9 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         <ToastContainer />
                                     </TwitterProvider>
                                 </NewsProvider>
-                            </PricesProvider>
-                        </ScoresProvider>
-                    </MemecoinProvider>
+                            </ScoresProvider>
+                        </MemecoinProvider>
+                    </PricesProvider>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>

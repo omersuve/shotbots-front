@@ -35,15 +35,12 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
                 const response = await fetch("/api/price", requestOptions);
                 const data = await response.json();
                 setPrices(data.prices);
+                setLoading(false);
             } catch (error) {
                 console.error("Error fetching the price:", error);
             }
         }
 
-        fetchPrices().then(r => {
-            if (prices)
-                setLoading(false);
-        });
         const interval = setInterval(fetchPrices, 10000); // Fetch every 15 secs
 
         return () => clearInterval(interval); // Cleanup on component unmount
