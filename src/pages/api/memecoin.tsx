@@ -26,28 +26,30 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 // Sort pairs by FDV in descending order
                 const sortedPairs = dataMc["pairs"].sort((a: any, b: any) => b["fdv"] - a["fdv"]);
 
-                // Find the pair with the closest price match within the threshold
-                for (const item of sortedPairs) {
-                    const dexPrice = parseFloat(item.priceUsd);
-                    const priceDifference = Math.abs(dexPrice - price) / price;
+                // Filter pairs based on price threshold and sort by liquidity
+                const filteredAndSortedPairs = sortedPairs
+                    .filter((item: any) => {
+                        const dexPrice = parseFloat(item.priceUsd);
+                        const priceDifference = Math.abs(dexPrice - price) / price;
+                        return priceDifference <= priceThreshold && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
+                    })
+                    .sort((a: any, b: any) => b["liquidity"]["usd"] - a["liquidity"]["usd"]);
 
-                    if (!item["liquidity"]) continue;
-                    const liquidity = item["liquidity"]["usd"];
-
-                    if (priceDifference <= priceThreshold && liquidity > item["fdv"] / 2000) {
-                        formattedData.push({
-                            id: row[0].id,
-                            name: row[0].name,
-                            symbol: symbol, // Make symbol uppercase
-                            price: row[1],
-                            price_change_1d: row[2],
-                            real_volume_1d: row[3],
-                            circulating_marketcap: item["fdv"],
-                            chainId: item["chainId"],
-                            url: item["url"],
-                        });
-                        break; // Move to the next row once a match is found
-                    }
+                // Select the pair with the highest liquidity
+                if (filteredAndSortedPairs.length > 0) {
+                    const item = filteredAndSortedPairs[0];
+                    formattedData.push({
+                        id: row[0].id,
+                        name: row[0].name,
+                        symbol: symbol, // Make symbol uppercase
+                        price: row[1],
+                        price_change_1d: row[2],
+                        real_volume_1d: row[3],
+                        circulating_marketcap: item["fdv"],
+                        chainId: item["chainId"],
+                        url: item["url"],
+                        liquidity: item["liquidity"]["usd"],
+                    });
                 }
             }
         }

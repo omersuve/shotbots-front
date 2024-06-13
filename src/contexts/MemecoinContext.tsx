@@ -10,6 +10,7 @@ type Memecoin = {
     circulating_marketcap: number | null;
     chainId: string;
     url: string;
+    liquidity: number | null
 };
 
 interface MemecoinContextProps {

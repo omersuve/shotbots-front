@@ -8,6 +8,7 @@ import Eth from "../../../public/ethereum-eth-logo.svg";
 import Poly from "../../../public/polygon-matic-logo.svg";
 import BSC from "../../../public/bsc.png";
 import Doge from "../../../public/dogechain.jpeg";
+import Ton from "../../../public/ton_symbol.png";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { useMemecoins } from "../../contexts/MemecoinContext";
@@ -24,6 +25,7 @@ type Memecoin = {
     circulating_marketcap: number | null;
     chainId: string;
     url: string;
+    liquidity: number | null;
 };
 
 type SortConfig = {
@@ -200,6 +202,9 @@ export const MemecoinView: FC = () => {
                                     <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
                                         Volume (1D) {getSortIndicator("real_volume_1d")}
                                     </th>
+                                    <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
+                                        Liquidity {getSortIndicator("liquidity")}
+                                    </th>
                                     <th onClick={() => requestSort("circulating_marketcap")}
                                         className={styles.sortableHeader}>
                                         Market Cap {getSortIndicator("circulating_marketcap")}
@@ -246,8 +251,14 @@ export const MemecoinView: FC = () => {
                                                                width: "16px",
                                                                marginRight: "10px",
                                                            }} />
-                                                ) : coin.chainId == "dogechain" && (
+                                                ) : coin.chainId == "dogechain" ? (
                                                     <Image src={Doge} alt="dogechain"
+                                                           style={{
+                                                               width: "16px",
+                                                               marginRight: "10px",
+                                                           }} />
+                                                ) : coin.chainId == "ton" && (
+                                                    <Image src={Ton} alt="ton"
                                                            style={{
                                                                width: "16px",
                                                                marginRight: "10px",
@@ -261,6 +272,7 @@ export const MemecoinView: FC = () => {
                                             {formatPriceChange(coin.price_change_1d)}
                                         </td>
                                         <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
+                                        <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
                                         <td className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
                                     </tr>
                                 ))}
