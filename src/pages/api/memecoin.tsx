@@ -31,7 +31,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     const dexPrice = parseFloat(item.priceUsd);
                     const priceDifference = Math.abs(dexPrice - price) / price;
 
-                    if (priceDifference <= priceThreshold) {
+                    if (!item["liquidity"]) continue;
+                    const liquidity = item["liquidity"]["usd"];
+
+                    if (priceDifference <= priceThreshold && liquidity > item["fdv"] / 2000) {
                         formattedData.push({
                             id: row[0].id,
                             name: row[0].name,
@@ -41,6 +44,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                             real_volume_1d: row[3],
                             circulating_marketcap: item["fdv"],
                             chainId: item["chainId"],
+                            url: item["url"],
                         });
                         break; // Move to the next row once a match is found
                     }

@@ -23,6 +23,7 @@ type Memecoin = {
     real_volume_1d: number | null;
     circulating_marketcap: number | null;
     chainId: string;
+    url: string;
 };
 
 type SortConfig = {
@@ -205,11 +206,16 @@ export const MemecoinView: FC = () => {
                                     </th>
                                 </tr>
                                 </thead>
-                                <tbody className="pointer-events-none">
+                                <tbody>
                                 {currentItems.map((coin, index) => (
                                     <tr key={coin.id}>
-                                        <td>{indexOfFirstItem + index + 1}</td>
-                                        <td>
+                                        <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                                        <td onClick={(e) => {
+                                            e.preventDefault();
+                                            console.log(`Navigating to: ${coin.url}`); // Debug log
+                                            window.open(coin.url, "_blank");
+                                        }} className="hover:bg-gray-300"
+                                            style={{ cursor: "pointer" }}>
                                             <div className="inline-flex float-left">
                                                 {coin.chainId == "solana" ? (
                                                     <Image src={Sol} alt="solana"
@@ -249,13 +255,13 @@ export const MemecoinView: FC = () => {
                                                 {coin.name}
                                             </div>
                                         </td>
-                                        <td>{coin.symbol?.toUpperCase()}</td>
-                                        <td>{formatPrice(coin.price)}</td>
-                                        <td className={coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative}>
+                                        <td className="pointer-events-none">{coin.symbol?.toUpperCase()}</td>
+                                        <td className="pointer-events-none">{formatPrice(coin.price)}</td>
+                                        <td className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
                                             {formatPriceChange(coin.price_change_1d)}
                                         </td>
-                                        <td>{formatLargeNumber(coin.real_volume_1d)}</td>
-                                        <td>{formatLargeNumber(coin.circulating_marketcap)}</td>
+                                        <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
+                                        <td className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
                                     </tr>
                                 ))}
                                 </tbody>
