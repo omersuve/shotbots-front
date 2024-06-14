@@ -50,7 +50,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
             }
             setError(errorMessage);
         } finally {
-            await timeout(3000); //for 1 sec delay
+            await timeout(5000); //for 1 sec delay
             setLoading(false);
         }
     };
