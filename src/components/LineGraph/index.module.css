@@ -1,0 +1,19 @@
+.graph {
+    width: 650px;
+    height: 200px;
+    position: relative;
+    border: 1px solid #C4C4C4;
+    border-radius: 0.375rem;
+    padding: 0.5rem;
+}
+
+@media (max-width: 480px) {
+    .graph {
+        width: 360px;
+        height: 180px;
+    }
+
+    .update {
+        display: none;
+    }
+}

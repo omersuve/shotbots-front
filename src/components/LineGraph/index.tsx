@@ -11,6 +11,7 @@ import {
     Legend,
     Filler,
 } from "chart.js";
+import styles from "./index.module.css";
 
 ChartJS.register(CategoryScale, LinearScale, PointElement, LineElement, Title, Tooltip, Legend, Filler);
 
@@ -95,7 +96,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
                     color: "gray",
                     font: {
                         family: "Nunito",
-                        size: 15,
+                        size: 12,
                     },
                 },
             },
@@ -147,18 +148,12 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
     };
 
     return (
-        <div style={{
-            position: "relative",
-            width: "50rem",
-            border: "1px solid #C4C4C4",
-            borderRadius: "0.375rem",
-            padding: "0.5rem",
-        }}>
-            <div style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}>
+        <div className={styles.graph}>
+            <div className={styles.update} style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}>
                 <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 20
                     UTC</p>
             </div>
-            <div style={{ position: "relative", width: "100%", height: "16rem" }}>
+            <div style={{ position: "relative", width: "100%", height: "100%" }}>
                 <Line id="home" options={options} data={canvasData} />
             </div>
         </div>

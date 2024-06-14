@@ -47,3 +47,67 @@
     padding: 20px;
     text-align: center;
 }
+
+@media (max-width: 768px) {
+    .container {
+        margin-left: 20px;
+        margin-right: 20px;
+    }
+
+    .title {
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+    }
+
+    .box-container {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 0.5rem;
+    }
+
+    .graph-container {
+        flex-direction: column;
+        margin: 0.5rem;
+    }
+
+    .box-with-graph {
+        margin-top: 0.5rem;
+    }
+
+    .news-box {
+        margin: 1rem;
+        padding: 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        margin-left: 10px;
+        margin-right: 10px;
+    }
+
+    .title {
+        padding-top: 0.25rem;
+        padding-bottom: 0.25rem;
+    }
+
+    .box-container {
+        flex-direction: column;
+        align-items: stretch;
+        margin-top: 0.25rem;
+    }
+
+    .graph-container {
+        flex-direction: column;
+        margin: 0.25rem;
+    }
+
+    .box-with-graph {
+        margin-top: 0.25rem;
+    }
+
+    .news-box {
+        margin: 0.5rem;
+        padding: 5px;
+    }
+}

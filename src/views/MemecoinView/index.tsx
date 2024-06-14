@@ -41,7 +41,7 @@ export const MemecoinView: FC = () => {
     const { memecoins, loading, error } = useMemecoins();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
-    const itemsPerPage = 10;
+    const itemsPerPage = 30;
 
     const sortedMemecoins = useMemo(() => {
         let sortableItems = [...memecoins];

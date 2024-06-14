@@ -1,4 +1,4 @@
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import TextLogoBlack from "../../../public/black.png";
@@ -8,11 +8,14 @@ import styles from "./index.module.css";
 import { usePrices } from "../../contexts/PricesContext";
 import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
+import { Squash as Hamburger } from "hamburger-react"; // Importing the hamburger menu component
 
 const Navbar: React.FC = () => {
     const router = useRouter();
     const { prices, loading } = usePrices();
     const { publicKey } = useWallet();
+    const [isOpen, setIsOpen] = useState(false); // State for controlling the mobile menu
+
 
     const getChangeClass = (change: string) => {
         const value = parseFloat(change);
@@ -44,10 +47,18 @@ const Navbar: React.FC = () => {
         }
     }, [publicKey]);
 
+    const toggleMenu = () => {
+        setIsOpen(!isOpen); // Toggle the mobile menu
+    };
+
+    const handleLinkClick = () => {
+        setIsOpen(false); // Close the mobile menu
+    };
+
     return (
         <nav className={`${styles["navbar"]} fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-90`}>
             <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
-                <div className="flex items-center space-x-12">
+                <div className="flex items-center lg:space-x-6">
                     <button>
                         <Link href="/" passHref={true}>
                             <div className="w-18 flex text-center items-center">
@@ -56,10 +67,10 @@ const Navbar: React.FC = () => {
                             </div>
                         </Link>
                     </button>
-                    <div className="hidden lg:inline-flex pointer-events-none">
-                        <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="fs-6 font-bold">BTC</h6>
-                            <div className="inline-flex">
+                    <div className="flex items-center justify-center flex-grow pointer-events-none">
+                        <div className="flex flex-col items-center px-2 w-20">
+                            <h6 className="text-xs font-bold">BTC</h6>
+                            <div className="contents">
                                 {loading ? (
                                     <MyLoader size="small" inline /> // Use size="small" and inline prop
                                 ) : (
@@ -72,9 +83,9 @@ const Navbar: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="fs-6 font-bold">ETH</h6>
-                            <div className="inline-flex">
+                        <div className="flex flex-col items-center px-2 w-20">
+                            <h6 className="text-xs font-bold">ETH</h6>
+                            <div className="contents">
                                 {loading ? (
                                     <MyLoader size="small" inline /> // Use size="small" and inline prop
                                 ) : (
@@ -87,9 +98,9 @@ const Navbar: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center px-2 w-28">
-                            <h6 className="fs-6 font-bold">SOL</h6>
-                            <div className="inline-flex">
+                        <div className="flex flex-col items-center px-2 w-20">
+                            <h6 className="text-xs font-bold">SOL</h6>
+                            <div className="contents">
                                 {loading ? (
                                     <MyLoader size="small" inline={true} /> // Use size="small" and inline prop
                                 ) : (
@@ -103,6 +114,9 @@ const Navbar: React.FC = () => {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="lg:hidden ml-auto">
+                    <Hamburger toggled={isOpen} toggle={toggleMenu} />
                 </div>
                 <div className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 relative"
                      id="navbar-sticky">
@@ -154,6 +168,51 @@ const Navbar: React.FC = () => {
                     </div>
                 </div>
             </div>
+            {isOpen && (
+                <div className="lg:hidden fixed top-0 left-0 w-full h-full bg-black bg-opacity-50" onClick={toggleMenu}>
+                    <div className="bg-white w-2/4 h-full shadow-lg p-4" onClick={e => e.stopPropagation()}>
+                        <ul className="space-y-4 w-75">
+                            <li>
+                                <Link href="/dashboard"
+                                      className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/dashboard" ? "border-b-2 border-blue-500" : ""}`}
+                                      onClick={handleLinkClick}>
+                                    Home
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/twitter"
+                                      className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out fs-3 fw-bold ${router.pathname === "/twitter" ? "border-b-2 border-blue-500" : ""}`}
+                                      onClick={handleLinkClick}>
+                                    X
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/news"
+                                      className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/news" ? "border-b-2 border-blue-500" : ""}`}
+                                      onClick={handleLinkClick}>
+                                    News
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/memecoin"
+                                      className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/memecoin" ? "border-b-2 border-blue-500" : ""}`}
+                                      onClick={handleLinkClick}>
+                                    Memecoins
+                                </Link>
+                            </li>
+                            <li>
+                                <WalletMultiButton
+                                    className="text-sm bg-gray-200 px-3 py-2 rounded-lg"
+                                    style={{
+                                        fontSize: "10px",
+                                        backgroundColor: "#e8e8e8",
+                                        color: "black",
+                                    }} />
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            )}
         </nav>
     );
 };
