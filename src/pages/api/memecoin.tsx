@@ -31,7 +31,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     .filter((item: any) => {
                         const dexPrice = parseFloat(item.priceUsd);
                         const priceDifference = Math.abs(dexPrice - price) / price;
-                        return priceDifference <= priceThreshold && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
+                        const isEqualSymbols = item.baseToken ? item.baseToken.symbol == symbol : false;
+                        return isEqualSymbols && priceDifference <= priceThreshold && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
                     })
                     .sort((a: any, b: any) => b["liquidity"]["usd"] - a["liquidity"]["usd"]);
 
