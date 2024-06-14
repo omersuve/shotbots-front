@@ -58,7 +58,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
         const interval = setInterval(() => {
             fetchMemeCoins().then(r => {
             }); // Fetch every 20 sec
-        }, 200000);
+        }, 20000);
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);

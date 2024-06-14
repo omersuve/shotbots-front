@@ -41,7 +41,7 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
             }
         }
 
-        const interval = setInterval(fetchPrices, 10000); // Fetch every 15 secs
+        const interval = setInterval(fetchPrices, 15000); // Fetch every 15 secs
 
         return () => clearInterval(interval); // Cleanup on component unmount
     }, []);
