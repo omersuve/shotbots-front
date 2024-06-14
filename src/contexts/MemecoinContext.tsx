@@ -39,14 +39,14 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
             const data: Memecoin[] = await response.json();
             const filteredData = data.filter((item) => item !== null); // Filter out null values
             setMemecoins(filteredData.slice(0, 15));
+            setLoading(false);
         } catch (err) {
             let errorMessage = "An unknown error occurred";
             if (err instanceof Error) {
                 errorMessage = err.message;
             }
             setError(errorMessage);
-        } finally {
-            setLoading(false);
+            setLoading(true);
         }
     };
 
