@@ -41,8 +41,8 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <PricesProvider>
-                        <MemecoinProvider>
+                    <MemecoinProvider>
+                        <PricesProvider>
                             <ScoresProvider>
                                 <NewsProvider>
                                     <TwitterProvider>
@@ -57,8 +57,8 @@ function MyApp({ Component, pageProps }: AppProps) {
                                     </TwitterProvider>
                                 </NewsProvider>
                             </ScoresProvider>
-                        </MemecoinProvider>
-                    </PricesProvider>
+                        </PricesProvider>
+                    </MemecoinProvider>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>
