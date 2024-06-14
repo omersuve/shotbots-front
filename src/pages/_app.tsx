@@ -41,10 +41,10 @@ function MyApp({ Component, pageProps }: AppProps) {
         <ConnectionProvider endpoint={endpoint}>
             <WalletProvider wallets={wallets} autoConnect>
                 <WalletModalProvider>
-                    <MemecoinProvider>
-                        <PricesProvider>
-                            <ScoresProvider>
-                                <NewsProvider>
+                    <PricesProvider>
+                        <ScoresProvider>
+                            <NewsProvider>
+                                <MemecoinProvider>
                                     <TwitterProvider>
                                         <div className="flex flex-col min-h-screen">
                                             {router.pathname != "/" && <Navbar />}
@@ -55,10 +55,10 @@ function MyApp({ Component, pageProps }: AppProps) {
                                         </div>
                                         <ToastContainer />
                                     </TwitterProvider>
-                                </NewsProvider>
-                            </ScoresProvider>
-                        </PricesProvider>
-                    </MemecoinProvider>
+                                </MemecoinProvider>
+                            </NewsProvider>
+                        </ScoresProvider>
+                    </PricesProvider>
                 </WalletModalProvider>
             </WalletProvider>
         </ConnectionProvider>

@@ -25,10 +25,6 @@ interface MemecoinProviderProps {
     children: ReactNode;
 }
 
-function timeout(delay: number) {
-    return new Promise(res => setTimeout(res, delay));
-}
-
 export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) => {
     const [memecoins, setMemecoins] = useState<Memecoin[]>([]);
     const [loading, setLoading] = useState(true);
@@ -50,15 +46,13 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
             }
             setError(errorMessage);
         } finally {
-            await timeout(3000); //for 1 sec delay
             setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchMemeCoins().then(r => {
-        }); // Initial fetch
-    }, []);
+        fetchMemeCoins().then();
+    });
 
     useEffect(() => {
         const interval = setInterval(() => {
