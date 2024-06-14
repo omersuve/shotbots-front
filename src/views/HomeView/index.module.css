@@ -92,14 +92,14 @@
     }
 
     .box-container {
-        flex-direction: column;
+        flex-direction: row;
         align-items: stretch;
-        margin-top: 0.25rem;
+        margin: 0.5rem;
     }
 
     .graph-container {
         flex-direction: column;
-        margin: 0.25rem;
+        margin: 1rem;
     }
 
     .box-with-graph {
