@@ -55,7 +55,7 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
             </div>
             <Container className="text-center">
                 <div className={`${styles["notice"]} p-2 mb-3`}>
-                    <p>Mobile Support TBA!</p>
+                    <p>Mobile Support Available!</p>
                 </div>
                 <Typist typingDelay={60} backspaceDelay={100}>
                     <div className={`${styles["typist-font"]} text-center fs-3`}>
