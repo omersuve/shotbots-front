@@ -1,12 +1,14 @@
 .box {
-    margin-inline: 2rem;
-    margin-top: 10px;
+    margin-inline: 3rem;
     margin-bottom: 1rem;
     --tw-bg-opacity: 1;
     background-color: rgba(255, 255, 255, 0.59);
     padding: 1rem /* 32px */;
-    width: 70%;
-    float: right;
     font-size: medium;
     height: fit-content;
+    @media (max-width: 768px) {
+        width: 100%; /* Full width on mobile */
+        font-size: small;
+        margin-inline: 1rem;
+    }
 }

@@ -53,25 +53,23 @@ export const TwitterView: FC = () => {
     return (
         <div>
             <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
-                {tags.map((t, i) => {
-                    return (
-                        <li key={i}>
-                            <button
-                                className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
-                                onClick={() => handleTabChange(`${t.toLowerCase().replace(" ", "-")}-tweets`, i)}
-                            >{t}</button>
-                        </li>
-                    );
-                })}
+                {tags.map((t, i) => (
+                    <li key={i} className={`lg:flex-none flex-1 ${styles["tab-item"]}`}>
+                        <button
+                            className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
+                            onClick={() => handleTabChange(`${t.toLowerCase().replace(" ", "-")}-tweets`, i)}
+                        >{t}</button>
+                    </li>
+                ))}
             </ul>
-            <p className="text-center fs-6 fw-bold my-4">RECENT HOT TWEETS</p>
+            <p className="text-center fs-6 fw-bold my-3">RECENT HOT TWEETS</p>
             {loading ? (
                 <MyLoader />
             ) : (
                 <div className="flex flex-col items-center">
                     {tweets.map((t, j) => (
                         <button key={`${selectedTab}-${j}`}
-                                className={`flex flex-col text-center items-center justify-center w-1/2 relative ${t._id.toString() !== selectedTweetId[selectedTab] ? "active:bg-yellow-200" : ""} ${t._id.toString() !== selectedTweetId[selectedTab] ? "hover:bg-yellow-100" : ""} ${t._id.toString() === selectedTweetId[selectedTab] ? "bg-yellow-300" : ""} mb-6`}
+                                className={`flex flex-col text-center items-center justify-center w-full lg:w-1/2 relative ${t._id.toString() !== selectedTweetId[selectedTab] ? "active:bg-yellow-200" : ""} ${t._id.toString() !== selectedTweetId[selectedTab] ? "hover:bg-yellow-100" : ""} ${t._id.toString() === selectedTweetId[selectedTab] ? "bg-yellow-300" : ""} mb-6`}
                                 onClick={() => setSelectedTweetId(prevState => ({
                                     ...prevState,
                                     [selectedTab]: t._id.toString(), // Set the selected news index for the current tab

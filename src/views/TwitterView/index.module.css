@@ -2,24 +2,46 @@
     font-size: 12px;
     justify-content: center;
     margin-bottom: 15px;
+    width: 100%;
+    @media (max-width: 768px) {
+        font-size: 8px;
+        margin-top: 7px;
+        display: flex;
+        flex-wrap: wrap;
+    }
 }
 
 .tab-view {
     border-left-width: 1px;
     border-right-width: 1px;
     border-bottom-width: 2px;
+    width: 200px;
+    @media (max-width: 768px) {
+        height: 30px;
+        width: 100%;
+        border-width: 1px;
+    }
+}
+
+.tab-item {
+    flex: 1;
+    @media (min-width: 769px) {
+        flex: none;
+    }
 }
 
 .box {
     --tw-bg-opacity: 1;
     background-color: rgba(255, 255, 255, 0.59);
     padding: 1rem /* 32px */;
-    font-size: smaller;
+    font-size: small;
     text-align: left;
-    min-height: 5rem;
     position: relative;
+    min-height: 80px;
     @media (max-width: 768px) {
-        width: 150px;
+        width: 100%; /* Full width on mobile */
+        font-size: xx-small;
+        padding: 0.5rem;
     }
 }
 
@@ -30,4 +52,17 @@
     position: absolute;
     top: 36%;
     opacity: 60%;
+}
+
+.news-body {
+    flex: 1;
+    margin: 0;
+    padding: 0;
+    @media (min-width: 1024px) {
+        /* Adjust the breakpoint as necessary */
+        width: 66.67%; /* 2/3 for desktop */
+    }
+    @media (max-width: 768px) {
+        width: 75%; /* 3/4 for mobile */
+    }
 }

@@ -10,7 +10,7 @@ export const HomeView: FC = () => {
 
     return (
         <div className={`${styles["box-with-graph"]} flex flex-col items-center`}>
-            <p className="text-center fs-6 fw-bold">TODAY&apos;S MARKET SENTIMENT SCORES</p>
+            <p className="text-center fs-6 fw-bold my-1">TODAY&apos;S MARKET SENTIMENT SCORES</p>
             {loading ? (
                 // Display a loading spinner while data is being fetched
                 <MyLoader />

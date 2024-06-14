@@ -83,7 +83,7 @@ const Navbar: React.FC = () => {
                                 )}
                             </div>
                         </div>
-                        <div className="flex flex-col items-center px-2 w-20">
+                        <div className="flex flex-col items-center px-1 w-12">
                             <h6 className="text-xs font-bold">ETH</h6>
                             <div className="contents">
                                 {loading ? (

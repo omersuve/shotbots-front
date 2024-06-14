@@ -87,9 +87,9 @@ export const NewsView: FC = () => {
         <div>
             <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
                 {tags.map((t, i) => (
-                    <li key={i}>
+                    <li key={i} className={`lg:flex-none flex-1 ${styles["tab-item"]}`}>
                         <button
-                            className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} inline-block px-12 py-1`}
+                            className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
                             onClick={() => handleTabChange(`${t.toLowerCase()}-news`, i)}
                         >
                             {t}
@@ -97,18 +97,18 @@ export const NewsView: FC = () => {
                     </li>
                 ))}
             </ul>
-            <p className="text-center fs-6 fw-bold mt-4">RECENT HOT NEWS</p>
+            <p className="text-center fs-6 fw-bold my-3">RECENT HOT NEWS</p>
             {loading ? (
                 <MyLoader />
             ) : (
-                <div className="flex mx-12 mt-4">
-                    <div className="block">
+                <div className="flex lg:mx-12 lg:mt-4">
+                    <div className="block w-1/4 lg:w-1/3">
                         {
                             news &&
                             news.map((n, j) => (
                                 <button
                                     key={`${selectedTab}-${j}`}
-                                    className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-6`}
+                                    className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-2 lg:m-6 w-full`}
                                     onClick={() => setSelectedNewsId(prevState => ({
                                         ...prevState,
                                         [selectedTab]: n._id.toString(), // Set the selected news index for the current tab
@@ -176,7 +176,7 @@ export const NewsView: FC = () => {
                                                 className="fa-xl" />
                                             }
                                         </div>
-                                        <div className="absolute right-2 top-2">
+                                        <div className={`${styles.formatDate} absolute right-2 top-2 text-gray-400`}>
                                             {formatDate(n["timestamp"])}
                                         </div>
                                     </div>
@@ -186,8 +186,10 @@ export const NewsView: FC = () => {
                     </div>
                     {
                         news.length > 0 &&
-                      <NewsBody
-                        body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
+                      <div className="news-body w-3/4 lg:w-2/3">
+                        <NewsBody
+                          body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
+                      </div>
                     }
                 </div>
             )}
