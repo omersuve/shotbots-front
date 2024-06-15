@@ -333,9 +333,9 @@ export const MemecoinView: FC = () => {
                                                         />
                                                     </button>
                                                     <span
-                                                        className="text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.upVote || 0}</span> {/* Upvote count */}
+                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.upVote || 0}</span> {/* Upvote count */}
                                                 </div>
-                                                <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                                <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
                                                     <button
                                                         onClick={() => handleVote(coin.baseAddress, "downvote")}
                                                         className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
@@ -347,9 +347,9 @@ export const MemecoinView: FC = () => {
                                                         />
                                                     </button>
                                                     <span
-                                                        className="text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.downVote || 0}</span> {/* Downvote count */}
+                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.downVote || 0}</span> {/* Downvote count */}
                                                 </div>
-                                                <div className="w-16 lg:w-36 flex justify-center opacity-75">
+                                                <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
                                                     <button
                                                         onClick={(e) => {
                                                             e.preventDefault();
