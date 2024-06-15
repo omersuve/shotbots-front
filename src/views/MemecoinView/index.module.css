@@ -16,7 +16,7 @@
 
 .table-container {
     width: 100%;
-    height: 650px; /* Set a fixed height for the table container */
+    height: 950px; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
     /*justify-content: space-between; !* Ensure the pagination stays at the bottom *!*/
@@ -42,11 +42,11 @@
 }
 
 .table-container:first-child {
-    flex-basis: 70%; /* First table takes 70% of the width */
+    flex-basis: 80%; /* First table takes 70% of the width */
 }
 
 .table-container:last-child {
-    flex-basis: 70%; /* Second table takes 30% of the width */
+    flex-basis: 80%; /* Second table takes 30% of the width */
 }
 
 .table-wrapper {
@@ -62,7 +62,7 @@
 .table {
     width: 100%;
     border-collapse: collapse;
-    font-size: 10px; /* Reduced font size */
+    font-size: 12px; /* Reduced font size */
     font-weight: bolder;
     table-layout: fixed; /* Ensure fixed table layout */
     background-color: #f2f2f2;
@@ -82,7 +82,7 @@
 }
 
 .table tr, .table th, .table td {
-    height: 30px; /* Set a fixed height for each row */
+    height: 40px; /* Set a fixed height for each row */
 }
 
 .sortableHeader {
@@ -145,7 +145,7 @@
 .table-sentiment {
     width: 100%;
     border-collapse: collapse;
-    font-size: 16px; /* Reduced font size */
+    font-size: 12px; /* Reduced font size */
     font-weight: bolder;
     table-layout: fixed; /* Ensure fixed table layout */
     background-color: #f2f2f2;
@@ -187,19 +187,18 @@
 
 /* Set fixed widths for each column */
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 5%;
+    width: 4%;
     opacity: 50%;
     pointer-events: none;
     background-color: #e0e0e0;
 }
 
 .table th:nth-child(2), .table td:nth-child(2) {
-    width: 30%;
+    width: 32%;
 }
 
 .table th:nth-child(3), .table td:nth-child(3) {
-    width: 15%;
-    font-weight: lighter;
+    width: 10%;
 }
 
 .table th:nth-child(4), .table td:nth-child(4) {
@@ -208,12 +207,12 @@
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
-    width: 10%;
+    width: 12%;
     font-weight: lighter;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
-    width: 10%;
+    width: 12%;
     font-weight: lighter;
 }
 
@@ -245,7 +244,7 @@
     }
 
     .table {
-        font-size: 6px;
+        font-size: 5px;
     }
 
     .pagination button {

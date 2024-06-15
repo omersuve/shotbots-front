@@ -32,7 +32,8 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         const dexPrice = parseFloat(item.priceUsd);
                         const priceDifference = Math.abs(dexPrice - price) / price;
                         const isEqualSymbols = item.baseToken ? item.baseToken.symbol == symbol : false;
-                        return isEqualSymbols && priceDifference <= priceThreshold && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
+                        const chain = item.chainId == "base" || item.chainId == "solana" || item.chainId == "ethereum";
+                        return isEqualSymbols && priceDifference <= priceThreshold && chain && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
                     })
                     .sort((a: any, b: any) => b["liquidity"]["usd"] - a["liquidity"]["usd"]);
 
@@ -40,7 +41,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 if (filteredAndSortedPairs.length > 0) {
                     const item = filteredAndSortedPairs[0];
                     formattedData.push({
-                        id: row[0].id,
+                        baseAddress: item.baseToken.address,
                         name: row[0].name,
                         symbol: symbol, // Make symbol uppercase
                         price: row[1],

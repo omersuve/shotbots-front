@@ -5,18 +5,19 @@ import Image from "next/image";
 import Sol from "../../../public/solana-sol-logo.svg";
 import Base from "../../../public/base.png";
 import Eth from "../../../public/ethereum-eth-logo.svg";
-import Poly from "../../../public/polygon-matic-logo.svg";
-import BSC from "../../../public/bsc.png";
-import Doge from "../../../public/dogechain.jpeg";
-import Ton from "../../../public/ton_symbol.png";
+import Up from "../../../public/up.jpg";
+import Down from "../../../public/down.jpg";
+import Dex from "../../../public/dex.png";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { useMemecoins } from "../../contexts/MemecoinContext";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { toast } from "react-toastify";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
 type Memecoin = {
-    id: string;
+    baseAddress: string;
     name: string;
     symbol: string;
     price: number | null;
@@ -26,6 +27,8 @@ type Memecoin = {
     chainId: string;
     url: string;
     liquidity: number | null;
+    upVote?: number;
+    downVote?: number;
 };
 
 type SortConfig = {
@@ -37,14 +40,50 @@ const subscriptDigits = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇",
     "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀",
 ];
 
+const fetchMemeVotes = async () => {
+    const response = await fetch("/api/getMemeVotes");
+    if (!response.ok) {
+        throw new Error("Failed to fetch meme votes");
+    }
+    const data = await response.json();
+    return data;
+};
+
 export const MemecoinView: FC = () => {
     const { memecoins, loading, error } = useMemecoins();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
+    const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
+    const { publicKey } = useWallet();
+
+    useEffect(() => {
+        const getVotes = async () => {
+            try {
+                const votes = await fetchMemeVotes();
+                const votesMap = votes.reduce((acc: any, vote: any) => {
+                    acc[vote.baseAddress] = {
+                        upVote: vote.upVote,
+                        downVote: vote.downVote,
+                    };
+                    return acc;
+                }, {});
+                setVotes(votesMap);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        getVotes().then();
+    }, []);
+
     const itemsPerPage = 30;
 
     const sortedMemecoins = useMemo(() => {
-        let sortableItems = [...memecoins];
+        let sortableItems = [...memecoins].map((coin) => ({
+            ...coin,
+            upVote: votes[coin.baseAddress]?.upVote || 0,
+            downVote: votes[coin.baseAddress]?.downVote || 0,
+        }));
         if (sortConfig.key) {
             sortableItems.sort((a, b) => {
                 const aValue = a[sortConfig.key!];
@@ -173,6 +212,48 @@ export const MemecoinView: FC = () => {
         aspectRatio: 0.25,
     };
 
+    const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
+        if (!publicKey) {
+            toast("Please connect your wallet first.");
+            return;
+        }
+
+        try {
+            const response = await fetch("/api/memeVote", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                body: JSON.stringify({
+                    pk: publicKey.toString(),
+                    baseAddress,
+                    vote,
+                }),
+            });
+
+            if (response.status != 200) {
+                toast("Already voted for this meme!");
+            } else {
+                setVotes((prevVotes) => {
+                    const currentVotes = prevVotes[baseAddress] || { upVote: 0, downVote: 0 };
+
+                    return {
+                        ...prevVotes,
+                        [baseAddress]: {
+                            upVote: vote === "upvote" ? currentVotes.upVote + 1 : currentVotes.upVote,
+                            downVote: vote === "downvote" ? currentVotes.downVote + 1 : currentVotes.downVote,
+                        },
+                    };
+                });
+
+                toast("Vote submitted successfully!");
+            }
+        } catch (err) {
+            console.error("Error submitting vote:", err);
+            alert("Failed to submit vote");
+        }
+    };
+
     return (
         <div className={styles.container}>
             {loading ? (
@@ -213,60 +294,79 @@ export const MemecoinView: FC = () => {
                                 </thead>
                                 <tbody>
                                 {currentItems.map((coin, index) => (
-                                    <tr key={coin.id}>
+                                    <tr key={coin.baseAddress}>
                                         <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
-                                        <td onClick={(e) => {
-                                            e.preventDefault();
-                                            console.log(`Navigating to: ${coin.url}`); // Debug log
-                                            window.open(coin.url, "_blank");
-                                        }} className="hover:bg-gray-300"
-                                            style={{ cursor: "pointer" }}>
-                                            <div className="inline-flex float-left">
-                                                {coin.chainId == "solana" ? (
-                                                    <Image src={Sol} alt="solana"
-                                                           style={{ width: "16px", marginRight: "8px" }} />
-                                                ) : coin.chainId == "base" ? (
-                                                    <Image src={Base} alt="base"
-                                                           style={{
-                                                               width: "16px",
-                                                               marginRight: "8px",
-                                                           }} />
-                                                ) : coin.chainId == "ethereum" ? (
-                                                    <Image src={Eth} alt="ethereum"
-                                                           style={{
-                                                               width: "10px",
-                                                               marginRight: "10px",
-                                                               marginLeft: "2px",
-                                                           }} />
-                                                ) : coin.chainId == "polygon" ? (
-                                                    <Image src={Poly} alt="polygon"
-                                                           style={{
-                                                               width: "16px",
-                                                               marginRight: "10px",
-                                                               marginLeft: "2px",
-                                                           }} />
-                                                ) : coin.chainId == "bsc" ? (
-                                                    <Image src={BSC} alt="bsc"
-                                                           style={{
-                                                               width: "16px",
-                                                               marginRight: "10px",
-                                                           }} />
-                                                ) : coin.chainId == "dogechain" ? (
-                                                    <Image src={Doge} alt="dogechain"
-                                                           style={{
-                                                               width: "16px",
-                                                               marginRight: "10px",
-                                                           }} />
-                                                ) : coin.chainId == "ton" && (
-                                                    <Image src={Ton} alt="ton"
-                                                           style={{
-                                                               width: "16px",
-                                                               marginRight: "10px",
-                                                           }} />)}
-                                                {coin.name}
+                                        <td>
+                                            <div className="flex items-center">
+                                                <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
+                                                    {coin.chainId == "solana" ? (
+                                                        <Image src={Sol} alt="solana"
+                                                               style={{ width: "16px", marginRight: "8px" }} />
+                                                    ) : coin.chainId == "base" ? (
+                                                        <Image src={Base} alt="base"
+                                                               style={{
+                                                                   width: "16px",
+                                                                   marginRight: "8px",
+                                                               }} />
+                                                    ) : coin.chainId == "ethereum" && (
+                                                        <Image src={Eth} alt="ethereum"
+                                                               style={{
+                                                                   width: "10px",
+                                                                   marginRight: "10px",
+                                                                   marginLeft: "2px",
+                                                               }} />
+                                                    )}
+                                                </div>
+                                                <div
+                                                    className="hidden lg:block lg:w-48 lg:text-left lg:truncate lg:pointer-events-none">
+                                                    {coin.name}
+                                                </div>
+                                                <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                                    <button
+                                                        onClick={() => handleVote(coin.baseAddress, "upvote")}
+                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                                    >
+                                                        <Image
+                                                            src={Up}
+                                                            alt="up"
+                                                            className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                                        />
+                                                    </button>
+                                                    <span
+                                                        className="text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.upVote || 0}</span> {/* Upvote count */}
+                                                </div>
+                                                <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                                    <button
+                                                        onClick={() => handleVote(coin.baseAddress, "downvote")}
+                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                                    >
+                                                        <Image
+                                                            src={Down}
+                                                            alt="down"
+                                                            className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                                        />
+                                                    </button>
+                                                    <span
+                                                        className="text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.downVote || 0}</span> {/* Downvote count */}
+                                                </div>
+                                                <div className="w-16 lg:w-36 flex justify-center opacity-75">
+                                                    <button
+                                                        onClick={(e) => {
+                                                            e.preventDefault();
+                                                            window.open(coin.url, "_blank");
+                                                        }}
+                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                                    >
+                                                        <Image
+                                                            src={Dex}
+                                                            alt="dex"
+                                                            className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
+                                                        />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </td>
-                                        <td className="pointer-events-none">{coin.symbol?.toUpperCase()}</td>
+                                        <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
                                         <td className="pointer-events-none">{formatPrice(coin.price)}</td>
                                         <td className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
                                             {formatPriceChange(coin.price_change_1d)}

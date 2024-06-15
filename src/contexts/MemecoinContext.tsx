@@ -1,7 +1,7 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
 
 type Memecoin = {
-    id: string;
+    baseAddress: string;
     name: string;
     symbol: string;
     price: number | null;
@@ -55,8 +55,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
 
     useEffect(() => {
         const interval = setInterval(() => {
-            fetchMemeCoins().then(r => {
-            }); // Fetch every 20 sec
+            fetchMemeCoins().then(); // Fetch every 1 min
         }, 60000);
 
         return () => clearInterval(interval); // Cleanup on component unmount
