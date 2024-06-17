@@ -1,7 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { useRouter } from "next/router";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import TextLogoBlack from "../../../public/black.png";
+import Fish from "../../../public/fish.png";
+import Sheriff from "../../../public/sheriff.png";
 import Image from "next/image";
 import Link from "next/link";
 import styles from "./index.module.css";
@@ -10,19 +12,69 @@ import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Squash as Hamburger } from "hamburger-react"; // Importing the hamburger menu component
 
+interface User {
+    publicKey: string,
+    points: number,
+    win: number,
+    lose: number,
+    pointBoost: number,
+    votingPower: number,
+    createdAt: Date,
+}
+
 const Navbar: React.FC = () => {
     const router = useRouter();
     const { prices, loading } = usePrices();
     const { publicKey } = useWallet();
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
+    const [profileInfo, setProfileInfo] = useState<User | null>(null);
+    const profileRef = useRef<HTMLDivElement>(null);
+    const profileButtonRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false); // State for controlling the mobile menu
 
+
+    useEffect(() => {
+        const handleClickOutside = (event: MouseEvent) => {
+            if (profileButtonRef.current &&
+                !profileButtonRef.current.contains(event.target as Node)) {
+                if (window.innerWidth > 768) {  // Check for mobile view
+                    setIsProfileOpen(false);
+                }
+            }
+        };
+
+        document.addEventListener("mousedown", handleClickOutside);
+        return () => {
+            document.removeEventListener("mousedown", handleClickOutside);
+        };
+    }, [profileRef]);
+
+    useEffect(() => {
+        if (isProfileOpen && profileButtonRef.current && profileRef.current) {
+            const buttonRect = profileButtonRef.current.getBoundingClientRect();
+            const popupRect = profileRef.current.getBoundingClientRect();
+            const offset = buttonRect.left + buttonRect.width / 2 - popupRect.width / 2;
+            profileRef.current.style.left = `${offset}px`;
+
+            if (window.innerWidth < 768) {  // Check for mobile view
+                profileRef.current.style.top = "400px";
+                profileRef.current.style.left = "50%";
+                profileRef.current.style.transform = "translateX(-50%)";
+                profileRef.current.style.width = "75%";
+                profileRef.current.style.minWidth = "unset";
+            }
+        }
+    }, [isProfileOpen]);
+
+    const toggleProfile = () => {
+        setIsProfileOpen((prev) => !prev);
+    };
 
     const getChangeClass = (change: string) => {
         const value = parseFloat(change);
         if (isNaN(value)) return "";
         return value < 0 ? "text-red-500" : "text-green-500";
     };
-
 
     const fetchProfile = async (publicKey: string) => {
         try {
@@ -34,7 +86,7 @@ const Navbar: React.FC = () => {
                 body: JSON.stringify({ publicKey }),
             });
             const data = await response.json();
-            // setProfileInfo(data);
+            setProfileInfo(data);
         } catch (error) {
             console.error("Error fetching profile info:", error);
         }
@@ -49,10 +101,12 @@ const Navbar: React.FC = () => {
 
     const toggleMenu = () => {
         setIsOpen(!isOpen); // Toggle the mobile menu
+        setIsProfileOpen(false);
     };
 
     const handleLinkClick = () => {
         setIsOpen(false); // Close the mobile menu
+        setIsProfileOpen(false);
     };
 
     return (
@@ -148,11 +202,13 @@ const Navbar: React.FC = () => {
                     </ul>
                     <div className="ml-auto flex items-center space-x-4">
                         <button
-                            disabled={true}
-                            className="flex h-10 rounded-md items-center py-3 px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-none"
+                            ref={profileButtonRef}
+                            disabled={!publicKey}
+                            onClick={toggleProfile}
+                            className={`${!publicKey ? "hidden" : ""} flex h-10 rounded-md items-center py-3 px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-auto`}
                             style={{
                                 fontFamily: "DM Sans",
-                                backgroundColor: "rgb(233, 233, 233)",
+                                backgroundColor: isProfileOpen ? "rgb(200, 200, 200)" : "rgb(233, 233, 233)",
                             }}
                         >
                             Profile
@@ -201,6 +257,17 @@ const Navbar: React.FC = () => {
                                 </Link>
                             </li>
                             <li>
+                                <button
+                                    className={`${!publicKey ? "hidden" : ""} text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${isProfileOpen ? "border-b-2 border-blue-500" : ""}`}
+                                    disabled={!publicKey}
+                                    onClick={(e) => {
+                                        e.stopPropagation();
+                                        toggleProfile();
+                                    }}>
+                                    Profile
+                                </button>
+                            </li>
+                            <li>
                                 <WalletMultiButton
                                     className="text-sm bg-gray-200 px-3 py-2 rounded-lg"
                                     style={{
@@ -210,6 +277,74 @@ const Navbar: React.FC = () => {
                                     }} />
                             </li>
                         </ul>
+                    </div>
+                </div>
+            )}
+            {isProfileOpen && (
+                <div ref={profileRef}
+                     className="absolute mt-2 p-4 border-2 bg-white border-blue-50 rounded-lg shadow-lg z-30"
+                     style={{
+                         top: "100%",
+                         minWidth: "300px",
+                         borderRadius: "20px",
+                         display: "flex",
+                         flexDirection: "column",
+                         alignItems: "center",
+                         gap: "10px",
+                     }}>
+                    <div style={{
+                        display: "flex",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        alignItems: "center",
+                    }}>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <span style={{ fontWeight: "bold", fontSize: "x-small" }}>POINT BOOST</span>
+                            <span style={{
+                                color: "#A52A2A",
+                                fontStyle: "italic",
+                                fontWeight: "bold",
+                                fontSize: "smaller",
+                            }}>x{profileInfo?.pointBoost}</span>
+                        </div>
+                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                            <span style={{ fontWeight: "bold", fontSize: "x-small" }}>VOTING POWER</span>
+                            <span style={{
+                                color: "#A52A2A",
+                                fontStyle: "italic",
+                                fontWeight: "bold",
+                                fontSize: "smaller",
+                            }}>x{profileInfo?.votingPower}</span>
+                        </div>
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                        width: "100%",
+                        backgroundColor: "rgb(230,230,230)",
+                        borderRadius: "20px",
+                    }}>
+                        <span style={{
+                            fontWeight: "bold",
+                            fontSize: "1.5em",
+                            borderRadius: "10px",
+                            fontFamily: "fantasy",
+                            marginLeft: "10px",
+                            display: "inline-flex",
+                            alignItems: "center",
+                        }}><p className="mt-2">Points: {profileInfo?.points}</p>
+                            <Image className="object-cover m-1 mr-4"
+                                   src={Sheriff}
+                                   width={30} // Adjust width as needed
+                                   height={30} // Adjust height as needed
+                                   alt="textlogo" />
+                        </span>
+                        <Image className="object-cover m-1.5 mr-4"
+                               src={Fish}
+                               width={30} // Adjust width as needed
+                               height={30} // Adjust height as needed
+                               alt="textlogo" />
                     </div>
                 </div>
             )}
