@@ -51,7 +51,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
 
     useEffect(() => {
         fetchMemeCoins().then();
-    });
+    }, []);
 
     useEffect(() => {
         const interval = setInterval(() => {
