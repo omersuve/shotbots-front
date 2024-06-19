@@ -33,13 +33,12 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
     const fetchMemeCoins = async () => {
         try {
             const response = await fetch("/api/memecoin");
-            if (!response.ok) {
-                throw new Error("Failed to fetch data");
+            if (response.ok) {
+                const data: Memecoin[] = await response.json();
+                const filteredData = data.filter((item) => item !== null); // Filter out null values
+                setMemecoins(filteredData.slice(0, 10));
+                setLoading(false);
             }
-            const data: Memecoin[] = await response.json();
-            const filteredData = data.filter((item) => item !== null); // Filter out null values
-            setMemecoins(filteredData.slice(0, 15));
-            setLoading(false);
         } catch (err) {
             let errorMessage = "An unknown error occurred";
             if (err instanceof Error) {
