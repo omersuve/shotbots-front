@@ -178,6 +178,14 @@
         font-size: 6px;
     }
 
+    .table td {
+        height: 50px; /* Set a fixed height for each row */
+    }
+
+    .table th {
+        font-size: 5px; /* Set a fixed height for each row */
+    }
+
     .pagination button {
         padding: 2px 6px;
         margin-top: 20px;
