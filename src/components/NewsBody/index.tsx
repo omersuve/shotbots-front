@@ -9,7 +9,7 @@ interface NewsBodyProps {
 
 function NewsBody({body}: NewsBodyProps) {
     return (
-        <div className={`${styles["box"]} shadow`}>
+        <div className={`${styles["box"]} shadow pointer-events-none`}>
             <h1 className="relative text-black">
                 {parse(body)}
             </h1>
