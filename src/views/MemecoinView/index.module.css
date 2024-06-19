@@ -28,11 +28,11 @@
 }
 
 .table-container:first-child {
-    flex-basis: 80%; /* First table takes 70% of the width */
+    flex-basis: 90%; /* First table takes 70% of the width */
 }
 
 .table-container:last-child {
-    flex-basis: 80%; /* Second table takes 30% of the width */
+    flex-basis: 90%; /* Second table takes 30% of the width */
 }
 
 .table-wrapper {
