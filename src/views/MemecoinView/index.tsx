@@ -277,7 +277,7 @@ export const MemecoinView: FC = () => {
                                                         />
                                                     </button>
                                                     <span
-                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.upVote || 0}</span> {/* Upvote count */}
+                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
                                                 </div>
                                                 <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
                                                     <button
@@ -291,7 +291,7 @@ export const MemecoinView: FC = () => {
                                                         />
                                                     </button>
                                                     <span
-                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{coin.downVote || 0}</span> {/* Downvote count */}
+                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
                                                 </div>
                                                 <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
                                                     <button
