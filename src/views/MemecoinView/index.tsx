@@ -13,26 +13,13 @@ import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Toolti
 import { useMemecoins } from "../../contexts/MemecoinContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
+import { formatPrice, formatPriceChange, formatLargeNumber } from "../../utils/formatting";
+import { MemecoinData } from "../../types";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
-type Memecoin = {
-    baseAddress: string;
-    name: string;
-    symbol: string;
-    price: number | null;
-    price_change_1d: number | null;
-    real_volume_1d: number | null;
-    circulating_marketcap: number | null;
-    chainId: string;
-    url: string;
-    liquidity: number | null;
-    upVote?: number;
-    downVote?: number;
-};
-
 type SortConfig = {
-    key: keyof Memecoin | null;
+    key: keyof MemecoinData | null;
     direction: "ascending" | "descending";
 };
 
@@ -103,7 +90,7 @@ export const MemecoinView: FC = () => {
         return sortableItems;
     }, [memecoins, sortConfig]);
 
-    const requestSort = (key: keyof Memecoin) => {
+    const requestSort = (key: keyof MemecoinData) => {
         let direction: "ascending" | "descending" = "descending";
         if (sortConfig.key === key && sortConfig.direction === "descending") {
             direction = "ascending";
@@ -111,54 +98,11 @@ export const MemecoinView: FC = () => {
         setSortConfig({ key, direction });
     };
 
-    const getSortIndicator = (key: keyof Memecoin) => {
+    const getSortIndicator = (key: keyof MemecoinData) => {
         if (sortConfig.key !== key) {
             return null;
         }
         return sortConfig.direction === "ascending" ? "↑" : "↓";
-    };
-
-    const formatPrice = (value: number | null): string | null => {
-        if (value === null) return null;
-        if (value === 0) return "0";
-        const formatted = value.toPrecision(2);
-
-        // Convert scientific notation to fixed-point notation if necessary
-        if (formatted.includes("e")) {
-            const [base, exponent] = formatted.split("e");
-            const exponentNumber = parseInt(exponent, 10);
-            const number = parseFloat(base) * Math.pow(10, exponentNumber);
-
-            if (exponentNumber < -4) {
-                const decimalPlaces = Math.abs(exponentNumber) - 1;
-                const significantPart = number.toFixed(Math.abs(exponentNumber) + 1).replace(/^-?0\.0*/, "");
-                return `$0.0${subscriptDigits[decimalPlaces]}${significantPart}`;
-            }
-
-            return number.toFixed(Math.max(0, -exponentNumber + 1));
-        }
-
-        return parseFloat(formatted).toString(); // Remove unnecessary trailing zeros
-    };
-
-    const formatPriceChange = (value: number | null): string | null => {
-        if (value === null) return null;
-        const roundedValue = Math.round(value);
-        const sign = roundedValue >= 0 ? "+" : "-";
-        return `${sign}${Math.abs(roundedValue)}%`;
-    };
-
-    const formatLargeNumber = (value: number | null): string | null => {
-        if (value === null) return null;
-        if (value >= 1_000_000_000) {
-            return `${(value / 1_000_000_000).toFixed(2)}B`;
-        } else if (value >= 1_000_000) {
-            return `${(value / 1_000_000).toFixed(2)}M`;
-        } else if (value >= 1_000) {
-            return `${(value / 1_000).toFixed(2)}K`;
-        } else {
-            return value.toFixed(2); // Ensure two decimal places for values below 1,000
-        }
     };
 
 
@@ -379,17 +323,17 @@ export const MemecoinView: FC = () => {
                                 </tbody>
                             </table>
                         </div>
-                        <div className={styles.pagination}>
-                            {Array.from({ length: totalPages }, (_, index) => (
-                                <button
-                                    key={index + 1}
-                                    onClick={() => setCurrentPage(index + 1)}
-                                    className={currentPage === index + 1 ? styles.activePage : ""}
-                                >
-                                    {index + 1}
-                                </button>
-                            ))}
-                        </div>
+                        {/*<div className={styles.pagination}>*/}
+                        {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
+                        {/*        <button*/}
+                        {/*            key={index + 1}*/}
+                        {/*            onClick={() => setCurrentPage(index + 1)}*/}
+                        {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
+                        {/*        >*/}
+                        {/*            {index + 1}*/}
+                        {/*        </button>*/}
+                        {/*    ))}*/}
+                        {/*</div>*/}
                     </div>
                     {/*<div className={styles["table-sentiment-container"]}>*/}
                     {/*    <div className={styles["table-wrapper-sentiment"]} style={{ height: "350px", width: "350px" }}>*/}

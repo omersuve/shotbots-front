@@ -31,6 +31,27 @@ export const NewsView: FC = () => {
 
     const news = newsData[selectedTab] || [];
 
+    const cardRefs = useRef<{ [key: string]: HTMLButtonElement | null }>({});
+    const newsBodyRef = useRef<HTMLDivElement | null>(null);
+
+    useEffect(() => {
+        const updatePosition = () => {
+            if (selectedNewsId[selectedTab] && cardRefs.current[selectedNewsId[selectedTab]]) {
+                const cardElement = cardRefs.current[selectedNewsId[selectedTab]];
+                const bodyElement = newsBodyRef.current;
+                if (cardElement && bodyElement) {
+                    const { height } = cardElement.getBoundingClientRect();
+                    const selectedIndex = news.findIndex(n => n._id.toString() === selectedNewsId[selectedTab]);
+                    const marginTop = selectedIndex * height; // 16px for margin-bottom of each card
+                    bodyElement.style.marginTop = `${marginTop}px`;
+                }
+            }
+        };
+
+        // Call the function initially and on tab change
+        updatePosition();
+    }, [selectedNewsId, selectedTab, news]);
+
     useEffect(() => {
         if (news.length > 0 && !selectedNewsId[selectedTab]) {
             setSelectedNewsId(prevState => ({
@@ -101,13 +122,16 @@ export const NewsView: FC = () => {
             {loading ? (
                 <MyLoader />
             ) : (
-                <div className="flex lg:mx-12 lg:mt-4">
-                    <div className="block w-1/4 lg:w-1/3">
+                <div className="relative flex lg:mx-12 lg:mt-4">
+                    <div className="block w-1/4 lg:w-1/3 relative">
                         {
                             news &&
                             news.map((n, j) => (
                                 <button
                                     key={`${selectedTab}-${j}`}
+                                    ref={(el) => {
+                                        cardRefs.current[n._id.toString()] = el;
+                                    }}
                                     className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-2 lg:m-6 w-full`}
                                     onClick={() => setSelectedNewsId(prevState => ({
                                         ...prevState,
@@ -115,7 +139,7 @@ export const NewsView: FC = () => {
                                     }))}>
                                     <div className={`${styles["box"]} shadow flex flex-col justify-between`}>
                                         <div className="flex-1 flex">
-                                            <h3 className="relative text-black mr-16">
+                                            <h3 className="relative text-black lg:mr-16">
                                                 {parse(n.title)}
                                             </h3>
                                         </div>
@@ -186,7 +210,7 @@ export const NewsView: FC = () => {
                     </div>
                     {
                         news.length > 0 &&
-                      <div className="news-body w-3/4 lg:w-2/3">
+                      <div ref={newsBodyRef} className="lg:w-2/3" style={{ width: "70%" }}>
                         <NewsBody
                           body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
                       </div>

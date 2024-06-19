@@ -7,7 +7,6 @@
 
 .tables-container {
     display: flex;
-    /*justify-content: space-between; !* Space between the tables *!*/
     justify-content: center;
     width: 100%; /* Ensure the container takes full width */
     margin-top: 20px;
@@ -19,7 +18,6 @@
     height: 950px; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
-    /*justify-content: space-between; !* Ensure the pagination stays at the bottom *!*/
     overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
     position: relative;
     margin-inline: 30px;
@@ -27,18 +25,6 @@
     justify-content: center;
     align-items: center;
     text-align: center;
-}
-
-.table-sentiment-container {
-    width: 80%;
-    height: 900px; /* Set a fixed height for the table container */
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between; /* Ensure the pagination stays at the bottom */
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
-    position: relative;
-    margin-inline: 30px;
-    padding: 10px; /* Add padding around table container */
 }
 
 .table-container:first-child {
@@ -51,12 +37,6 @@
 
 .table-wrapper {
     flex-grow: 1;
-}
-
-.table-wrapper-sentiment {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
 }
 
 .table {
@@ -82,7 +62,7 @@
 }
 
 .table tr, .table th, .table td {
-    height: 40px; /* Set a fixed height for each row */
+    height: 30px; /* Set a fixed height for each row */
 }
 
 .sortableHeader {
@@ -141,53 +121,9 @@
     border-radius: 10px;
 }
 
-
-.table-sentiment {
-    width: 100%;
-    border-collapse: collapse;
-    font-size: 12px; /* Reduced font size */
-    font-weight: bolder;
-    table-layout: fixed; /* Ensure fixed table layout */
-    background-color: #f2f2f2;
-    border-radius: 10px; /* Rounded corners for the entire table */
-    overflow: hidden; /* Ensure rounded corners are applied properly */
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
-}
-
-.table-sentiment th, .table-sentiment td {
-    border: 1px solid #ddd;
-    padding: 8px;
-}
-
-.table-sentiment th {
-    background-color: rgba(224, 224, 224, 0.5);
-    font-weight: bold !important;
-}
-
-.table-sentiment tr, .table-sentiment th, .table-sentiment td {
-    height: 50px; /* Set a fixed height for each row */
-}
-
-/* Set fixed widths for each column */
-.table-sentiment th:nth-child(1), .table-sentiment td:nth-child(1) {
-    width: 5%;
-    opacity: 50%;
-    pointer-events: none;
-    background-color: #e0e0e0;
-}
-
-.table-sentiment th:nth-child(2), .table-sentiment td:nth-child(2) {
-    width: 15%;
-}
-
-.table-sentiment th:nth-child(3), .table-sentiment td:nth-child(3) {
-    width: 15%;
-    font-weight: lighter;
-}
-
 /* Set fixed widths for each column */
 .table th:nth-child(1), .table td:nth-child(1) {
-    width: 4%;
+    width: 3%;
     opacity: 50%;
     pointer-events: none;
     background-color: #e0e0e0;
@@ -198,32 +134,27 @@
 }
 
 .table th:nth-child(3), .table td:nth-child(3) {
-    width: 10%;
+    width: 11%;
 }
 
 .table th:nth-child(4), .table td:nth-child(4) {
     width: 10%;
-    font-weight: lighter;
 }
 
 .table th:nth-child(5), .table td:nth-child(5) {
     width: 12%;
-    font-weight: lighter;
 }
 
 .table th:nth-child(6), .table td:nth-child(6) {
     width: 12%;
-    font-weight: lighter;
 }
 
 .table th:nth-child(7), .table td:nth-child(7) {
     width: 10%;
-    font-weight: lighter;
 }
 
 .table th:nth-child(8), .table td:nth-child(8) {
     width: 10%;
-    font-weight: lighter;
 }
 
 @media (max-width: 768px) {
@@ -262,7 +193,7 @@
     }
 
     .table td:nth-child(2) {
-        width: 32%;
+        width: 30%;
         font-size: 8px;
         padding: 4px;
     }
@@ -326,14 +257,13 @@
     }
 
     .table td:nth-child(8) {
-        width: 10%;
-        font-weight: lighter;
         font-size: 6px;
         padding: 0;
+        font-weight: lighter;
     }
 
     .table th:nth-child(8) {
         padding: 0;
-        font-size: 5px;
+        width: 12%;
     }
 }
