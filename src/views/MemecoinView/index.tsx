@@ -8,6 +8,7 @@ import Eth from "../../../public/ethereum-eth-logo.svg";
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
+import Ph from "../../../public/placeholder.png";
 import { Bar } from "react-chartjs-2";
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
 import { useMemecoins } from "../../contexts/MemecoinContext";
@@ -199,150 +200,162 @@ export const MemecoinView: FC = () => {
     };
 
     return (
-        <div className={styles.container}>
-            {loading ? (
-                <MyLoader />
-            ) : (
-                <div className={styles["tables-container"]}>
-                    <div className={styles["table-container"]}>
-                        <p className="text-center fs-6 fw-bold mb-4">TOP PERFORMING MEMECOINS</p>
-                        <div className={styles["table-wrapper"]}>
-                            <table className={styles.table}>
-                                <thead>
-                                <tr>
-                                    <th>#</th>
-                                    <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
-                                        Name {getSortIndicator("name")}
-                                    </th>
-                                    <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
-                                        Symbol {getSortIndicator("symbol")}
-                                    </th>
-                                    <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
-                                        Price {getSortIndicator("price")}
-                                    </th>
-                                    <th onClick={() => requestSort("price_change_1d")}
-                                        className={styles.sortableHeader}>
-                                        Change (1D) {getSortIndicator("price_change_1d")}
-                                    </th>
-                                    <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
-                                        Volume (1D) {getSortIndicator("real_volume_1d")}
-                                    </th>
-                                    <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
-                                        Liquidity {getSortIndicator("liquidity")}
-                                    </th>
-                                    <th onClick={() => requestSort("circulating_marketcap")}
-                                        className={styles.sortableHeader}>
-                                        Market Cap {getSortIndicator("circulating_marketcap")}
-                                    </th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                {currentItems.map((coin, index) => (
-                                    <tr key={coin.baseAddress}>
-                                        <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
-                                        <td>
-                                            <div className="flex items-center">
-                                                <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
-                                                    {coin.chainId == "solana" ? (
-                                                        <Image src={Sol} alt="solana"
-                                                               style={{ width: "16px", marginRight: "8px" }} />
-                                                    ) : coin.chainId == "base" ? (
-                                                        <Image src={Base} alt="base"
-                                                               style={{
-                                                                   width: "16px",
-                                                                   marginRight: "8px",
-                                                               }} />
-                                                    ) : coin.chainId == "ethereum" && (
-                                                        <Image src={Eth} alt="ethereum"
-                                                               style={{
-                                                                   width: "10px",
-                                                                   marginRight: "10px",
-                                                                   marginLeft: "2px",
-                                                               }} />
-                                                    )}
-                                                </div>
-                                                <div
-                                                    className="hidden lg:block lg:w-48 lg:text-left lg:truncate lg:pointer-events-none">
-                                                    {coin.name}
-                                                </div>
-                                                <div className="w-12 lg:w-20 flex justify-center opacity-75">
-                                                    <button
-                                                        onClick={() => handleVote(coin.baseAddress, "upvote")}
-                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                                    >
-                                                        <Image
-                                                            src={Up}
-                                                            alt="up"
-                                                            className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
-                                                        />
-                                                    </button>
-                                                    <span
-                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
-                                                </div>
-                                                <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
-                                                    <button
-                                                        onClick={() => handleVote(coin.baseAddress, "downvote")}
-                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                                    >
-                                                        <Image
-                                                            src={Down}
-                                                            alt="down"
-                                                            className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
-                                                        />
-                                                    </button>
-                                                    <span
-                                                        className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
-                                                </div>
-                                                <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
-                                                    <button
-                                                        onClick={(e) => {
-                                                            e.preventDefault();
-                                                            window.open(coin.url, "_blank");
-                                                        }}
-                                                        className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                                    >
-                                                        <Image
-                                                            src={Dex}
-                                                            alt="dex"
-                                                            className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
-                                                        />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </td>
-                                        <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
-                                        <td className="pointer-events-none">{formatPrice(coin.price)}</td>
-                                        <td className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
-                                            {formatPriceChange(coin.price_change_1d)}
-                                        </td>
-                                        <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
-                                        <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
-                                        <td className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
-                                    </tr>
-                                ))}
-                                </tbody>
-                            </table>
-                        </div>
-                        {/*<div className={styles.pagination}>*/}
-                        {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
-                        {/*        <button*/}
-                        {/*            key={index + 1}*/}
-                        {/*            onClick={() => setCurrentPage(index + 1)}*/}
-                        {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
-                        {/*        >*/}
-                        {/*            {index + 1}*/}
-                        {/*        </button>*/}
-                        {/*    ))}*/}
-                        {/*</div>*/}
+      <div className={styles.container}>
+          {loading ? (
+            <MyLoader />
+          ) : (
+            <div className={styles["tables-container"]}>
+                <div className={styles["table-container"]}>
+                    <p className="text-center fs-6 fw-bold mb-4">TOP PERFORMING MEMECOINS</p>
+                    <div className={styles["table-wrapper"]}>
+                        <table className={styles.table}>
+                            <thead>
+                            <tr>
+                                <th>#</th>
+                                <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
+                                    Name {getSortIndicator("name")}
+                                </th>
+                                <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
+                                    Symbol {getSortIndicator("symbol")}
+                                </th>
+                                <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
+                                    Price {getSortIndicator("price")}
+                                </th>
+                                <th onClick={() => requestSort("price_change_1d")}
+                                    className={styles.sortableHeader}>
+                                    Change (1D) {getSortIndicator("price_change_1d")}
+                                </th>
+                                <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
+                                    Volume (1D) {getSortIndicator("real_volume_1d")}
+                                </th>
+                                <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
+                                    Liquidity {getSortIndicator("liquidity")}
+                                </th>
+                                <th onClick={() => requestSort("circulating_marketcap")}
+                                    className={styles.sortableHeader}>
+                                    Market Cap {getSortIndicator("circulating_marketcap")}
+                                </th>
+                            </tr>
+                            </thead>
+                            <tbody>
+                            {currentItems.map((coin, index) => (
+                              <tr key={coin.baseAddress}>
+                                  <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                                  <td>
+                                      <div className="flex items-center">
+                                          <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
+                                              {coin.chainId == "solana" ? (
+                                                <Image src={Sol} alt="solana"
+                                                       style={{ width: "16px", marginRight: "8px" }} />
+                                              ) : coin.chainId == "base" ? (
+                                                <Image src={Base} alt="base"
+                                                       style={{
+                                                           width: "16px",
+                                                           marginRight: "8px",
+                                                       }} />
+                                              ) : coin.chainId == "ethereum" && (
+                                                <Image src={Eth} alt="ethereum"
+                                                       style={{
+                                                           width: "10px",
+                                                           marginRight: "10px",
+                                                           marginLeft: "2px",
+                                                       }} />
+                                              )}
+                                          </div>
+                                          <div
+                                            className="hidden lg:block lg:w-48 lg:text-left lg:truncate lg:pointer-events-none">
+                                              {coin.name}
+                                          </div>
+                                          <div
+                                            className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
+                                              <Image
+                                                src={coin.logoUrl == "https://dd.dexscreener.com/ds-data/tokens/ethereum/0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c.png" ? Ph.src : coin.logoUrl || Ph.src}
+                                                alt={`${coin.name} logo`}
+                                                width={35}
+                                                height={35}
+                                                className={styles.logo}
+                                              />
+                                          </div>
+                                          <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                              <button
+                                                onClick={() => handleVote(coin.baseAddress, "upvote")}
+                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                              >
+                                                  <Image
+                                                    src={Up}
+                                                    alt="up"
+                                                    className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                                  />
+                                              </button>
+                                              <span
+                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
+                                          </div>
+                                          <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
+                                              <button
+                                                onClick={() => handleVote(coin.baseAddress, "downvote")}
+                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                              >
+                                                  <Image
+                                                    src={Down}
+                                                    alt="down"
+                                                    className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                                  />
+                                              </button>
+                                              <span
+                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
+                                          </div>
+                                          <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
+                                              <button
+                                                onClick={(e) => {
+                                                    e.preventDefault();
+                                                    window.open(coin.url, "_blank");
+                                                }}
+                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                              >
+                                                  <Image
+                                                    src={Dex}
+                                                    alt="dex"
+                                                    className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
+                                                  />
+                                              </button>
+                                          </div>
+                                      </div>
+                                  </td>
+                                  <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
+                                  <td className="pointer-events-none">{formatPrice(coin.price)}</td>
+                                  <td
+                                    className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
+                                      {formatPriceChange(coin.price_change_1d)}
+                                  </td>
+                                  <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
+                                  <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
+                                  <td
+                                    className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
+                              </tr>
+                            ))}
+                            </tbody>
+                        </table>
                     </div>
-                    {/*<div className={styles["table-sentiment-container"]}>*/}
-                    {/*    <div className={styles["table-wrapper-sentiment"]} style={{ height: "350px", width: "350px" }}>*/}
-                    {/*        <p className="text-center fs-6 fw-bold mb-4">OUR SELECTIONS</p>*/}
-                    {/*        <Bar data={sentimentData} options={sentimentOptions} />*/}
-                    {/*    </div>*/}
+                    {/*<div className={styles.pagination}>*/}
+                    {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
+                    {/*        <button*/}
+                    {/*            key={index + 1}*/}
+                    {/*            onClick={() => setCurrentPage(index + 1)}*/}
+                    {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
+                    {/*        >*/}
+                    {/*            {index + 1}*/}
+                    {/*        </button>*/}
+                    {/*    ))}*/}
                     {/*</div>*/}
                 </div>
-            )}
-        </div>
+                {/*<div className={styles["table-sentiment-container"]}>*/}
+                {/*    <div className={styles["table-wrapper-sentiment"]} style={{ height: "350px", width: "350px" }}>*/}
+                {/*        <p className="text-center fs-6 fw-bold mb-4">OUR SELECTIONS</p>*/}
+                {/*        <Bar data={sentimentData} options={sentimentOptions} />*/}
+                {/*    </div>*/}
+                {/*</div>*/}
+            </div>
+          )}
+      </div>
     );
 };

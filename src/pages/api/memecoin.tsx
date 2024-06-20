@@ -38,6 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     const item = filteredAndSortedPairs[0];
                     return {
                         baseAddress: item.baseToken.address,
+                        logoUrl: (item.info && item.info.imageUrl) ? item.info.imageUrl : "",
                         name: row[0].name,
                         symbol: symbol, // Make symbol uppercase
                         price: row[1],

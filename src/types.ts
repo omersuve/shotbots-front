@@ -95,6 +95,7 @@ export type NftData = {
 
 export type MemecoinData = {
     baseAddress: string;
+    logoUrl: string;
     name: string;
     symbol: string;
     price: number | null;

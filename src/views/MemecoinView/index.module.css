@@ -121,6 +121,11 @@
     border-radius: 10px;
 }
 
+.logo {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
 /* Set fixed widths for each column */
 .table th:nth-child(1), .table td:nth-child(1) {
     width: 3%;

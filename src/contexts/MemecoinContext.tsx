@@ -2,6 +2,7 @@ import React, { createContext, useContext, useEffect, useState, ReactNode } from
 
 type Memecoin = {
     baseAddress: string;
+    logoUrl: string;
     name: string;
     symbol: string;
     price: number | null;
