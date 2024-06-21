@@ -17,7 +17,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         const fetchMagicEdenData = async (nftName: string) => {
             const magicEdenResponse = await fetch(`https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${nftName}?edge_cache=true&limit=5`, {
-                "headers": {
+                headers: {
                     "accept": "application/json, text/plain, */*",
                     "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
                     "priority": "u=1, i",
@@ -30,17 +30,26 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     "Referer": "https://magiceden.io/",
                     "Referrer-Policy": "strict-origin-when-cross-origin",
                 },
-                "body": null,
-                "method": "GET",
+                body: null,
+                method: "GET",
             });
 
-            const magicEdenData: MagicEdenNftData = await magicEdenResponse.json();
+            const magicEdenTextData = await magicEdenResponse.text();
+            let magicEdenData;
+
+            try {
+                magicEdenData = JSON.parse(magicEdenTextData);
+            } catch (e) {
+                console.error("Failed to parse MagicEden response as JSON", magicEdenTextData);
+                throw new Error("Invalid MagicEden JSON response");
+            }
+
             return magicEdenData;
         };
 
         const promises: Promise<NftData | null>[] = data.results.map(async (nft): Promise<NftData | null> => {
             try {
-                if(nft.name == "STEPN") return null
+                if (nft.name == "STEPN") return null;
                 const magicEdenData = await fetchMagicEdenData(nft.name);
                 return {
                     name: nft.name,
