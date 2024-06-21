@@ -18,7 +18,11 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const data: DappRadarNft = await response.json();
 
         const fetchMagicEdenData = async (nftName: string) => {
-            const magicEdenResponse = await fetch(`https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${nftName}?edge_cache=true&limit=5`, {
+            const meUrl = `https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${encodeURIComponent(nftName)}?edge_cache=true&limit=5&blockchain=solana`;
+            const proxyUrl = `/api/proxy?url=${encodeURIComponent(meUrl)}`;
+            const baseUrl = process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000";
+
+            const response = await fetch(`${baseUrl}${proxyUrl}`, {
                 headers: {
                     "accept": "application/json, text/plain, */*",
                     "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
@@ -35,24 +39,19 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 body: null,
                 method: "GET",
             });
-
-            const magicEdenTextData = await magicEdenResponse.text();
-            let magicEdenData;
-
+            const textData = await response.text();
             try {
-                magicEdenData = JSON.parse(magicEdenTextData);
+                return JSON.parse(textData);
             } catch (e) {
-                console.error("Failed to parse MagicEden response as JSON", magicEdenTextData);
-                throw new Error("Invalid MagicEden JSON response");
+                console.error(`Failed to parse JSON for ${nftName}: ${textData}`);
+                throw new Error(`Invalid JSON response for ${nftName}`);
             }
-
-            return magicEdenData;
         };
 
         const promises: Promise<NftData | null>[] = data.results.map(async (nft, index): Promise<NftData | null> => {
             try {
                 if (nft.name == "STEPN") return null;
-                await delay(index * 500);
+                await delay(index * 100);
                 const magicEdenData = await fetchMagicEdenData(nft.name);
                 return {
                     name: nft.name,

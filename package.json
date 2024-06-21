@@ -27,6 +27,7 @@
     "daisyui": "^1.16.2",
     "hamburger-react": "^2.5.1",
     "html-react-parser": "^5.1.10",
+    "http-proxy-middleware": "^3.0.0",
     "i": "^0.3.7",
     "lodash.orderby": "^4.6.0",
     "mongodb": "^6.5.0",
@@ -45,6 +46,7 @@
     "sass": "^1.54.3"
   },
   "devDependencies": {
+    "@types/http-proxy-middleware": "^1.0.0",
     "@types/node": "^20.12.8",
     "@types/react": "^18.3.1",
     "autoprefixer": "^10.4.0",
