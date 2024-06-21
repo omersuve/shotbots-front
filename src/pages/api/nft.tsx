@@ -20,7 +20,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const fetchMagicEdenData = async (nftName: string) => {
             const meUrl = `https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${encodeURIComponent(nftName)}?edge_cache=true&limit=5&blockchain=solana`;
             const proxyUrl = `/api/proxy?url=${encodeURIComponent(meUrl)}`;
-            const baseUrl = process.env.VERCEL_URL ? "https://" + process.env.VERCEL_URL : "http://localhost:3000";
+            const baseUrl = process.env.BASE_URL_PROD ?? "http://localhost:3000";
 
             const response = await fetch(`${baseUrl}${proxyUrl}`, {
                 headers: {
