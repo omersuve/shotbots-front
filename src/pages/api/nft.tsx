@@ -1,6 +1,8 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { DappRadarNft, MagicEdenNftData, NftData } from "../../types";
 
+const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
+
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
         if (req.method !== "GET") {
@@ -47,9 +49,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             return magicEdenData;
         };
 
-        const promises: Promise<NftData | null>[] = data.results.map(async (nft): Promise<NftData | null> => {
+        const promises: Promise<NftData | null>[] = data.results.map(async (nft, index): Promise<NftData | null> => {
             try {
                 if (nft.name == "STEPN") return null;
+                await delay(index * 500);
                 const magicEdenData = await fetchMagicEdenData(nft.name);
                 return {
                     name: nft.name,
