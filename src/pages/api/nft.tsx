@@ -52,7 +52,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const promises: Promise<NftData | null>[] = data.results.map(async (nft, index): Promise<NftData | null> => {
             try {
                 if (nft.name == "STEPN") return null;
-                await delay(index * 5000);
+                await delay(index * 500);
                 const magicEdenData = await fetchMagicEdenData(nft.name);
                 return {
                     name: nft.name,
