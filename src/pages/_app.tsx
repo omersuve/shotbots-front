@@ -22,6 +22,7 @@ import { TwitterProvider } from "../contexts/TwitterContext";
 import { ScoresProvider } from "../contexts/ScoresContext";
 import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
+import { NftProvider } from "../contexts/NftContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -45,16 +46,18 @@ function MyApp({ Component, pageProps }: AppProps) {
                         <ScoresProvider>
                             <NewsProvider>
                                 <MemecoinProvider>
-                                    <TwitterProvider>
-                                        <div className="flex flex-col min-h-screen">
-                                            {router.pathname != "/" && <Navbar />}
-                                            <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
-                                                <Component {...pageProps} />
+                                    <NftProvider>
+                                        <TwitterProvider>
+                                            <div className="flex flex-col min-h-screen">
+                                                {router.pathname != "/" && <Navbar />}
+                                                <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
+                                                    <Component {...pageProps} />
+                                                </div>
+                                                {router.pathname != "/" && <Footer />}
                                             </div>
-                                            {router.pathname != "/" && <Footer />}
-                                        </div>
-                                        <ToastContainer />
-                                    </TwitterProvider>
+                                            <ToastContainer />
+                                        </TwitterProvider>
+                                    </NftProvider>
                                 </MemecoinProvider>
                             </NewsProvider>
                         </ScoresProvider>

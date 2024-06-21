@@ -199,6 +199,12 @@ const Navbar: React.FC = () => {
                                 Memecoins
                             </Link>
                         </li>
+                        <li className="flex items-center h-full">
+                            <Link href="/nft"
+                                  className={`flex items-center h-full px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/nft" ? "border-b-2 border-blue-500" : ""}`}>
+                                NFTs
+                            </Link>
+                        </li>
                     </ul>
                     <div className="ml-auto flex items-center space-x-4">
                         <button
@@ -257,6 +263,13 @@ const Navbar: React.FC = () => {
                                 </Link>
                             </li>
                             <li>
+                                <Link href="/nft"
+                                      className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${router.pathname === "/nft" ? "border-b-2 border-blue-500" : ""}`}
+                                      onClick={handleLinkClick}>
+                                    NFTs
+                                </Link>
+                            </li>
+                            <li>
                                 <button
                                     className={`${!publicKey ? "hidden" : ""} text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${isProfileOpen ? "border-b-2 border-blue-500" : ""}`}
                                     disabled={!publicKey}
@@ -298,7 +311,12 @@ const Navbar: React.FC = () => {
                         width: "100%",
                         alignItems: "center",
                     }}>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                            marginLeft: "5px",
+                        }}>
                             <span style={{ fontWeight: "bold", fontSize: "x-small" }}>POINT BOOST</span>
                             <span style={{
                                 color: "#A52A2A",
@@ -307,7 +325,11 @@ const Navbar: React.FC = () => {
                                 fontSize: "smaller",
                             }}>x{profileInfo?.pointBoost}</span>
                         </div>
-                        <div style={{ display: "flex", flexDirection: "column", alignItems: "center" }}>
+                        <div style={{
+                            display: "flex",
+                            flexDirection: "column",
+                            alignItems: "center",
+                        }}>
                             <span style={{ fontWeight: "bold", fontSize: "x-small" }}>VOTING POWER</span>
                             <span style={{
                                 color: "#A52A2A",
@@ -327,7 +349,7 @@ const Navbar: React.FC = () => {
                     }}>
                         <span style={{
                             fontWeight: "bold",
-                            fontSize: "1.5em",
+                            fontSize: "20px",
                             borderRadius: "10px",
                             fontFamily: "fantasy",
                             marginLeft: "10px",
@@ -336,14 +358,14 @@ const Navbar: React.FC = () => {
                         }}><p className="mt-2">Points: {profileInfo?.points}</p>
                             <Image className="object-cover m-1 mr-4"
                                    src={Sheriff}
-                                   width={30} // Adjust width as needed
-                                   height={30} // Adjust height as needed
+                                   width={25} // Adjust width as needed
+                                   height={25} // Adjust height as needed
                                    alt="textlogo" />
                         </span>
-                        <Image className="object-cover m-1.5 mr-4"
+                        <Image className="object-cover mr-6"
                                src={Fish}
-                               width={30} // Adjust width as needed
-                               height={30} // Adjust height as needed
+                               width={25} // Adjust width as needed
+                               height={25} // Adjust height as needed
                                alt="textlogo" />
                     </div>
                 </div>

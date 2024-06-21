@@ -1,0 +1,299 @@
+.container {
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.tables-container {
+    display: flex;
+    justify-content: center;
+    width: 100%;
+    margin-top: 20px;
+    margin-bottom: 40px;
+}
+
+.table-container {
+    width: 100%;
+    height: 1400px;
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+    position: relative;
+    margin-inline: 30px;
+    padding: 10px;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.table-container:first-child {
+    flex-basis: 90%; /* First table takes 70% of the width */
+}
+
+.table-container:last-child {
+    flex-basis: 90%; /* Second table takes 30% of the width */
+}
+
+.table-wrapper {
+    flex-grow: 1;
+}
+
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12px;
+    font-weight: bolder;
+    table-layout: fixed; /* Ensure fixed table layout */
+    background-color: #f2f2f2;
+    border-radius: 10px;
+    overflow: hidden; /* Ensure rounded corners are applied properly */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.table th, .table td {
+    border: 1px solid #ddd;
+    padding: 8px;
+}
+
+.table th {
+    background-color: rgba(224, 224, 224, 0.5);
+    font-weight: bold !important;
+}
+
+.table tr, .table th, .table td {
+    height: 25px;
+}
+
+.sortableHeader {
+    cursor: pointer;
+    position: relative;
+    padding-right: 20px;
+}
+
+.sortableHeader:hover {
+    background-color: #f2f2f2;
+}
+
+.sortableHeader::after {
+    content: '▼';
+    position: absolute;
+    right: 8px;
+    font-size: 12px;
+    display: none;
+}
+
+.sortableHeader.asc::after {
+    content: '▲';
+    display: inline-block;
+}
+
+.sortableHeader.desc::after {
+    content: '▼';
+    display: inline-block;
+}
+
+.priceChangePositive {
+    color: green;
+}
+
+.priceChangeNegative {
+    color: red;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+}
+
+.pagination button {
+    margin: 0 4px;
+    padding: 6px 12px;
+    border: 1px solid #ddd;
+    background-color: #f2f2f2;
+    cursor: pointer;
+}
+
+.pagination .activePage {
+    background-color: #000000;
+    color: white;
+    border: 1px solid #ffffff;
+    border-radius: 10px;
+}
+
+.logo {
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+/* Set fixed widths for each column */
+.table th:nth-child(1), .table td:nth-child(1) {
+    width: 3%;
+    opacity: 50%;
+    pointer-events: none;
+    background-color: #e0e0e0;
+}
+
+.table th:nth-child(2), .table td:nth-child(2) {
+    width: 30%;
+}
+
+.table th:nth-child(3), .table td:nth-child(3) {
+    width: 8%;
+}
+
+.table th:nth-child(4), .table td:nth-child(4) {
+    width: 8%;
+}
+
+.table th:nth-child(5), .table td:nth-child(5) {
+    width: 8%;
+}
+
+.table th:nth-child(6), .table td:nth-child(6) {
+    width: 9%;
+}
+
+.table th:nth-child(7), .table td:nth-child(7) {
+    width: 8%;
+}
+
+.table th:nth-child(8), .table td:nth-child(8) {
+    width: 10%;
+}
+
+.table th:nth-child(9), .table td:nth-child(9) {
+    width: 8%;
+}
+
+.table th:nth-child(10), .table td:nth-child(10) {
+    width: 8%;
+}
+
+@media (max-width: 768px) {
+    .container {
+        overflow-y: auto; /* Enable vertical scrolling */
+    }
+
+    .tables-container {
+        flex-direction: column; /* Stack elements vertically */
+    }
+
+    .table-container {
+        margin: 0;
+        padding: 0;
+        height: 100%; /* Full height */
+        justify-content: flex-start; /* Align items at the start */
+        align-items: stretch; /* Stretch to fill the width */
+    }
+
+    .table {
+        font-size: 5px;
+        padding: 0;
+        height: 25px;
+    }
+
+    .pagination button {
+        padding: 2px 6px;
+        margin-top: 20px;
+    }
+
+    .table th:nth-child(1), .table td:nth-child(1) {
+        width: 4%;
+        opacity: 50%;
+        pointer-events: none;
+        background-color: #e0e0e0;
+        padding: 0;
+    }
+
+    .table td:nth-child(2) {
+        width: 32%;
+        padding: 4px;
+    }
+
+    .table th:nth-child(2) {
+        padding: 0;
+    }
+
+    .table td:nth-child(3) {
+        width: 10%;
+        padding: 0;
+    }
+
+    .table th:nth-child(3) {
+        padding: 0;
+    }
+
+    .table td:nth-child(4) {
+        width: 10%;
+        font-weight: lighter;
+        font-size: 6px;
+        padding: 0;
+    }
+
+    .table th:nth-child(4) {
+        padding: 0;
+    }
+
+    .table td:nth-child(5) {
+        width: 12%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(5) {
+        padding: 0;
+    }
+
+    .table td:nth-child(6) {
+        width: 12%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(6) {
+        padding: 0;
+    }
+
+    .table td:nth-child(7) {
+        width: 10%;
+        font-weight: lighter;
+        font-size: 7px;
+        padding: 0;
+    }
+
+    .table th:nth-child(7) {
+        padding: 0;
+    }
+
+    .table td:nth-child(8) {
+        width: 10%;
+        font-weight: lighter;
+        font-size: 6px;
+        padding: 0;
+    }
+
+    .table th:nth-child(8) {
+        padding: 0;
+    }
+
+    .table td:nth-child(9) {
+        width: 10%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(9) {
+        padding: 0;
+    }
+
+    .table td:nth-child(10) {
+        width: 10%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(10) {
+        padding: 0;
+    }
+}

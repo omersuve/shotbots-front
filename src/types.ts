@@ -80,7 +80,7 @@ export type NftData = {
     name: string;
     logoUrl: string;
     url: string;
-    avgPriceUsd: number;
+    floorPriceSol: number;
     avgPriceChange: number;
     volumeUsd: number;
     volumeChange: number;

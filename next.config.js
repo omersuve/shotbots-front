@@ -54,11 +54,11 @@ const nextConfig = {
     return config;
   },
   images: {
-    domains: [
-      "nft-metaservice.dappradar.com",
-      "lh3.googleusercontent.com",
-      "dd.dexscreener.com",
-      // Add any other domains you need to support
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "**",
+      },
     ],
   },
 };
