@@ -21,7 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Perform the update operation with upsert set to true
         await db
-          .collection("meme-votes")
+          .collection("nft-votes")
           .updateOne(
             { baseAddress: baseAddress },
             update,
@@ -38,7 +38,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         // Fetch the updated or inserted document
         const myVotes = await db
-          .collection("meme-votes")
+          .collection("nft-votes")
           .find({ baseAddress: baseAddress })
           .toArray();
 

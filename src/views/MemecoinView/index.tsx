@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useMemo, FC } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import styles from "./index.module.css";
 import MyLoader from "../../components/MyLoader";
 import Image from "next/image";
@@ -9,12 +9,11 @@ import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
 import Ph from "../../../public/placeholder.png";
-import { Bar } from "react-chartjs-2";
-import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend } from "chart.js";
+import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
 import { useMemecoins } from "../../contexts/MemecoinContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
-import { formatPrice, formatPriceChange, formatLargeNumber } from "../../utils/formatting";
+import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
 import { MemecoinData } from "../../types";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
@@ -33,8 +32,7 @@ const fetchMemeVotes = async () => {
     if (!response.ok) {
         throw new Error("Failed to fetch meme votes");
     }
-    const data = await response.json();
-    return data;
+    return await response.json();
 };
 
 export const MemecoinView: FC = () => {

@@ -1,10 +1,10 @@
-import React, { FC, useState, useMemo } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import styles from "./index.module.css";
 import MyLoader from "../../components/MyLoader";
 import Image from "next/image";
 import { useNfts } from "../../contexts/NftContext";
 import { NftData } from "../../types";
-import { formatPrice, formatPriceChange, formatLargeNumber } from "../../utils/formatting";
+import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Me from "../../../public/me.png";
@@ -17,6 +17,14 @@ type SortConfig = {
     direction: "ascending" | "descending";
 };
 
+const fetchNftVotes = async () => {
+    const response = await fetch("/api/getNftVotes");
+    if (!response.ok) {
+        throw new Error("Failed to fetch meme votes");
+    }
+    return await response.json();
+};
+
 export const NftView: FC = () => {
     const { nfts, loading, error } = useNfts();
     const { prices, loading: loadingPrice } = usePrices();
@@ -24,6 +32,26 @@ export const NftView: FC = () => {
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const { publicKey } = useWallet();
+
+    useEffect(() => {
+        const getVotes = async () => {
+            try {
+                const votes = await fetchNftVotes();
+                const votesMap = votes.reduce((acc: any, vote: any) => {
+                    acc[vote.baseAddress] = {
+                        upVote: vote.upVote,
+                        downVote: vote.downVote,
+                    };
+                    return acc;
+                }, {});
+                setVotes(votesMap);
+            } catch (err) {
+                console.error(err);
+            }
+        };
+
+        getVotes().then();
+    }, []);
 
     const itemsPerPage = 30;
 
@@ -60,21 +88,21 @@ export const NftView: FC = () => {
         setSortConfig({ key, direction });
     };
 
-    const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
+    const handleVote = async (name: string, vote: "upvote" | "downvote") => {
         if (!publicKey) {
             toast("Please connect your wallet first.");
             return;
         }
 
         try {
-            const response = await fetch("/api/memeVote", {
+            const response = await fetch("/api/nftVote", {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
                     pk: publicKey.toString(),
-                    baseAddress,
+                    baseAddress: name,
                     vote,
                 }),
             });
@@ -83,11 +111,11 @@ export const NftView: FC = () => {
                 toast("Already voted for this meme!");
             } else {
                 setVotes((prevVotes) => {
-                    const currentVotes = prevVotes[baseAddress] || { upVote: 0, downVote: 0 };
+                    const currentVotes = prevVotes[name] || { upVote: 0, downVote: 0 };
 
                     return {
                         ...prevVotes,
-                        [baseAddress]: {
+                        [name]: {
                             upVote: vote === "upvote" ? currentVotes.upVote + 1 : currentVotes.upVote,
                             downVote: vote === "downvote" ? currentVotes.downVote + 1 : currentVotes.downVote,
                         },
