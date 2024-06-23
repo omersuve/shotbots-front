@@ -18,6 +18,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         pathRewrite: {
             "^/api/proxy": "", // Remove base path
         },
+        on: {
+            error: (error, req, res, target) => {
+                console.error(`Proxy error: ${error.message}`);
+                (res as NextApiResponse).status(500).json({ error: "Proxy error", details: error.message });
+            },
+            proxyReq: (proxyReq, req, res) => {
+                console.log(`Proxy request sent to: ${targetUrl}`);
+            },
+            proxyRes: (proxyRes, req, res) => {
+                console.log(`Proxy response received from: ${targetUrl}`);
+            },
+        },
     });
 
     (proxy as any)(req, res);

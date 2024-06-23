@@ -191,12 +191,12 @@ export const NftView: FC = () => {
                                   <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
                                   <td>
                                       <div className="flex items-center">
-                                          <div className="w-16 lg:w-24 mr-1 flex justify-center pointer-events-none">
+                                          <div className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
                                               <Image src={nft.logoUrl} alt={`${nft.name} logo`} width={35}
                                                      height={35} className={styles.logo} />
                                           </div>
                                           <div
-                                            className="hidden lg:block lg:w-48 lg:text-left lg:truncate lg:pointer-events-none">
+                                            className="w-16 mr-1 lg:block lg:w-48 text-left truncate pointer-events-none">
                                               {nft.name}
                                           </div>
                                           <div className="w-12 lg:w-20 flex justify-center opacity-75">
@@ -211,7 +211,7 @@ export const NftView: FC = () => {
                                                   />
                                               </button>
                                               <span
-                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{nft.upVote || 0}</span> {/* Upvote count */}
+                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[nft.name]?.upVote || 0}</span> {/* Upvote count */}
                                           </div>
                                           <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
                                               <button
@@ -225,7 +225,7 @@ export const NftView: FC = () => {
                                                   />
                                               </button>
                                               <span
-                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{nft.downVote || 0}</span> {/* Downvote count */}
+                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[nft.name]?.downVote || 0}</span> {/* Downvote count */}
                                           </div>
                                           <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
                                               <button

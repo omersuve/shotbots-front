@@ -180,15 +180,17 @@
     }
 
     .table {
-        font-size: 6px;
-    }
-
-    .table td {
-        height: 50px; /* Set a fixed height for each row */
+        font-size: 7px;
+        padding: 0;
+        height: 25px;
     }
 
     .table th {
         font-size: 5px; /* Set a fixed height for each row */
+    }
+
+    .table td {
+        height: 45px; /* Set a fixed height for each row */
     }
 
     .pagination button {
@@ -201,24 +203,21 @@
         opacity: 50%;
         pointer-events: none;
         background-color: #e0e0e0;
-        font-size: 8px;
         padding: 0;
     }
 
     .table td:nth-child(2) {
-        width: 30%;
-        font-size: 8px;
         padding: 4px;
     }
 
     .table th:nth-child(2) {
+        width: 40%;
         padding: 0;
     }
 
     .table td:nth-child(3) {
         width: 10%;
         padding: 0;
-        font-size: 5px;
     }
 
     .table th:nth-child(3) {
@@ -228,7 +227,10 @@
     .table td:nth-child(4) {
         width: 10%;
         font-weight: lighter;
-        font-size: 6px;
+        font-size: 8px;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
         padding: 0;
     }
 

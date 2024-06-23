@@ -188,9 +188,17 @@
     }
 
     .table {
-        font-size: 5px;
+        font-size: 7px;
         padding: 0;
         height: 25px;
+    }
+
+    .table th {
+        font-size: 5px;
+    }
+
+    .table td {
+        height: 45px; /* Set a fixed height for each row */
     }
 
     .pagination button {
@@ -207,11 +215,11 @@
     }
 
     .table td:nth-child(2) {
-        width: 32%;
         padding: 4px;
     }
 
     .table th:nth-child(2) {
+        width: 40%;
         padding: 0;
     }
 
@@ -227,7 +235,7 @@
     .table td:nth-child(4) {
         width: 10%;
         font-weight: lighter;
-        font-size: 6px;
+        font-size: 7px;
         padding: 0;
     }
 

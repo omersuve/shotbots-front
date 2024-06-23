@@ -23,9 +23,7 @@ type SortConfig = {
     direction: "ascending" | "descending";
 };
 
-const subscriptDigits = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉",
-    "₁₀", "₁₁", "₁₂", "₁₃", "₁₄", "₁₅", "₁₆", "₁₇", "₁₈", "₁₉", "₂₀",
-];
+
 
 const fetchMemeVotes = async () => {
     const response = await fetch("/api/getMemeVotes");
@@ -261,7 +259,7 @@ export const MemecoinView: FC = () => {
                                               )}
                                           </div>
                                           <div
-                                            className="hidden lg:block lg:w-48 lg:text-left lg:truncate lg:pointer-events-none">
+                                            className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
                                               {coin.name}
                                           </div>
                                           <div
