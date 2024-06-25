@@ -59,9 +59,10 @@
 .table th {
     background-color: rgba(224, 224, 224, 0.5);
     font-weight: bold !important;
+    height: 30px;
 }
 
-.table tr, .table th, .table td {
+.table td {
     height: 55px;
 }
 
@@ -203,7 +204,7 @@
     }
 
     .table tr {
-        height: 25px; /* Set a fixed height for each row */
+        height: 30px; /* Set a fixed height for each row */
     }
 
     .pagination button {

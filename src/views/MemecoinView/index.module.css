@@ -61,8 +61,12 @@
     font-weight: bold !important;
 }
 
-.table tr, .table th, .table td {
+.table tr, .table th {
     height: 30px; /* Set a fixed height for each row */
+}
+
+.table td {
+    height: 55px; /* Set a fixed height for each row */
 }
 
 .sortableHeader {
@@ -187,10 +191,11 @@
 
     .table th {
         font-size: 5px; /* Set a fixed height for each row */
+        height: 15px; /* Set a fixed height for each row */
     }
 
     .table td {
-        height: 45px; /* Set a fixed height for each row */
+        height: 55px; /* Set a fixed height for each row */
     }
 
     .pagination button {
