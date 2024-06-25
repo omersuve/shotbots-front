@@ -1,7 +1,5 @@
 import { NextApiRequest, NextApiResponse } from "next";
-import { DappRadarNft, MagicEdenNftData, NftData } from "../../types";
-
-const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
+import { DappRadarNft, NftData } from "../../types";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -48,15 +46,52 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             }
         };
 
+        const fetchMagicEdenSupplyData = async (nftName: string) => {
+            const meSupplyUrl = `https://api-mainnet.magiceden.io/rpc/getCollectionHolderStats/${encodeURIComponent(nftName)}?edge_cache=true`;
+            const proxyUrl = `/api/proxy?url=${encodeURIComponent(meSupplyUrl)}`;
+            const baseUrl = process.env.BASE_URL_PROD ?? "http://localhost:3000";
+
+            const response = await fetch(`${baseUrl}${proxyUrl}`, {
+                headers: {
+                    "accept": "application/json, text/plain, */*",
+                    "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
+                    "priority": "u=1, i",
+                    "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
+                    "sec-ch-ua-mobile": "?1",
+                    "sec-ch-ua-platform": "\"Android\"",
+                    "sec-fetch-dest": "empty",
+                    "sec-fetch-mode": "cors",
+                    "sec-fetch-site": "same-site",
+                    "Referer": "https://magiceden.io/",
+                    "Referrer-Policy": "strict-origin-when-cross-origin",
+                },
+                body: null,
+                method: "GET",
+            });
+            const textData = await response.text();
+            try {
+                return JSON.parse(textData);
+            } catch (e) {
+                console.error(`Failed to parse JSON for ${nftName}: ${textData}`);
+                throw new Error(`Invalid JSON response for ${nftName}`);
+            }
+        };
+
         const promises: Promise<NftData | null>[] = data.results.map(async (nft, index): Promise<NftData | null> => {
             try {
                 if (nft.name == "STEPN") return null;
                 const magicEdenData = await fetchMagicEdenData(nft.name);
+                const magicEdenSupplyData = await fetchMagicEdenSupplyData(magicEdenData.solana[0].symbol); // Another fetch operation
+
+                if (magicEdenSupplyData.results.totalSupply == 0) return null;
+
                 return {
                     name: nft.name,
                     logoUrl: magicEdenData.solana[0].image,
                     url: `https://magiceden.io/marketplace/${magicEdenData.solana[0].symbol}`,
                     floorPriceSol: magicEdenData.solana[0].floorPrice!,
+                    totalSupply: magicEdenSupplyData.results.totalSupply, // Use the other response
+                    uniqueHolders: magicEdenSupplyData.results.uniqueHolders, // Use the other response
                     avgPriceChange: nft.avgPriceChange,
                     volumeUsd: nft.volumeInFiat,
                     volumeChange: nft.volumeChange,

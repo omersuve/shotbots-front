@@ -170,6 +170,12 @@ export const NftView: FC = () => {
                                 <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
                                     Name {getSortIndicator("name")}
                                 </th>
+                                <th onClick={() => requestSort("totalSupply")} className={styles.sortableHeader}>
+                                    Supply {getSortIndicator("totalSupply")}
+                                </th>
+                                <th onClick={() => requestSort("uniqueHolders")} className={styles.sortableHeader}>
+                                    Unique Holders {getSortIndicator("uniqueHolders")}
+                                </th>
                                 <th onClick={() => requestSort("floorPriceSol")} className={styles.sortableHeader}>
                                     Price {getSortIndicator("floorPriceSol")}
                                 </th>
@@ -255,6 +261,12 @@ export const NftView: FC = () => {
                                               </button>
                                           </div>
                                       </div>
+                                  </td>
+                                  <td
+                                    className="pointer-events-none">{nft.totalSupply}
+                                  </td>
+                                  <td
+                                    className="pointer-events-none">{nft.uniqueHolders}
                                   </td>
                                   <td
                                     className="pointer-events-none">{formatPrice(nft.floorPriceSol / 1000000000 * parseFloat(prices["solana"].price))}$

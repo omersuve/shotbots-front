@@ -171,6 +171,14 @@
     width: 8%;
 }
 
+.table th:nth-child(11), .table td:nth-child(11) {
+    width: 8%;
+}
+
+.table th:nth-child(12), .table td:nth-child(12) {
+    width: 8%;
+}
+
 @media (max-width: 768px) {
     .container {
         overflow-y: auto; /* Enable vertical scrolling */
@@ -308,6 +316,26 @@
     }
 
     .table th:nth-child(10) {
+        padding: 0;
+    }
+
+    .table td:nth-child(11) {
+        width: 10%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(11) {
+        padding: 0;
+    }
+
+    .table td:nth-child(12) {
+        width: 10%;
+        font-weight: lighter;
+        padding: 0;
+    }
+
+    .table th:nth-child(12) {
         padding: 0;
     }
 }
