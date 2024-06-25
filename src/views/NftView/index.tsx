@@ -8,6 +8,7 @@ import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/f
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Me from "../../../public/me.png";
+import Ph from "../../../public/placeholder.png";
 import { toast } from "react-toastify";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { usePrices } from "../../contexts/PricesContext";
@@ -17,27 +18,36 @@ type SortConfig = {
     direction: "ascending" | "descending";
 };
 
-const fetchNftVotes = async () => {
-    const response = await fetch("/api/getNftVotes");
-    if (!response.ok) {
-        throw new Error("Failed to fetch meme votes");
-    }
-    return await response.json();
-};
-
 export const NftView: FC = () => {
     const { nfts, loading, error } = useNfts();
     const { prices, loading: loadingPrice } = usePrices();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
+    const [uVotes, setUVotes] = useState<string[]>([]);
     const { publicKey } = useWallet();
+
+    const fetchNftVotes = async () => {
+        const response = await fetch("/api/getNftVotes", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+                pk: publicKey?.toString(),
+            }),
+        });
+        if (!response.ok) {
+            throw new Error("Failed to fetch meme votes");
+        }
+        return await response.json();
+    };
 
     useEffect(() => {
         const getVotes = async () => {
             try {
-                const votes = await fetchNftVotes();
-                const votesMap = votes.reduce((acc: any, vote: any) => {
+                const { nftVotes, userVotes } = await fetchNftVotes();
+                const votesMap = nftVotes.reduce((acc: any, vote: any) => {
                     acc[vote.baseAddress] = {
                         upVote: vote.upVote,
                         downVote: vote.downVote,
@@ -45,13 +55,14 @@ export const NftView: FC = () => {
                     return acc;
                 }, {});
                 setVotes(votesMap);
+                setUVotes(userVotes.map((u: any) => u.baseAddress));
             } catch (err) {
                 console.error(err);
             }
         };
 
         getVotes().then();
-    }, []);
+    }, [publicKey]);
 
     const itemsPerPage = 30;
 
@@ -121,7 +132,7 @@ export const NftView: FC = () => {
                         },
                     };
                 });
-
+                setUVotes((prevUVotes) => [...prevUVotes, name]);
                 toast("Vote submitted successfully!");
             }
         } catch (err) {
@@ -187,7 +198,8 @@ export const NftView: FC = () => {
                             </thead>
                             <tbody>
                             {currentItems.map((nft, index) => (
-                              <tr key={nft.name}>
+                              <tr key={nft.name}
+                                  className={`${publicKey && uVotes.includes(nft.name) ? "bg-gray-300 pointer-events-none" : ""}`}>
                                   <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
                                   <td>
                                       <div className="flex items-center">
