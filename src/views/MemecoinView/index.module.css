@@ -7,36 +7,38 @@
 
 .tables-container {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     width: 100%; /* Ensure the container takes full width */
     margin-top: 20px;
     margin-bottom: 40px;
+    align-items: center;
 }
 
 .table-container {
-    width: 100%;
-    height: 900px; /* Set a fixed height for the table container */
+    width: 80%;
+    height: auto; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
     overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
     position: relative;
-    margin-inline: 30px;
     padding: 10px; /* Add padding around table container */
     justify-content: center;
     align-items: center;
     text-align: center;
 }
 
-.table-container:first-child {
-    flex-basis: 90%; /* First table takes 70% of the width */
-}
-
-.table-container:last-child {
-    flex-basis: 90%; /* Second table takes 30% of the width */
-}
-
-.table-wrapper {
-    flex-grow: 1;
+.top-table-container {
+    width: 60%;
+    height: auto; /* Set a fixed height for the table container */
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
+    position: relative;
+    padding: 10px; /* Add padding around table container */
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }
 
 .table {
@@ -125,6 +127,35 @@
     border-radius: 10px;
 }
 
+.scrollButtonDiv {
+    position: absolute;
+    left: 3%;
+    top: 4px;
+    justify-content: center;
+    align-items: center;
+    display: flex;
+}
+
+.scrollButton {
+    font-weight: bold;
+    font-size: small;
+    background-color: rgba(224, 224, 224, 0.5);
+    padding: 5px;
+    border: 1px solid #ddd;;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-left: 10px;
+    transition: background-color 0.3s ease;
+}
+
+.scrollButton:hover {
+    background-color: rgba(155, 155, 155, 0.5);
+}
+
+.activeHeader {
+    background-color: #f0f0f0;
+}
+
 .logo {
     border-radius: 50%;
     object-fit: cover;
@@ -171,14 +202,37 @@
         overflow-y: auto; /* Enable vertical scrolling */
     }
 
+    .scrollButtonDiv {
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 20%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .scrollButton {
+        font-size: 5px;
+        font-weight: bold;
+    }
+
     .tables-container {
         flex-direction: column; /* Stack elements vertically */
     }
 
     .table-container {
+        width: 100%;
         margin: 0;
         padding: 0;
-        height: 100%; /* Full height */
+        justify-content: flex-start; /* Align items at the start */
+        align-items: stretch; /* Stretch to fill the width */
+    }
+
+    .top-table-container {
+        width: 100%;
+        margin: 0;
+        padding: 0;
         justify-content: flex-start; /* Align items at the start */
         align-items: stretch; /* Stretch to fill the width */
     }
@@ -190,7 +244,7 @@
     }
 
     .table th {
-        font-size: 5px; /* Set a fixed height for each row */
+        font-size: 6px; /* Set a fixed height for each row */
         height: 15px; /* Set a fixed height for each row */
     }
 
@@ -257,7 +311,7 @@
     .table td:nth-child(6) {
         width: 12%;
         font-weight: lighter;
-        font-size: 7px;
+        font-size: 8px;
         padding: 0;
     }
 
@@ -268,7 +322,7 @@
     .table td:nth-child(7) {
         width: 10%;
         font-weight: lighter;
-        font-size: 7px;
+        font-size: 8px;
         padding: 0;
     }
 
@@ -277,7 +331,7 @@
     }
 
     .table td:nth-child(8) {
-        font-size: 6px;
+        font-size: 8px;
         padding: 0;
         font-weight: lighter;
     }

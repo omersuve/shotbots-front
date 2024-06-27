@@ -16,6 +16,7 @@ type Memecoin = {
 
 interface MemecoinContextProps {
     memecoins: Memecoin[];
+    topMemecoins: Memecoin[];
     loading: boolean;
     error: string | null;
 }
@@ -28,6 +29,7 @@ interface MemecoinProviderProps {
 
 export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) => {
     const [memecoins, setMemecoins] = useState<Memecoin[]>([]);
+    const [topMemecoins, setTopMemecoins] = useState<Memecoin[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
 
@@ -38,7 +40,22 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
                 const data: Memecoin[] = await response.json();
                 const filteredData = data.filter((item) => item !== null); // Filter out null values
                 setMemecoins(filteredData.slice(0, 10));
-                setLoading(false);
+            }
+        } catch (err) {
+            let errorMessage = "An unknown error occurred";
+            if (err instanceof Error) {
+                errorMessage = err.message;
+            }
+            setError(errorMessage);
+        }
+    };
+
+    const fetchTopMemeCoins = async () => {
+        try {
+            const responseTop = await fetch("/api/getTopMemecoins");
+            if (responseTop.ok) {
+                const dataTop: Memecoin[] = await responseTop.json();
+                setTopMemecoins(dataTop.slice(0, 5));
             }
         } catch (err) {
             let errorMessage = "An unknown error occurred";
@@ -50,7 +67,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
     };
 
     useEffect(() => {
-        fetchMemeCoins().then();
+        fetchMemeCoins().then(r => fetchTopMemeCoins().then(r => setLoading(false)));
     }, []);
 
     useEffect(() => {
@@ -62,9 +79,9 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
     }, []);
 
     return (
-        <MemecoinContext.Provider value={{ memecoins, loading, error }}>
-            {children}
-        </MemecoinContext.Provider>
+      <MemecoinContext.Provider value={{ memecoins, topMemecoins, loading, error }}>
+          {children}
+      </MemecoinContext.Provider>
     );
 };
 

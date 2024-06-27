@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useState } from "react";
+import React, { FC, useEffect, useMemo, useRef, useState } from "react";
 import styles from "./index.module.css";
 import MyLoader from "../../components/MyLoader";
 import Image from "next/image";
@@ -15,6 +15,9 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
 import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
 import { MemecoinData } from "../../types";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
+import { IconProp } from "@fortawesome/fontawesome-svg-core";
 
 ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
 
@@ -24,11 +27,12 @@ type SortConfig = {
 };
 
 export const MemecoinView: FC = () => {
-    const { memecoins, loading, error } = useMemecoins();
+    const { memecoins, topMemecoins, loading, error } = useMemecoins();
     const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
+    const topMemecoinsRef = useRef<HTMLDivElement>(null);
     const { publicKey } = useWallet();
 
     const fetchMemeVotes = async () => {
@@ -203,6 +207,10 @@ export const MemecoinView: FC = () => {
         }
     };
 
+    const scrollToTopMemecoins = () => {
+        topMemecoinsRef.current?.scrollIntoView({ behavior: "smooth" });
+    };
+
     return (
       <div className={styles.container}>
           {loading ? (
@@ -210,137 +218,144 @@ export const MemecoinView: FC = () => {
           ) : (
             <div className={styles["tables-container"]}>
                 <div className={styles["table-container"]}>
-                    <p className="text-center fs-6 fw-bold mb-4">TOP PERFORMING MEMECOINS</p>
-                    <div className={styles["table-wrapper"]}>
-                        <table className={styles.table}>
-                            <thead>
-                            <tr>
-                                <th>#</th>
-                                <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
-                                    Name {getSortIndicator("name")}
-                                </th>
-                                <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
-                                    Symbol {getSortIndicator("symbol")}
-                                </th>
-                                <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
-                                    Price {getSortIndicator("price")}
-                                </th>
-                                <th onClick={() => requestSort("price_change_1d")}
-                                    className={styles.sortableHeader}>
-                                    Change (1D) {getSortIndicator("price_change_1d")}
-                                </th>
-                                <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
-                                    Volume (1D) {getSortIndicator("real_volume_1d")}
-                                </th>
-                                <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
-                                    Liquidity {getSortIndicator("liquidity")}
-                                </th>
-                                <th onClick={() => requestSort("circulating_marketcap")}
-                                    className={styles.sortableHeader}>
-                                    Market Cap {getSortIndicator("circulating_marketcap")}
-                                </th>
-                            </tr>
-                            </thead>
-                            <tbody>
-                            {currentItems.map((coin, index) => (
-                              <tr key={coin.baseAddress}
-                                  className={`${publicKey && uVotes.includes(coin.baseAddress) ? "bg-gray-300 pointer-events-none" : ""}`}>
-                                  <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
-                                  <td>
-                                      <div className="flex items-center">
-                                          <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
-                                              {coin.chainId == "solana" ? (
-                                                <Image src={Sol} alt="solana"
-                                                       style={{ width: "16px", marginRight: "8px" }} />
-                                              ) : coin.chainId == "base" ? (
-                                                <Image src={Base} alt="base"
-                                                       style={{
-                                                           width: "16px",
-                                                           marginRight: "8px",
-                                                       }} />
-                                              ) : coin.chainId == "ethereum" && (
-                                                <Image src={Eth} alt="ethereum"
-                                                       style={{
-                                                           width: "10px",
-                                                           marginRight: "10px",
-                                                           marginLeft: "2px",
-                                                       }} />
-                                              )}
-                                          </div>
-                                          <div
-                                            className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
-                                              {coin.name}
-                                          </div>
-                                          <div
-                                            className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
-                                              <Image
-                                                src={coin.logoUrl == "https://dd.dexscreener.com/ds-data/tokens/ethereum/0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c.png" ? Ph.src : coin.logoUrl || Ph.src}
-                                                alt={`${coin.name} logo`}
-                                                width={35}
-                                                height={35}
-                                                className={styles.logo}
-                                              />
-                                          </div>
-                                          <div className="w-12 lg:w-20 flex justify-center opacity-75">
-                                              <button
-                                                onClick={() => handleVote(coin.baseAddress, "upvote")}
-                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                              >
-                                                  <Image
-                                                    src={Up}
-                                                    alt="up"
-                                                    className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
-                                                  />
-                                              </button>
-                                              <span
-                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
-                                          </div>
-                                          <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
-                                              <button
-                                                onClick={() => handleVote(coin.baseAddress, "downvote")}
-                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                              >
-                                                  <Image
-                                                    src={Down}
-                                                    alt="down"
-                                                    className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
-                                                  />
-                                              </button>
-                                              <span
-                                                className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
-                                          </div>
-                                          <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
-                                              <button
-                                                onClick={(e) => {
-                                                    e.preventDefault();
-                                                    window.open(coin.url, "_blank");
-                                                }}
-                                                className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
-                                              >
-                                                  <Image
-                                                    src={Dex}
-                                                    alt="dex"
-                                                    className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
-                                                  />
-                                              </button>
-                                          </div>
-                                      </div>
-                                  </td>
-                                  <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
-                                  <td className="pointer-events-none">{formatPrice(coin.price)}</td>
-                                  <td
-                                    className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
-                                      {formatPriceChange(coin.price_change_1d)}
-                                  </td>
-                                  <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
-                                  <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
-                                  <td
-                                    className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
-                              </tr>
-                            ))}
-                            </tbody>
-                        </table>
+                    <div className={styles.scrollButtonDiv}>
+                        <FontAwesomeIcon
+                          icon={faArrowRight as IconProp}
+                          className="hidden lg:inline lg:bg-purple-100 lg:p-1 lg:rounded-md lg:fa-l" />
+                        <button className={styles.scrollButton} onClick={scrollToTopMemecoins}>
+                            See Highest MC Memes
+                        </button>
                     </div>
+                    <p className="text-center fs-6 fw-bold mb-3 mt-1">TOP PERFORMING MEMECOINS</p>
+                    <table className={styles.table}>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
+                                Name {getSortIndicator("name")}
+                            </th>
+                            <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
+                                Symbol {getSortIndicator("symbol")}
+                            </th>
+                            <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
+                                Price {getSortIndicator("price")}
+                            </th>
+                            <th onClick={() => requestSort("price_change_1d")}
+                                className={styles.sortableHeader}>
+                                Change (1D) {getSortIndicator("price_change_1d")}
+                            </th>
+                            <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
+                                Volume (1D) {getSortIndicator("real_volume_1d")}
+                            </th>
+                            <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
+                                Liquidity {getSortIndicator("liquidity")}
+                            </th>
+                            <th onClick={() => requestSort("circulating_marketcap")}
+                                className={styles.sortableHeader}>
+                                Market Cap {getSortIndicator("circulating_marketcap")}
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {currentItems.map((coin, index) => (
+                          <tr key={coin.baseAddress}
+                              className={`${publicKey && uVotes.includes(coin.baseAddress) ? "bg-gray-300 pointer-events-none" : ""}`}>
+                              <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                              <td>
+                                  <div className="flex items-center">
+                                      <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
+                                          {coin.chainId == "solana" ? (
+                                            <Image src={Sol} alt="solana"
+                                                   style={{ width: "16px", marginRight: "8px" }} />
+                                          ) : coin.chainId == "base" ? (
+                                            <Image src={Base} alt="base"
+                                                   style={{
+                                                       width: "16px",
+                                                       marginRight: "8px",
+                                                   }} />
+                                          ) : coin.chainId == "ethereum" && (
+                                            <Image src={Eth} alt="ethereum"
+                                                   style={{
+                                                       width: "10px",
+                                                       marginRight: "10px",
+                                                       marginLeft: "2px",
+                                                   }} />
+                                          )}
+                                      </div>
+                                      <div
+                                        className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
+                                          {coin.name}
+                                      </div>
+                                      <div
+                                        className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
+                                          <Image
+                                            src={coin.logoUrl == "https://dd.dexscreener.com/ds-data/tokens/ethereum/0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c.png" ? Ph.src : coin.logoUrl || Ph.src}
+                                            alt={`${coin.name} logo`}
+                                            width={35}
+                                            height={35}
+                                            className={styles.logo}
+                                          />
+                                      </div>
+                                      <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                          <button
+                                            onClick={() => handleVote(coin.baseAddress, "upvote")}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Up}
+                                                alt="up"
+                                                className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                              />
+                                          </button>
+                                          <span
+                                            className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
+                                      </div>
+                                      <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
+                                          <button
+                                            onClick={() => handleVote(coin.baseAddress, "downvote")}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Down}
+                                                alt="down"
+                                                className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                              />
+                                          </button>
+                                          <span
+                                            className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
+                                      </div>
+                                      <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
+                                          <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open(coin.url, "_blank");
+                                            }}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Dex}
+                                                alt="dex"
+                                                className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
+                                              />
+                                          </button>
+                                      </div>
+                                  </div>
+                              </td>
+                              <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
+                              <td className="pointer-events-none">{formatPrice(coin.price)}</td>
+                              <td
+                                className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
+                                  {formatPriceChange(coin.price_change_1d)}
+                              </td>
+                              <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
+                              <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
+                              <td
+                                className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
+                          </tr>
+                        ))}
+                        </tbody>
+                    </table>
+
                     {/*<div className={styles.pagination}>*/}
                     {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
                     {/*        <button*/}
@@ -359,6 +374,115 @@ export const MemecoinView: FC = () => {
                 {/*        <Bar data={sentimentData} options={sentimentOptions} />*/}
                 {/*    </div>*/}
                 {/*</div>*/}
+                <div ref={topMemecoinsRef} className={styles["top-table-container"]}>
+                    <p className="text-center fs-6 fw-bold mb-3 mt-4">TOP MARKET CAP MEMECOINS ON SOL</p>
+                    <table className={styles.table}>
+                        <thead>
+                        <tr>
+                            <th>#</th>
+                            <th>Name</th>
+                            <th>Symbol</th>
+                            <th>Price</th>
+                            <th>Change (1D)</th>
+                            <th>Market Cap</th>
+                        </tr>
+                        </thead>
+                        <tbody>
+                        {topMemecoins.map((coin, index) => (
+                          <tr key={coin.baseAddress}>
+                              <td>{index + 1}</td>
+                              <td>
+                                  <div className="flex items-center">
+                                      <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
+                                          {coin.chainId == "solana" ? (
+                                            <Image src={Sol} alt="solana"
+                                                   style={{ width: "16px", marginRight: "8px" }} />
+                                          ) : coin.chainId == "base" ? (
+                                            <Image src={Base} alt="base"
+                                                   style={{
+                                                       width: "16px",
+                                                       marginRight: "8px",
+                                                   }} />
+                                          ) : coin.chainId == "ethereum" && (
+                                            <Image src={Eth} alt="ethereum"
+                                                   style={{
+                                                       width: "10px",
+                                                       marginRight: "10px",
+                                                       marginLeft: "2px",
+                                                   }} />
+                                          )}
+                                      </div>
+                                      <div
+                                        className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
+                                          {coin.name}
+                                      </div>
+                                      <div
+                                        className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
+                                          <Image
+                                            src={coin.logoUrl == "https://dd.dexscreener.com/ds-data/tokens/ethereum/0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c.png" ? Ph.src : coin.logoUrl || Ph.src}
+                                            alt={`${coin.name} logo`}
+                                            width={35}
+                                            height={35}
+                                            className={styles.logo}
+                                          />
+                                      </div>
+                                      <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                          <button
+                                            onClick={() => handleVote(coin.baseAddress, "upvote")}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Up}
+                                                alt="up"
+                                                className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                              />
+                                          </button>
+                                          <span
+                                            className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.upVote || 0}</span> {/* Upvote count */}
+                                      </div>
+                                      <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
+                                          <button
+                                            onClick={() => handleVote(coin.baseAddress, "downvote")}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Down}
+                                                alt="down"
+                                                className="w-4 h-4 lg:w-5 lg:h-5 rounded-full"
+                                              />
+                                          </button>
+                                          <span
+                                            className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[coin.baseAddress]?.downVote || 0}</span> {/* Downvote count */}
+                                      </div>
+                                      <div className="ml-2 w-16 lg:w-36 flex justify-center opacity-75">
+                                          <button
+                                            onClick={(e) => {
+                                                e.preventDefault();
+                                                window.open(coin.url, "_blank");
+                                            }}
+                                            className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
+                                          >
+                                              <Image
+                                                src={Dex}
+                                                alt="dex"
+                                                className="w-5 h-5 lg:w-8 lg:h-8 rounded-full"
+                                              />
+                                          </button>
+                                      </div>
+                                  </div>
+                              </td>
+                              <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
+                              <td>{formatPrice(coin.price)}</td>
+                              <td
+                                className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
+                                  {formatPriceChange(coin.price_change_1d)}
+                              </td>
+                              <td>{formatLargeNumber(coin.circulating_marketcap)}</td>
+                          </tr>
+                        ))}
+                        </tbody>
+                    </table>
+                </div>
             </div>
           )}
       </div>

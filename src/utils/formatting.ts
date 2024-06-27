@@ -12,7 +12,7 @@ export const formatPrice = (value: number | null): string | null => {
         const significantPart = num.replace(/^0+\.(0+)?/, "");
         console.log(num, significantPart);
         const subscriptPart = leadingZeros > 0 ? subscriptDigits[leadingZeros] : "";
-        return `$0.0${subscriptPart}${significantPart}`;
+        return `0.0${subscriptPart}${significantPart}`;
     };
 
     // Convert scientific notation to fixed-point notation if necessary
@@ -28,7 +28,7 @@ export const formatPrice = (value: number | null): string | null => {
 
             const significantPart = number.toFixed(Math.abs(exponentNumber) + 1).replace(/^-?0\.0*/, "");
 
-            return `$0.0${subscriptDigits[decimalPlaces]}${significantPart}`;
+            return `0.0${subscriptDigits[decimalPlaces]}${significantPart}`;
         }
 
         return number.toFixed(Math.max(0, -exponentNumber + 1));
