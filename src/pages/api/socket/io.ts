@@ -21,6 +21,9 @@ export default async function handler(_: NextApiRequest, res: NextApiResponseWit
         const io = new IOServer(res.socket.server, {
             path: "/api/socket/io",
             addTrailingSlash: false,
+            cors: {
+                origin: "*",
+            },
         });
         res.socket.server.io = io;
         io.on("connection", socket => redisEvents(socket));
