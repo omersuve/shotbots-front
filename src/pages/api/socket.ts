@@ -29,6 +29,7 @@ const socketHandler = async (req: NextApiRequest, res: NextApiResponse) => {
     if (!io) {
         io = new IOServer(httpServer, {
             path: "/api/socket",
+            addTrailingSlash: false,
             cors: {
                 origin: "*",
             },
