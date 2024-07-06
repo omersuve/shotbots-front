@@ -88,9 +88,9 @@ export const NewsProvider: FC<NewsProviderProps> = ({ children }) => {
     }
 
     return (
-        <NewsContext.Provider value={{ newsData, loading, timers }}>
-            {children}
-        </NewsContext.Provider>
+      <NewsContext.Provider value={{ newsData, loading, timers }}>
+          {children}
+      </NewsContext.Provider>
     );
 };
 

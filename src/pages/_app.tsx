@@ -23,6 +23,7 @@ import { ScoresProvider } from "../contexts/ScoresContext";
 import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
 import { NftProvider } from "../contexts/NftContext";
+import { WebSocketProvider } from "../contexts/WebSocketContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -31,40 +32,43 @@ function MyApp({ Component, pageProps }: AppProps) {
     const endpoint = useMemo(() => clusterApiUrl(network), [network]);
 
     const wallets = useMemo(
-        () => [
-            new PhantomWalletAdapter(),
-            new SolflareWalletAdapter(),
-        ],
-        [network],
+      () => [
+          new PhantomWalletAdapter(),
+          new SolflareWalletAdapter(),
+      ],
+      [network],
     );
 
     return (
-        <ConnectionProvider endpoint={endpoint}>
-            <WalletProvider wallets={wallets} autoConnect>
-                <WalletModalProvider>
-                    <PricesProvider>
-                        <ScoresProvider>
-                            <NewsProvider>
-                                <MemecoinProvider>
-                                    <NftProvider>
-                                        <TwitterProvider>
-                                            <div className="flex flex-col min-h-screen">
-                                                {router.pathname != "/" && <Navbar />}
-                                                <div className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
-                                                    <Component {...pageProps} />
-                                                </div>
-                                                {router.pathname != "/" && <Footer />}
-                                            </div>
-                                            <ToastContainer />
-                                        </TwitterProvider>
-                                    </NftProvider>
-                                </MemecoinProvider>
-                            </NewsProvider>
-                        </ScoresProvider>
-                    </PricesProvider>
-                </WalletModalProvider>
-            </WalletProvider>
-        </ConnectionProvider>
+      <ConnectionProvider endpoint={endpoint}>
+          <WalletProvider wallets={wallets} autoConnect>
+              <WalletModalProvider>
+                  <PricesProvider>
+                      <ScoresProvider>
+                          <NewsProvider>
+                              <MemecoinProvider>
+                                  <NftProvider>
+                                      <TwitterProvider>
+                                          <WebSocketProvider>
+                                              <div className="flex flex-col min-h-screen">
+                                                  {router.pathname != "/" && <Navbar />}
+                                                  <div
+                                                    className={`${router.pathname != "/" && "flex-grow mt-20 mb-12"}`}>
+                                                      <Component {...pageProps} />
+                                                  </div>
+                                                  {router.pathname != "/" && <Footer />}
+                                              </div>
+                                              <ToastContainer />
+                                          </WebSocketProvider>
+                                      </TwitterProvider>
+                                  </NftProvider>
+                              </MemecoinProvider>
+                          </NewsProvider>
+                      </ScoresProvider>
+                  </PricesProvider>
+              </WalletModalProvider>
+          </WalletProvider>
+      </ConnectionProvider>
     );
 }
 
