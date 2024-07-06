@@ -22,7 +22,7 @@ export const WebSocketProvider: FC<WebSocketProviderProps> = ({ children }) => {
     const [messages, setMessages] = useState<Message[]>([]);
 
     useEffect(() => {
-        const socket = io(process.env.BASE_URL_PROD || "http://localhost:3000", {
+        const socket = io(process.env.BASE_URL_PROD ?? "http://localhost:3000", {
             path: "/api/socket",
         });
 
