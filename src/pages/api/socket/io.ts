@@ -34,8 +34,16 @@ export default async function handler(_: NextApiRequest, res: NextApiResponseWit
     res.status(200).end();
 }
 
+export const config = {
+    api: {
+        bodyParser: false,
+    },
+};
+
 async function redisEvents(socket: Socket) {
     const app = await RedisServer.getInstance();
+
+    console.log("io connected!");
 
     await app.redisSub.subscribe("telegram_messages", (data) => {
         console.log("redis get message:", data);

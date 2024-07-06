@@ -22,7 +22,9 @@ export function SocketProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         if (!socket) {
-            socket = io({ path: "/api/socket/io", addTrailingSlash: false });
+            socket = io(process.env.NEXT_PUBLIC_BASE_URL_PROD!,
+              { path: "/api/socket/io", addTrailingSlash: false },
+            );
 
             socket.on("connect", () => {
                 setStatus(SocketStatus.CONNECTED);
