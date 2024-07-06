@@ -23,7 +23,7 @@ import { ScoresProvider } from "../contexts/ScoresContext";
 import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
 import { NftProvider } from "../contexts/NftContext";
-import { WebSocketProvider } from "../contexts/SocketContext";
+import { SocketProvider } from "../contexts/SocketContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
@@ -49,7 +49,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                               <MemecoinProvider>
                                   <NftProvider>
                                       <TwitterProvider>
-                                          <WebSocketProvider>
+                                          <SocketProvider>
                                               <div className="flex flex-col min-h-screen">
                                                   {router.pathname != "/" && <Navbar />}
                                                   <div
@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                                                   {router.pathname != "/" && <Footer />}
                                               </div>
                                               <ToastContainer />
-                                          </WebSocketProvider>
+                                          </SocketProvider>
                                       </TwitterProvider>
                                   </NftProvider>
                               </MemecoinProvider>
