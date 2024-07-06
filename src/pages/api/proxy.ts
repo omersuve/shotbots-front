@@ -24,10 +24,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 (res as NextApiResponse).status(500).json({ error: "Proxy error", details: error.message });
             },
             proxyReq: (proxyReq, req, res) => {
-                console.log(`Proxy request sent to: ${targetUrl}`);
+                // console.log(`Proxy request sent to: ${targetUrl}`);
             },
             proxyRes: (proxyRes, req, res) => {
-                console.log(`Proxy response received from: ${targetUrl}`);
+                // console.log(`Proxy response received from: ${targetUrl}`);
             },
         },
     });
