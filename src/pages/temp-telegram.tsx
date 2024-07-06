@@ -3,6 +3,7 @@ import { useNewPairs } from "../contexts/WebSocketContext";
 
 const Home: React.FC = () => {
     const { messages } = useNewPairs();
+    console.log(messages);
 
 
     return (
