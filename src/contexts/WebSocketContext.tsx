@@ -23,7 +23,7 @@ export const WebSocketProvider: FC<WebSocketProviderProps> = ({ children }) => {
 
     useEffect(() => {
         const socket = io({
-            path: "/api/socket_io",
+            path: "/api/socket",
         });
         // console.log("process.env.NEXT_PUBLIC_BASE_URL_PROD", process.env.NEXT_PUBLIC_BASE_URL_PROD);
 
