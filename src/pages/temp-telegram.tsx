@@ -1,10 +1,30 @@
-import React from "react";
-import { useNewPairs } from "../contexts/WebSocketContext";
+import React, { useEffect, useState } from "react";
+import { useSocket } from "../contexts/SocketContext";
+
+interface Message {
+    group: string;
+    sender: number;
+    text: string;
+    date: string;
+}
 
 const Home: React.FC = () => {
-    const { messages } = useNewPairs();
-    console.log(messages);
+    const socketContext = useSocket();
+    const [messages, setMessages] = useState<Message[]>([]);
 
+    useEffect(() => {
+        if (socketContext.socket) {
+            socketContext.socket.on("new_message", (message: Message) => {
+                console.log(`Message: ${JSON.stringify(message)}`);
+                setMessages((prevMessages) => [...prevMessages, message]);
+            });
+        }
+        return () => {
+            if (!socketContext.socket) return;
+            socketContext.socket.disconnect();
+            socketContext.socket = undefined;
+        };
+    }, [socketContext.socket]);
 
     return (
       <div>

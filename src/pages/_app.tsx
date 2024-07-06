@@ -23,7 +23,7 @@ import { ScoresProvider } from "../contexts/ScoresContext";
 import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
 import { NftProvider } from "../contexts/NftContext";
-import { WebSocketProvider } from "../contexts/WebSocketContext";
+import { WebSocketProvider } from "../contexts/SocketContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
     const router = useRouter();
