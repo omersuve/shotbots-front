@@ -25,6 +25,7 @@ export const WebSocketProvider: FC<WebSocketProviderProps> = ({ children }) => {
         const socket = io(process.env.BASE_URL_PROD ?? "http://localhost:3000", {
             path: "/api/socket",
         });
+        console.log("process.env.BASE_URL_PROD", process.env.BASE_URL_PROD);
 
         socket.on("connect", () => {
             console.log("Connected to WebSocket");
