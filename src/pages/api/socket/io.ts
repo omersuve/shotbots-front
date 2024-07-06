@@ -46,7 +46,7 @@ async function redisEvents(socket: Socket) {
     console.log("io connected!");
 
     await app.redisSub.subscribe("telegram_messages", (data) => {
-        console.log("redis get message:", data);
-        socket.emit("new_message", data);
+        console.log("redis get message:", JSON.stringify(data));
+        socket.emit("new_message", JSON.stringify(data));
     });
 }

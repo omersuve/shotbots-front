@@ -14,9 +14,10 @@ const Home: React.FC = () => {
 
     useEffect(() => {
         if (socketContext.socket) {
-            socketContext.socket.on("new_message", (message: Message) => {
-                console.log(`Message: ${JSON.stringify(message)}`);
-                setMessages((prevMessages) => [...prevMessages, message]);
+            socketContext.socket.on("new_message", (message: string) => {
+                const msg = JSON.parse(message);
+                console.log(`Message: ${message}`);
+                setMessages((prevMessages) => [...prevMessages, msg]);
             });
         }
         return () => {
