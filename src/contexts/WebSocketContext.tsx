@@ -22,10 +22,11 @@ export const WebSocketProvider: FC<WebSocketProviderProps> = ({ children }) => {
     const [messages, setMessages] = useState<Message[]>([]);
 
     useEffect(() => {
-        const socket = io(process.env.BASE_URL_PROD ?? "http://localhost:3000", {
+        const socket = io(process.env.NEXT_PUBLIC_BASE_URL_PROD || "http://localhost:3000", {
             path: "/api/socket",
         });
-        console.log("process.env.BASE_URL_PROD", process.env.BASE_URL_PROD);
+        console.log("process.env.NEXT_PUBLIC_BASE_URL_PROD", process.env.NEXT_PUBLIC_BASE_URL_PROD);
+
 
         socket.on("connect", () => {
             console.log("Connected to WebSocket");
