@@ -11,7 +11,7 @@ export const config = {
 };
 
 const redisUrl = process.env.REDIS_PUBLIC_URL ?? "redis://localhost:6379";
-console.log(redisUrl);
+console.log("redisUrl", redisUrl);
 
 // Create the Redis client
 const redisClient: RedisClientType = createClient({ url: redisUrl });
