@@ -23,7 +23,6 @@
     "@tailwindcss/typography": "^0.4.1",
     "@types/lodash.orderby": "^4.6.6",
     "@types/redis": "^4.0.11",
-    "@types/socket.io": "^3.0.2",
     "bootstrap": "^5.3.3",
     "chart.js": "^4.4.2",
     "cheerio": "^1.0.0-rc.12",
@@ -49,10 +48,7 @@
     "react-toastify": "^10.0.5",
     "react-typist-component": "^1.0.6",
     "redis": "^4.6.15",
-    "sass": "^1.54.3",
-    "socket.io": "^4.7.5",
-    "socket.io-client": "^4.7.5",
-    "ws": "^8.18.0"
+    "sass": "^1.54.3"
   },
   "devDependencies": {
     "@types/http-proxy-middleware": "^1.0.0",
