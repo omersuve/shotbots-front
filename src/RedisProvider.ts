@@ -15,11 +15,9 @@ export class RedisProvider {
     }
 
     private async getRedisClient(): Promise<RedisClientType> {
+        console.log("creating or connecting redis...", process.env.REDIS_PUBLIC_URL ?? "redis://localhost:6379");
         return createRedisClient({
             url: process.env.REDIS_PUBLIC_URL ?? "redis://localhost:6379",
-            socket: {
-                connectTimeout: 5000, // Increase if needed
-            },
         });
     }
 }

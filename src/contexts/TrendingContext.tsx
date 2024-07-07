@@ -20,7 +20,10 @@ export function TrendingProvider({ children }: PropsWithChildren) {
         fetch("/api/subscribe").then(r => {
             const channel = pusher.subscribe("my-channel");
 
+            console.log("subscribed my-channel");
+
             channel.bind("my-event", (data: { message: string }) => {
+                console.log(data);
                 setMessages((prevMessages: any) => [...prevMessages, data.message]);
             });
 

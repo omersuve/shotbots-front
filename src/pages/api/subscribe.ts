@@ -18,12 +18,13 @@ async function connectRedis() {
 
     console.log("redis connected!");
 
-    await app.redisSub.subscribe("telegram_messages", (data: TelegramMessage) => {
-        console.log("redis get message:", JSON.stringify(data));
+    await app.redisSub.subscribe("telegram_messages", (data: string) => {
+        console.log("redis get message:", data);
         pusher.trigger("my-channel", "my-event", {
-            message: JSON.stringify(data),
+            message: data,
         });
     });
+    console.log("redis subscribed to telegram_messages");
 }
 
 export default async function handler(req: NextApiRequest, res: NextApiResponse) {
