@@ -24,14 +24,14 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
                 // Filter pairs based on price threshold and sort by liquidity
                 const filteredAndSortedPairs = sortedPairs
-                    .filter((item: any) => {
-                        const dexPrice = parseFloat(item.priceUsd);
-                        const priceDifference = Math.abs(dexPrice - price) / price;
-                        const isEqualSymbols = item.baseToken ? item.baseToken.symbol == symbol : false;
-                        const chain = item.chainId == "base" || item.chainId == "solana" || item.chainId == "ethereum";
-                        return isEqualSymbols && priceDifference <= priceThreshold && chain && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
-                    })
-                    .sort((a: any, b: any) => b["liquidity"]["usd"] - a["liquidity"]["usd"]);
+                  .filter((item: any) => {
+                      const dexPrice = parseFloat(item.priceUsd);
+                      const priceDifference = Math.abs(dexPrice - price) / price;
+                      const isEqualSymbols = item.baseToken ? item.baseToken.symbol == symbol : false;
+                      const chain = item.chainId == "base" || item.chainId == "solana" || item.chainId == "ethereum";
+                      return isEqualSymbols && priceDifference <= priceThreshold && chain && item["liquidity"] && item["liquidity"]["usd"] > item["fdv"] / 2000;
+                  })
+                  .sort((a: any, b: any) => b["liquidity"]["usd"] - a["liquidity"]["usd"]);
 
                 // Select the pair with the highest liquidity
                 if (filteredAndSortedPairs.length > 0) {
@@ -60,7 +60,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 const price = row[1]; // Get the price from the original data
                 return await fetchMarketCapData(symbol, price, row);
             } catch (e) {
-                console.log(e);
+                // console.log(e);
                 return null;
             }
         });

@@ -10,7 +10,7 @@ const Home: React.FC = () => {
       <div>
           <h1>Telegram Messages</h1>
           <ul>
-              {messages.map((message, index) => (
+              {messages.slice().reverse().map((message, index) => (
                 <li key={index}>
                     <p><strong>Group:</strong> {message.group}</p>
                     <p><strong>Sender:</strong> {message.sender}</p>

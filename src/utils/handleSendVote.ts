@@ -26,7 +26,7 @@ export async function handleSendVote(assetId: string, vote: number, tag: string,
         const response = await fetch("/api/sendVote", requestOptions);
         const result = await response.json();
         if (response.ok) {
-            console.log("successfully sent vote");
+            // console.log("successfully sent vote");
             toast("Voted Successfully!");
             return vote;
         } else {

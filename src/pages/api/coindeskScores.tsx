@@ -30,17 +30,17 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
 
         for (const collectionName of requestBody) {
             const scores = await db
-                .collection<ScoreDocument>(collectionName)
-                .find({})
-                .toArray();
+              .collection<ScoreDocument>(collectionName)
+              .find({})
+              .toArray();
 
             // Filter and sum the scores in JavaScript
             const recentScores = scores
-                .map(score => ({
-                    ...score,
-                    timestamp: new Date(score.timestamp),  // Convert timestamp string to Date object
-                }))
-                .filter(score => score.timestamp >= twoDaysAgo);  // Filter scores within the last 24 hours
+              .map(score => ({
+                  ...score,
+                  timestamp: new Date(score.timestamp),  // Convert timestamp string to Date object
+              }))
+              .filter(score => score.timestamp >= twoDaysAgo);  // Filter scores within the last 24 hours
 
             const totalScores = recentScores.reduce((acc, score) => acc + score.score, 0);  // Sum the scores
             const averageScore = recentScores.length ? totalScores / recentScores.length : 0;  // Calculate the average

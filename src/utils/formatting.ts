@@ -1,5 +1,4 @@
 export const formatPrice = (value: number | null): string | null => {
-    console.log("value", value);
     if (value === null) return null;
     if (value === 0) return "0";
     const subscriptDigits = ["₀", "₁", "₂", "₃", "₄", "₅", "₆", "₇", "₈", "₉",
@@ -10,7 +9,6 @@ export const formatPrice = (value: number | null): string | null => {
 
     const formatWithSubscripts = (num: string, leadingZeros: number): string => {
         const significantPart = num.replace(/^0+\.(0+)?/, "");
-        console.log(num, significantPart);
         const subscriptPart = leadingZeros > 0 ? subscriptDigits[leadingZeros] : "";
         return `0.0${subscriptPart}${significantPart}`;
     };

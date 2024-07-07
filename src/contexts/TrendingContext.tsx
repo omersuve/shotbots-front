@@ -17,36 +17,32 @@ export function TrendingProvider({ children }: PropsWithChildren) {
     const [messages, setMessages] = useState<TelegramMessage[]>([]);
 
     useEffect(() => {
-        fetch("/api/subscribe").then(r => {
-            // Fetch initial messages
-            fetch("/api/getLatestTrending").then((res) => res.json())
-              .then((data: string[]) => {
-                  console.log("data", data);
-                  setMessages(data.map((m: string) => JSON.parse(m)));
-              });
+        // Fetch initial messages
+        fetch("/api/getLatestTrending").then((res) => res.json())
+          .then((data: string[]) => {
+              console.log("data", data);
+              setMessages(data.map((m: string) => JSON.parse(m)));
+          });
 
-            const channel = pusher.subscribe("my-channel");
+        const channel = pusher.subscribe("my-channel");
 
-            console.log("subscribed my-channel");
-
-            channel.bind("my-event", (data: { message: string }) => {
-                console.log(data);
-                setMessages((prevMessages: any) => [...prevMessages, JSON.parse(data.message)].slice(-10));
-            });
-
-            channel.bind("pusher:subscription_succeeded", () => {
-                console.log("success-connect");
-            });
-
-            channel.bind("pusher:subscription_error", () => {
-                console.log("error-connect");
-            });
-
-            return () => {
-                channel.unbind_all();
-                channel.unsubscribe();
-            };
+        channel.bind("my-event", (data: { message: string }) => {
+            console.log(data);
+            setMessages((prevMessages: any) => [...prevMessages, JSON.parse(data.message)].slice(-10));
         });
+
+        channel.bind("pusher:subscription_succeeded", () => {
+            console.log("success-connect");
+        });
+
+        channel.bind("pusher:subscription_error", () => {
+            console.log("error-connect");
+        });
+
+        return () => {
+            channel.unbind_all();
+            channel.unsubscribe();
+        };
     }, []);
 
     return (
