@@ -17,7 +17,7 @@ async function connectRedis() {
 
     console.log("redis connected!");
 
-    await app.redisSub.subscribe("telegram_messages", async (data: string) => {
+    await app.redisSub.subscribe("telegram_messages", async (data: any) => {
         console.log("redis get message:", data);
 
         // Store the message in a Redis list
