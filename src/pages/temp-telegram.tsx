@@ -1,31 +1,9 @@
-import React, { useEffect, useState } from "react";
-import { useSocket } from "../contexts/SocketContext";
+import React from "react";
+import { useTrending } from "../contexts/TrendingContext";
 
-interface Message {
-    group: string;
-    sender: number;
-    text: string;
-    date: string;
-}
 
 const Home: React.FC = () => {
-    const socketContext = useSocket();
-    const [messages, setMessages] = useState<Message[]>([]);
-
-    useEffect(() => {
-        if (socketContext.socket) {
-            socketContext.socket.on("new_message", (message: string) => {
-                const msg = JSON.parse(message);
-                console.log(`Message: ${message}`);
-                setMessages((prevMessages) => [...prevMessages, msg]);
-            });
-        }
-        return () => {
-            if (!socketContext.socket) return;
-            socketContext.socket.disconnect();
-            socketContext.socket = undefined;
-        };
-    }, [socketContext.socket]);
+    const { messages } = useTrending();
 
     return (
       <div>

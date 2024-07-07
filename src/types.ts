@@ -153,3 +153,10 @@ export type FeesInfo = {
     floorTakerFeeBp: number;
     floorListedNftType: string;
 }
+
+export type TelegramMessage = {
+    group: string;
+    sender: number;
+    text: string;
+    date: string;
+}
