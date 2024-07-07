@@ -18,6 +18,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
         pathRewrite: {
             "^/api/proxy": "", // Remove base path
         },
+        timeout: 5000, // Added timeout
         on: {
             error: (error, req, res, target) => {
                 console.error(`Proxy error: ${error.message}`);
@@ -25,6 +26,7 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             },
             proxyReq: (proxyReq, req, res) => {
                 // console.log(`Proxy request sent to: ${targetUrl}`);
+                proxyReq.setHeader("Connection", "keep-alive");
             },
             proxyRes: (proxyRes, req, res) => {
                 // console.log(`Proxy response received from: ${targetUrl}`);
@@ -38,5 +40,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
 export const config = {
     api: {
         bodyParser: false, // Disable body parsing to handle binary data correctly
+        externalResolver: true,
     },
 };
