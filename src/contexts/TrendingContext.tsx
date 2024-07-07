@@ -21,7 +21,7 @@ export function TrendingProvider({ children }: PropsWithChildren) {
             // Fetch initial messages
             fetch("/api/getLatestTrending")
               .then((res) => res.json())
-              .then((data) => setMessages(data.messages));
+              .then((data) => setMessages(data.messages.map((m: string) => JSON.parse(m))));
 
             const channel = pusher.subscribe("my-channel");
 
