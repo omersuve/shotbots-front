@@ -4,6 +4,7 @@ import { useTrending } from "../contexts/TrendingContext";
 
 const Home: React.FC = () => {
     const { messages } = useTrending();
+    console.log("messages", messages);
 
     return (
       <div>
