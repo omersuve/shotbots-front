@@ -1,7 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { RedisServer } from "../../RedisServer";
 import Pusher from "pusher";
-import { TelegramMessage } from "../../types";
 
 const pusher = new Pusher({
     appId: process.env.PUSHER_APP_ID!,
@@ -18,9 +17,15 @@ async function connectRedis() {
 
     console.log("redis connected!");
 
-    await app.redisSub.subscribe("telegram_messages", (data: string) => {
+    await app.redisSub.subscribe("telegram_messages", async (data: string) => {
         console.log("redis get message:", data);
-        pusher.trigger("my-channel", "my-event", {
+
+        // Store the message in a Redis list
+        await app.redisClient.lPush("latest_messages", data);
+        // Trim the list to the last 10 messages
+        await app.redisClient.lTrim("latest_messages", 0, 9);
+
+        await pusher.trigger("my-channel", "my-event", {
             message: data,
         });
     });

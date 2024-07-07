@@ -18,13 +18,18 @@ export function TrendingProvider({ children }: PropsWithChildren) {
 
     useEffect(() => {
         fetch("/api/subscribe").then(r => {
+            // Fetch initial messages
+            fetch("/api/getLatestTrending")
+              .then((res) => res.json())
+              .then((data) => setMessages(data.messages));
+
             const channel = pusher.subscribe("my-channel");
 
             console.log("subscribed my-channel");
 
             channel.bind("my-event", (data: { message: string }) => {
                 console.log(data);
-                setMessages((prevMessages: any) => [...prevMessages, data.message]);
+                setMessages((prevMessages: any) => [...prevMessages, JSON.parse(data.message)].slice(-10));
             });
 
             channel.bind("pusher:subscription_succeeded", () => {
