@@ -15,20 +15,24 @@ const TrendingContext = createContext<TrendingContextProps | undefined>(undefine
 
 export function TrendingProvider({ children }: PropsWithChildren) {
     const [messages, setMessages] = useState<TelegramMessage[]>([]);
+    const [refetch, setRefetch] = useState(false);
 
-    useEffect(() => {
-        // Fetch initial messages
+    const fetchMessages = () => {
         fetch("/api/getLatestTrending").then((res) => res.json())
           .then((data: string[]) => {
               console.log("data", data);
               setMessages(data.map((m: string) => JSON.parse(m)));
           });
+    };
+
+    useEffect(() => {
+        fetchMessages();
 
         const channel = pusher.subscribe("my-channel");
 
         channel.bind("my-event", (data: { message: string }) => {
             console.log(data);
-            setMessages((prevMessages: any) => [...prevMessages, JSON.parse(data.message)].slice(-10));
+            setRefetch(prev => !prev); // Toggle reFetch state
         });
 
         channel.bind("pusher:subscription_succeeded", () => {
@@ -44,6 +48,11 @@ export function TrendingProvider({ children }: PropsWithChildren) {
             channel.unsubscribe();
         };
     }, []);
+
+    useEffect(() => {
+        fetchMessages();
+    }, [refetch]);
+
 
     return (
       <TrendingContext.Provider value={{ messages }}>{children}</TrendingContext.Provider>
