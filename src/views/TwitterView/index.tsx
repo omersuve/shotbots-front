@@ -9,7 +9,7 @@ import Box from "@mui/material/Box";
 import Slider from "@mui/material/Slider";
 import { useTwitter } from "../../contexts/TwitterContext";
 
-const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "NFT", "MEMECOIN"];
+const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "NFT"];
 
 export const TwitterView: FC = () => {
     const { tweetsData, loading } = useTwitter();

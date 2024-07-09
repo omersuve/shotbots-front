@@ -150,7 +150,7 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
     return (
         <div className={styles.graph}>
             <div className={styles.update} style={{ position: "absolute", top: "0.5rem", right: "0.5rem", zIndex: 1 }}>
-                <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 20
+                <p style={{ color: "black", fontFamily: "Nunito", fontSize: "12px", opacity: "50%" }}>Updated Daily | 18
                     UTC</p>
             </div>
             <div style={{ position: "relative", width: "100%", height: "100%" }}>

@@ -155,8 +155,7 @@ export type FeesInfo = {
 }
 
 export type TelegramMessage = {
-    group: string;
-    sender: number;
     text: string;
     date: string;
+    score: number;
 }

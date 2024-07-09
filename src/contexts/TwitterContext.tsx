@@ -20,7 +20,7 @@ export const TwitterProvider: FC<TwitterProviderProps> = ({ children }) => {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
-            const collections = ["bitcoin-tweets", "ethereum-tweets", "solana-tweets", "nft-tweets", "memecoin-tweets"];
+            const collections = ["bitcoin-tweets", "ethereum-tweets", "solana-tweets", "nft-tweets"];
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
