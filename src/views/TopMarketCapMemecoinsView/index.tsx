@@ -1,32 +1,21 @@
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./index.module.css";
-import MyLoader from "../../components/MyLoader";
 import Image from "next/image";
 import Sol from "../../../public/solana-sol-logo.svg";
 import Base from "../../../public/base.png";
 import Eth from "../../../public/ethereum-eth-logo.svg";
+import Ph from "../../../public/placeholder.png";
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
-import Ph from "../../../public/placeholder.png";
-import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
 import { useMemecoins } from "../../contexts/MemecoinContext";
+import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
+import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
-import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
-import { MemecoinData } from "../../types";
 
-ChartJS.register(CategoryScale, LinearScale, BarElement, Title, Tooltip, Legend);
-
-type SortConfig = {
-    key: keyof MemecoinData | null;
-    direction: "ascending" | "descending";
-};
-
-export const MemecoinView: FC = () => {
-    const { memecoins, loading, error } = useMemecoins();
-    const [currentPage, setCurrentPage] = useState(1);
-    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
+export const TopMarketCapMemecoinsView: FC = () => {
+    const { topMemecoins, loading } = useMemecoins();
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
     const { publicKey } = useWallet();
@@ -67,55 +56,6 @@ export const MemecoinView: FC = () => {
 
         if (publicKey) getVotes().then();
     }, [publicKey]);
-
-    const itemsPerPage = 30;
-
-    const sortedMemecoins = useMemo(() => {
-        let sortableItems = [...memecoins].map((coin) => ({
-            ...coin,
-            upVote: votes[coin.baseAddress]?.upVote || 0,
-            downVote: votes[coin.baseAddress]?.downVote || 0,
-        }));
-        if (sortConfig.key) {
-            sortableItems.sort((a, b) => {
-                const aValue = a[sortConfig.key!];
-                const bValue = b[sortConfig.key!];
-                if (aValue === null || bValue === null) {
-                    return 0;
-                }
-                if (aValue < bValue) {
-                    return sortConfig.direction === "ascending" ? -1 : 1;
-                }
-                if (aValue > bValue) {
-                    return sortConfig.direction === "ascending" ? 1 : -1;
-                }
-                return 0;
-            });
-        }
-        return sortableItems;
-    }, [memecoins, sortConfig]);
-
-    const requestSort = (key: keyof MemecoinData) => {
-        let direction: "ascending" | "descending" = "descending";
-        if (sortConfig.key === key && sortConfig.direction === "descending") {
-            direction = "ascending";
-        }
-        setSortConfig({ key, direction });
-    };
-
-    const getSortIndicator = (key: keyof MemecoinData) => {
-        if (sortConfig.key !== key) {
-            return null;
-        }
-        return sortConfig.direction === "ascending" ? "↑" : "↓";
-    };
-
-
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = sortedMemecoins.slice(indexOfFirstItem, indexOfLastItem).slice(0, 15);
-
-    const totalPages = Math.ceil(memecoins.length / itemsPerPage);
 
     const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
         if (!publicKey) {
@@ -169,62 +109,33 @@ export const MemecoinView: FC = () => {
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
-                            Name {getSortIndicator("name")}
-                        </th>
-                        <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
-                            Symbol {getSortIndicator("symbol")}
-                        </th>
-                        <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
-                            Price {getSortIndicator("price")}
-                        </th>
-                        <th onClick={() => requestSort("price_change_1d")}
-                            className={styles.sortableHeader}>
-                            Change (1D) {getSortIndicator("price_change_1d")}
-                        </th>
-                        <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
-                            Volume (1D) {getSortIndicator("real_volume_1d")}
-                        </th>
-                        <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
-                            Liquidity {getSortIndicator("liquidity")}
-                        </th>
-                        <th onClick={() => requestSort("circulating_marketcap")}
-                            className={styles.sortableHeader}>
-                            Market Cap {getSortIndicator("circulating_marketcap")}
-                        </th>
+                        <th>Name</th>
+                        <th>Symbol</th>
+                        <th>Price</th>
+                        <th>Change (1D)</th>
+                        <th>Market Cap</th>
                     </tr>
                     </thead>
                     <tbody>
-                    {currentItems.map((coin, index) => (
+                    {topMemecoins.map((coin, index) => (
                       <tr key={coin.baseAddress}>
-                          <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                          <td>{index + 1}</td>
                           <td>
                               <div className="flex items-center">
                                   <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
                                       {coin.chainId == "solana" ? (
-                                        <Image src={Sol} alt="solana"
-                                               style={{ width: "16px", marginRight: "8px" }} />
+                                        <Image src={Sol} alt="solana" style={{ width: "16px", marginRight: "8px" }} />
                                       ) : coin.chainId == "base" ? (
-                                        <Image src={Base} alt="base"
-                                               style={{
-                                                   width: "16px",
-                                                   marginRight: "8px",
-                                               }} />
+                                        <Image src={Base} alt="base" style={{ width: "16px", marginRight: "8px" }} />
                                       ) : coin.chainId == "ethereum" && (
                                         <Image src={Eth} alt="ethereum"
-                                               style={{
-                                                   width: "10px",
-                                                   marginRight: "10px",
-                                                   marginLeft: "2px",
-                                               }} />
+                                               style={{ width: "10px", marginRight: "10px", marginLeft: "2px" }} />
                                       )}
                                   </div>
-                                  <div
-                                    className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
+                                  <div className="hidden lg:block lg:w-32 text-left truncate pointer-events-none">
                                       {coin.name}
                                   </div>
-                                  <div
-                                    className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
+                                  <div className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
                                       <Image
                                         src={coin.logoUrl == "https://dd.dexscreener.com/ds-data/tokens/ethereum/0xe0f63a424a4439cbe457d80e4f4b51ad25b2c56c.png" ? Ph.src : coin.logoUrl || Ph.src}
                                         alt={`${coin.name} logo`}
@@ -281,39 +192,18 @@ export const MemecoinView: FC = () => {
                               </div>
                           </td>
                           <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
-                          <td className="pointer-events-none">{formatPrice(coin.price)}</td>
+                          <td>{formatPrice(coin.price)}</td>
                           <td
                             className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
                               {formatPriceChange(coin.price_change_1d)}
                           </td>
-                          <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
-                          <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
-                          <td
-                            className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
+                          <td>{formatLargeNumber(coin.circulating_marketcap)}</td>
                       </tr>
                     ))}
                     </tbody>
                 </table>
-
-                {/*<div className={styles.pagination}>*/}
-                {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
-                {/*        <button*/}
-                {/*            key={index + 1}*/}
-                {/*            onClick={() => setCurrentPage(index + 1)}*/}
-                {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
-                {/*        >*/}
-                {/*            {index + 1}*/}
-                {/*        </button>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
             </div>
           )}
-          {/*<div className={styles["table-sentiment-container"]}>*/}
-          {/*    <div className={styles["table-wrapper-sentiment"]} style={{ height: "350px", width: "350px" }}>*/}
-          {/*        <p className="text-center fs-6 fw-bold mb-4">OUR SELECTIONS</p>*/}
-          {/*        <Bar data={sentimentData} options={sentimentOptions} />*/}
-          {/*    </div>*/}
-          {/*</div>*/}
       </div>
     );
 };

@@ -55,7 +55,7 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
             const responseTop = await fetch("/api/getTopMemecoins");
             if (responseTop.ok) {
                 const dataTop: Memecoin[] = await responseTop.json();
-                setTopMemecoins(dataTop.slice(0, 5));
+                setTopMemecoins(dataTop.slice(0, 10));
             }
         } catch (err) {
             let errorMessage = "An unknown error occurred";

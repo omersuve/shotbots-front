@@ -39,7 +39,6 @@ export const TrendingView: FC = () => {
 
     return (
       <div className={styles.container}>
-          <h1 className={styles.header}>Trending Tickers</h1>
           <ul className={styles.messageList}>
               {messages.slice().map((message, index) => {
                   const { url, token, telegram } = extractInfo(message.text);

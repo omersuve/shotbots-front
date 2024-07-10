@@ -3,33 +3,10 @@
     display: flex;
     flex-direction: column;
     align-items: center;
-}
-
-.tables-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    width: 100%; /* Ensure the container takes full width */
-    margin-top: 20px;
-    margin-bottom: 40px;
-    align-items: center;
+    position: relative;
 }
 
 .table-container {
-    width: 80%;
-    height: auto; /* Set a fixed height for the table container */
-    display: flex;
-    flex-direction: column;
-    overflow-y: auto; /* Allow vertical scrolling if content exceeds height */
-    position: relative;
-    padding: 10px; /* Add padding around table container */
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-.top-table-container {
-    width: 60%;
     height: auto; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
@@ -129,8 +106,8 @@
 
 .scrollButtonDiv {
     position: absolute;
-    left: 3%;
-    top: 4px;
+    left: 10%;
+    top: -2%;
     justify-content: center;
     align-items: center;
     display: flex;
@@ -202,34 +179,7 @@
         overflow-y: auto; /* Enable vertical scrolling */
     }
 
-    .scrollButtonDiv {
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 20%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    .scrollButton {
-        font-size: 5px;
-        font-weight: bold;
-    }
-
-    .tables-container {
-        flex-direction: column; /* Stack elements vertically */
-    }
-
     .table-container {
-        width: 100%;
-        margin: 0;
-        padding: 0;
-        justify-content: flex-start; /* Align items at the start */
-        align-items: stretch; /* Stretch to fill the width */
-    }
-
-    .top-table-container {
         width: 100%;
         margin: 0;
         padding: 0;
@@ -257,7 +207,15 @@
         margin-top: 20px;
     }
 
-    .table th:nth-child(1), .table td:nth-child(1) {
+    .table td:nth-child(1) {
+        width: 4%;
+        opacity: 50%;
+        pointer-events: none;
+        background-color: #e0e0e0;
+        padding: 0;
+    }
+
+    .table th:nth-child(1) {
         width: 4%;
         opacity: 50%;
         pointer-events: none;
