@@ -43,7 +43,7 @@ export const TrendingView: FC = () => {
           <ul className={styles.messageList}>
               {messages.slice().map((message, index) => {
                   const { url, token, telegram } = extractInfo(message.text);
-                  const scores = [10, 20, 30, 40]; // Example scores, replace with real scores
+                  const scores = [message.score, 20, 30, 40]; // Example scores, replace with real scores
                   return (
                     <li key={index} className={styles.messageItem}>
                         <div className={styles.messageDate}>{new Date(message.date).toLocaleString()}</div>
