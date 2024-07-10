@@ -174,7 +174,7 @@ export const NftView: FC = () => {
                                     Supply {getSortIndicator("totalSupply")}
                                 </th>
                                 <th onClick={() => requestSort("uniqueHolders")} className={styles.sortableHeader}>
-                                    Unique Holders {getSortIndicator("uniqueHolders")}
+                                    Holders {getSortIndicator("uniqueHolders")}
                                 </th>
                                 <th onClick={() => requestSort("floorPriceSol")} className={styles.sortableHeader}>
                                     Price {getSortIndicator("floorPriceSol")}
