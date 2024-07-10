@@ -41,7 +41,7 @@ export const TrendingView: FC = () => {
       <div className={styles.container}>
           <h1 className={styles.header}>Trending Tickers</h1>
           <ul className={styles.messageList}>
-              {messages.slice().reverse().map((message, index) => {
+              {messages.slice().map((message, index) => {
                   const { url, token, telegram } = extractInfo(message.text);
                   const scores = [10, 20, 30, 40]; // Example scores, replace with real scores
                   return (
@@ -66,16 +66,19 @@ export const TrendingView: FC = () => {
                               </Link>
                           </p>
                         )}
-                        <div className={styles.messageScore}>
-                            <strong>Score:</strong> {message.score}
+                        <div className={styles.toggleButtonContainer}>
                             <button
                               className={styles.toggleButton}
                               onClick={() => toggleGraphVisibility(index)}
                             >
-                                {visibleGraphs[index] ? "Hide Graph" : "Show Graph"}
+                                {visibleGraphs[index] ? "Hide Sentiments" : "Show Sentiments"}
                             </button>
                         </div>
-                        {visibleGraphs[index] && <GraphComponent scores={scores} startDate={message.date} />}
+                        {visibleGraphs[index] && (
+                          <div className={styles.graphContainer}>
+                              <GraphComponent scores={scores} startDate={message.date} />
+                          </div>
+                        )}
                     </li>
                   );
               })}
@@ -103,7 +106,7 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
     const labels = scores.map((_, index) => {
         const date = new Date(startDate);
         date.setHours(date.getHours() + index);
-        return date.toLocaleString();
+        return date;
     });
 
     const data = {
@@ -120,14 +123,48 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
 
     const options = {
         scales: {
+            x: {
+                ticks: {
+                    padding: 10,
+                    font: {
+                        size: 12,
+                    },
+                    callback: function(value: any, index: number) {
+                        const date = labels[index];
+                        const formattedDate = date.toLocaleDateString();
+                        const formattedTime = date.toLocaleTimeString();
+                        return `${formattedDate}\n${formattedTime}`;
+                    },
+                },
+            },
             y: {
                 beginAtZero: true,
                 max: 100,
+                ticks: {
+                    stepSize: 20,
+                },
             },
         },
+        plugins: {
+            legend: {
+                display: false,
+            },
+            tooltip: {
+                callbacks: {
+                    label: function(context: any) {
+                        return `Score: ${context.parsed.y}`;
+                    },
+                },
+            },
+        },
+        maintainAspectRatio: false, // Allows for flexible resizing
     };
 
-    return <Line data={data} options={options} />;
+    return (
+      <div style={{ height: "200px" }}>
+          <Line data={data} options={options} />
+      </div>
+    );
 };
 
 export default GraphComponent;
