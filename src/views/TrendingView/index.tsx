@@ -104,7 +104,7 @@ type GraphComponentProps = {
 const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
     const labels = scores.map((_, index) => {
         const date = new Date(startDate);
-        date.setHours(date.getHours() + index);
+        date.setMinutes(date.getMinutes() + index * 90);
         return date;
     });
 
