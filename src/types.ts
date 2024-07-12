@@ -155,7 +155,13 @@ export type FeesInfo = {
 }
 
 export type TelegramMessage = {
+    id: string;
     text: string;
     date: string;
-    score: number;
+    scores: (number | null)[];
+    rugcheck?: {
+        risks: string[],
+        totalLPProviders: number,
+        totalMarketLiquidity: number
+    }
 }

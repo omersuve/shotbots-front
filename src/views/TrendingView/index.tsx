@@ -13,6 +13,7 @@ import {
     Tooltip,
     Legend,
 } from "chart.js";
+import { formatLargeNumber } from "../../utils/formatting";
 
 export const TrendingView: FC = () => {
     const { messages } = useTrending();
@@ -42,7 +43,7 @@ export const TrendingView: FC = () => {
           <ul className={styles.messageList}>
               {messages.slice().map((message, index) => {
                   const { url, token, telegram } = extractInfo(message.text);
-                  const scores = [message.score, 20, 30, 40]; // Example scores, replace with real scores
+                  const scores = message.scores; // Example scores, replace with real scores
                   return (
                     <li key={index} className={styles.messageItem}>
                         <div className={styles.messageDate}>{new Date(message.date).toLocaleString()}</div>
@@ -64,6 +65,14 @@ export const TrendingView: FC = () => {
                                   {url}
                               </Link>
                           </p>
+                        )}
+                        {message.rugcheck && (
+                          <div className={styles.rugcheck}>
+                              <p><strong>Risks:</strong> {message.rugcheck.risks.join(", ")}</p>
+                              <p><strong>Total LP Providers:</strong> {message.rugcheck.totalLPProviders}</p>
+                              <p><strong>Total Market
+                                  Liquidity:</strong> {formatLargeNumber(message.rugcheck.totalMarketLiquidity)}</p>
+                          </div>
                         )}
                         <div className={styles.toggleButtonContainer}>
                             <button
@@ -97,14 +106,14 @@ ChartJS.register(
 );
 
 type GraphComponentProps = {
-    scores: number[];
+    scores: (number | null)[];
     startDate: string;
 };
 
 const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
     const labels = scores.map((_, index) => {
         const date = new Date(startDate);
-        date.setMinutes(date.getMinutes() + index * 90);
+        date.setMinutes(date.getMinutes() + index * 30);
         return date;
     });
 
