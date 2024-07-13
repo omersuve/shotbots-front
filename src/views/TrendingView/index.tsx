@@ -135,7 +135,7 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
                 ticks: {
                     padding: 10,
                     font: {
-                        size: 12,
+                        size: 10,
                     },
                     callback: function(value: any, index: number) {
                         const date = labels[index];
