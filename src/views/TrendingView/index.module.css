@@ -3,6 +3,7 @@
     border-radius: 8px;
     max-width: 800px;
     margin: auto;
+    word-wrap: break-word;
 }
 
 .header {
@@ -54,6 +55,7 @@
 .messageItem a:hover {
     text-decoration: underline;
 }
+
 .toggleButtonContainer {
     text-align: center;
     margin-top: 10px;
