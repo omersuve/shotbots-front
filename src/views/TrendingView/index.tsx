@@ -14,7 +14,6 @@ import {
     Legend,
 } from "chart.js";
 import { formatLargeNumber } from "../../utils/formatting";
-import Image from "next/image";
 
 export const TrendingView: FC = () => {
     const { messages } = useTrending();
@@ -74,16 +73,6 @@ export const TrendingView: FC = () => {
                               <p><strong>Total Market
                                   Liquidity:</strong> {formatLargeNumber(message.rugcheck.totalMarketLiquidity)}</p>
                           </div>
-                        )}
-                        {message.image_url && (
-                          <Image
-                            src={message.image_url}
-                            alt="Telegram Image"
-                            layout="responsive"
-                            width={100}  // Adjust width and height as needed
-                            height={100} // Adjust width and height as needed
-                            className={styles.messageImage}
-                          />
                         )}
                         <div className={styles.toggleButtonContainer}>
                             <button

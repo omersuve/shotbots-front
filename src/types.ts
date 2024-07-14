@@ -163,6 +163,5 @@ export type TelegramMessage = {
         risks: string[],
         totalLPProviders: number,
         totalMarketLiquidity: number
-    },
-    image_url?: string
+    }
 }
