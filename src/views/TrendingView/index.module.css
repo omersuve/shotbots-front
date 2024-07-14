@@ -78,3 +78,9 @@
 .graphContainer {
     margin-top: 10px;
 }
+
+.messageImage {
+    width: 100px;
+    height: auto;
+    margin: 10px 0;
+}
