@@ -28,7 +28,7 @@ export const TrendingView: FC = () => {
 
     const extractInfo = (text: string) => {
         const urlMatch = text.match(/(https?:\/\/[^\s)]+)/);  // Updated regex to exclude the trailing ')'
-        const tokenMatch = text.match(/\$[A-Z]+/);
+        const tokenMatch = text.match(/[$#][A-Z]+/);
         const telegramMatch = text.match(/(t\.me\/\+[\w\d]+|@[A-Za-z\d_]+)/);
 
         return {
