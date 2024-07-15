@@ -2,8 +2,26 @@
     background-color: #f1f1f1;
 }
 
+.logoButton {
+    width: 7rem;
+}
+
 @media (max-width: 768px) {
     .navbar {
         background-color: #f1f1f1;
+    }
+
+    .prices-fear-greed {
+        font-size: 7px;
+        text-align: center;
+    }
+
+    .fear-greed {
+        font-size: 8px;
+        text-align: center;
+    }
+
+    .logoButton {
+        width: 7.5rem;
     }
 }
