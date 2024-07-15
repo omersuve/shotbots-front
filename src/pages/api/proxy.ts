@@ -25,9 +25,6 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 (res as NextApiResponse).status(500).json({ error: "Proxy error", details: error.message });
             },
             proxyReq: (proxyReq, req, res) => {
-                proxyReq.setHeader(":authority", "api-mainnet.magiceden.io");
-                proxyReq.setHeader(":method", "GET");
-                proxyReq.setHeader(":scheme", "https");
                 proxyReq.setHeader("Accept", "application/json, text/plain, */*");
                 proxyReq.setHeader("Accept-Encoding", "gzip, deflate, br, zstd");
                 proxyReq.setHeader("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6");
