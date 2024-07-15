@@ -6,14 +6,16 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         if (req.method !== "GET") {
             return res.status(405).json({ error: "Method not allowed. Only GET requests are allowed." });
         }
-
-        const url = "https://nft-sales-service.dappradar.com/v3.1/collection?currency=usd&sort=volumeInFiat&order=desc&resultsPerPage=25&page=1&range=day&chainId[]=27";
+        const url = "https://nft-sales-service.dappradar.com/v3.1/collection?currency=usd&sort=volumeInFiat&order=desc&resultsPerPage=10&page=1&range=day&chainId[]=27";
         const response = await fetch(url, {
             headers: {
+                "Origin": "https://dappradar.com",
                 "Referer": "https://dappradar.com/",
             },
         });
         const data: DappRadarNft = await response.json();
+
+        console.log("dappradar-data", data);
 
         const fetchMagicEdenData = async (nftName: string) => {
             const meUrl = `https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${encodeURIComponent(nftName)}?edge_cache=true&limit=5&blockchain=solana`;
