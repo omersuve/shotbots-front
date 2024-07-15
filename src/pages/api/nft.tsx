@@ -21,6 +21,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const meUrl = `https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${encodeURIComponent(nftName)}?edge_cache=true&limit=5&blockchain=solana`;
             const proxyUrl = `/api/proxy?url=${encodeURIComponent(meUrl)}`;
             const baseUrl = process.env.BASE_URL_PROD ?? "http://localhost:3000";
+            console.log("url", `${baseUrl}${proxyUrl}`);
             try {
                 const response = await fetch(`${baseUrl}${proxyUrl}`, {
                     headers: {
@@ -34,6 +35,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                         "sec-fetch-mode": "cors",
                         "sec-fetch-site": "same-site",
                         "Referer": "https://magiceden.io/",
+                        "Origin": "https://magiceden.io",
                         "Referrer-Policy": "strict-origin-when-cross-origin",
                     },
                     body: null,
