@@ -27,12 +27,10 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
             proxyReq: (proxyReq, req, res) => {
                 proxyReq.setHeader(":authority", "api-mainnet.magiceden.io");
                 proxyReq.setHeader(":method", "GET");
-                proxyReq.setHeader(":path", "/v2/unifiedSearch/xchain/collection/smb?edge_cache=true&limit=100");
                 proxyReq.setHeader(":scheme", "https");
                 proxyReq.setHeader("Accept", "application/json, text/plain, */*");
                 proxyReq.setHeader("Accept-Encoding", "gzip, deflate, br, zstd");
                 proxyReq.setHeader("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6");
-                proxyReq.setHeader("If-None-Match", "W/\"2b40e-ypnnjredkYBH23Xb1u1rT1GXGIc\"");
                 proxyReq.setHeader("Origin", "https://magiceden.io");
                 proxyReq.setHeader("Priority", "u=1, i");
                 proxyReq.setHeader("Referer", "https://magiceden.io/");
