@@ -22,21 +22,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             console.log("url", `${baseUrl}${proxyUrl}`);
             try {
                 const response = await fetch(`${baseUrl}${proxyUrl}`, {
-                    headers: {
-                        // "accept": "application/json, text/plain, */*",
-                        // "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
-                        // "priority": "u=1, i",
-                        // "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
-                        // "sec-ch-ua-mobile": "?1",
-                        // "sec-ch-ua-platform": "\"Android\"",
-                        // "sec-fetch-dest": "empty",
-                        // "sec-fetch-mode": "cors",
-                        // "sec-fetch-site": "same-site",
-                        // "Referer": "https://magiceden.io/",
-                        // "Origin": "https://magiceden.io",
-                        // "Referrer-Policy": "strict-origin-when-cross-origin",
-                    },
-                    body: null,
                     method: "GET",
                 });
                 return await response.json();

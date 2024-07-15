@@ -39,6 +39,18 @@ export default function handler(req: NextApiRequest, res: NextApiResponse) {
                 // proxyReq.setHeader("sec-ch-ua", "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"");
                 // proxyReq.setHeader("sec-ch-ua-mobile", "?1");
                 // proxyReq.setHeader("sec-ch-ua-platform", "\"Android\"");
+                proxyReq.setHeader("Connection", "keep-alive");
+                proxyReq.setHeader("User-Agent", "Mozilla/5.0 (Linux; Android 6.0; Nexus 5 Build/MRA58N) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/126.0.0.0 Mobile Safari/537.36");
+                proxyReq.setHeader("Accept-Language", "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6");
+                proxyReq.setHeader("Accept-Encoding", "gzip, deflate, br, zstd");
+                proxyReq.setHeader("Accept", "*/*");
+                proxyReq.setHeader("Sec-Fetch-Dest", "empty");
+                proxyReq.setHeader("Sec-Fetch-Mode", "cors");
+                proxyReq.setHeader("Sec-Fetch-Site", "same-origin");
+                proxyReq.setHeader("Referer", "http://localhost:3000/nft");
+                proxyReq.setHeader("sec-ch-ua", "\"Not/A)Brand\";v=\"8\", \"Chromium\";v=\"126\", \"Google Chrome\";v=\"126\"");
+                proxyReq.setHeader("sec-ch-ua-mobile", "?1");
+                proxyReq.setHeader("sec-ch-ua-platform", "\"Android\"");
             },
             proxyRes: (proxyRes, req, res) => {
                 // console.log(`Proxy response received from: ${targetUrl}`);
