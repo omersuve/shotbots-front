@@ -9,7 +9,6 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         const url = "https://nft-sales-service.dappradar.com/v3.1/collection?currency=usd&sort=volumeInFiat&order=desc&resultsPerPage=10&page=1&range=day&chainId[]=27";
         const response = await fetch(url, {
             headers: {
-                "Origin": "https://dappradar.com",
                 "Referer": "https://dappradar.com/",
             },
         });
@@ -19,9 +18,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
             const meUrl = `https://api-mainnet.magiceden.io/v2/unifiedSearch/xchain/collection/${encodeURIComponent(nftName)}?edge_cache=true&limit=5&blockchain=solana`;
             const proxyUrl = `/api/proxy?url=${encodeURIComponent(meUrl)}`;
             const baseUrl = process.env.BASE_URL_PROD ?? "http://localhost:3000";
-            console.log("url", `${baseUrl}${proxyUrl}`);
             try {
                 const response = await fetch(`${baseUrl}${proxyUrl}`, {
+                    headers: {
+                        "accept": "application/json, text/plain, */*",
+                        "accept-language": "tr-TR,tr;q=0.9,en-US;q=0.8,en;q=0.7,de;q=0.6",
+                        "priority": "u=1, i",
+                        "sec-ch-ua": "\"Google Chrome\";v=\"125\", \"Chromium\";v=\"125\", \"Not.A/Brand\";v=\"24\"",
+                        "sec-ch-ua-mobile": "?1",
+                        "sec-ch-ua-platform": "\"Android\"",
+                        "sec-fetch-dest": "empty",
+                        "sec-fetch-mode": "cors",
+                        "sec-fetch-site": "same-site",
+                        "Referer": "https://magiceden.io/",
+                        "Referrer-Policy": "strict-origin-when-cross-origin",
+                    },
+                    body: null,
                     method: "GET",
                 });
                 return await response.json();
@@ -85,7 +97,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                     chainId: "solana",
                 };
             } catch (e) {
-                console.log(nft.name, "returned null", e);
+                console.log(nft.name, "returned null!", e);
                 return null;
             }
         });
