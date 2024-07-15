@@ -206,14 +206,14 @@ const Navbar: React.FC = () => {
                       </div>
                       {fearGreedIndex && (
                         <div
-                          className="ml-1 text-center border-2 border-dotted bg-gray-200 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-6 w-20 lg:w-36">
+                          className="ml-1.5 text-center border-2 border-dotted bg-gray-200 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-6 w-20 lg:w-36">
                             <p className={`${styles["prices-fear-greed"]} font-bold`}>Fear & Greed</p>
                             <div className="flex items-center mt-2 justify-center text-center">
                                 <p
-                                  className={`${styles["fear-greed"]} lg:fs-6 lg:px-1 ${getClassificationColor(fearGreedIndex.classification)}`}>
+                                  className={`${styles["prices-fear-greed"]} lg:fs-6 lg:px-1 ${getClassificationColor(fearGreedIndex.classification)}`}>
                                     %{fearGreedIndex.value}</p>
                                 <p
-                                  className={`px-1 ${styles["fear-greed"]} ${getClassificationColor(fearGreedIndex.classification)}`}>
+                                  className={`px-1 ${styles["prices-fear-greed"]} ${getClassificationColor(fearGreedIndex.classification)}`}>
                                     {fearGreedIndex.classification}
                                 </p>
                             </div>

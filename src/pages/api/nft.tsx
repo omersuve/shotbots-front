@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from "next";
 import { DappRadarNft, NftData } from "../../types";
+import { NFT_NAME_MAP } from "../../utils/nftNameMap";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
     try {
@@ -83,7 +84,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 return {
                     name: nft.name,
                     logoUrl: nft.logo,
-                    url: `https://magiceden.io/marketplace/${nft.slug}`,
+                    url: `https://magiceden.io/marketplace/${NFT_NAME_MAP.get(nft.slug) ?? nft.slug}`,
                     // floorPriceSol: magicEdenData.solana[0].floorPrice!,
                     avgPrice: nft.avgPriceInFiat,
                     // totalSupply: magicEdenSupplyData.results.totalSupply, // Use the other response
