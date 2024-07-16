@@ -125,6 +125,8 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
                 data: scores,
                 borderColor: "rgba(75,192,192,1)",
                 backgroundColor: "rgba(75,192,192,0.2)",
+                pointRadius: 6, // Adjust point radius here
+                pointHoverRadius: 8, // Adjust hover point radius here
             },
         ],
     };
