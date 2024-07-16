@@ -6,4 +6,5 @@ export const NFT_NAME_MAP = new Map<string, string>([
     ["retardio-cousins", "retardio_cousins"],
     ["smb-gen2", "solana_monkey_business"],
     ["urban-node", "urbannode"],
+    ["claynosaurz-1", "claynosaurz"],
 ]);
