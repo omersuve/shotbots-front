@@ -36,6 +36,7 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
                 // Select the pair with the highest liquidity
                 if (filteredAndSortedPairs.length > 0) {
                     const item = filteredAndSortedPairs[0];
+                    if (item["fdv"] < 50000) return null;
                     return {
                         baseAddress: item.baseToken.address,
                         logoUrl: (item.info && item.info.imageUrl) ? item.info.imageUrl : "",
