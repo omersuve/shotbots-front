@@ -9,7 +9,7 @@ const mainBody = {
     message2: " to Natural ",
     icons: [
         {
-            image: "fa-twitter",
+            image: "fa-x-twitter",
             url: "https://twitter.com/TheShotBots",
         },
     ],
