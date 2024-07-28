@@ -28,7 +28,7 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
-                body: JSON.stringify(["bitcoin", "ethereum", "solana"]),
+                body: JSON.stringify({ tickers: ["bitcoin", "ethereum", "solana"] }),
             };
 
             try {
@@ -41,8 +41,7 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
             }
         }
 
-        fetchPrices().then(r => {
-        });
+        fetchPrices().then();
 
         const interval = setInterval(fetchPrices, 15000); // Fetch every 15 secs
 
@@ -50,9 +49,9 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
     }, []);
 
     return (
-        <PricesContext.Provider value={{ prices, loading, setPrices }}>
-            {children}
-        </PricesContext.Provider>
+      <PricesContext.Provider value={{ prices, loading, setPrices }}>
+          {children}
+      </PricesContext.Provider>
     );
 };
 
