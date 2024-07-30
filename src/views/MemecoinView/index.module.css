@@ -7,6 +7,7 @@
 }
 
 .table-container {
+    width: 90%;
     height: auto; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
@@ -19,7 +20,6 @@
 }
 
 .table {
-    width: 100%;
     border-collapse: collapse;
     font-size: 12px; /* Reduced font size */
     font-weight: bolder;
@@ -28,6 +28,20 @@
     border-radius: 10px; /* Rounded corners for the entire table */
     overflow: hidden; /* Ensure rounded corners are applied properly */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.flash {
+    animation: flash 0.5s ease-in-out;
+}
+
+@keyframes flash {
+    0% {
+        background-color: #b6a8a8;
+
+    }
+    100% {
+        background-color: inherit;
+    }
 }
 
 .table th, .table td {
@@ -82,51 +96,6 @@
 
 .priceChangeNegative {
     color: red;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-}
-
-.pagination button {
-    margin: 0 4px;
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    background-color: #f2f2f2;
-    cursor: pointer;
-}
-
-.pagination .activePage {
-    background-color: #000000;
-    color: white;
-    border: 1px solid #ffffff;
-    border-radius: 10px;
-}
-
-.scrollButtonDiv {
-    position: absolute;
-    left: 10%;
-    top: -2%;
-    justify-content: center;
-    align-items: center;
-    display: flex;
-}
-
-.scrollButton {
-    font-weight: bold;
-    font-size: small;
-    background-color: rgba(224, 224, 224, 0.5);
-    padding: 5px;
-    border: 1px solid #ddd;;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-left: 10px;
-    transition: background-color 0.3s ease;
-}
-
-.scrollButton:hover {
-    background-color: rgba(155, 155, 155, 0.5);
 }
 
 .activeHeader {
@@ -216,7 +185,6 @@
     }
 
     .table th:nth-child(1) {
-        width: 4%;
         opacity: 50%;
         pointer-events: none;
         background-color: #e0e0e0;
@@ -224,11 +192,11 @@
     }
 
     .table td:nth-child(2) {
+        width: 40%;
         padding: 4px;
     }
 
     .table th:nth-child(2) {
-        width: 40%;
         padding: 0;
     }
 

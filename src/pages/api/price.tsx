@@ -1,19 +1,19 @@
+import { RedisServer } from "../../RedisServer";
 import { NextApiRequest, NextApiResponse } from "next";
 
 export default async (req: NextApiRequest, res: NextApiResponse) => {
-    if (req.method !== "POST") {
-        return res.status(405).json({ error: "Method not allowed" });
+    try {
+        const redisServer = await RedisServer.getInstance();
+        const priceData = await redisServer.redisClient.get("price_data");
+
+        if (priceData) {
+            const data = JSON.parse(priceData);
+            res.status(200).json(data);
+        } else {
+            res.status(404).json({ error: "Price data not found" });
+        }
+    } catch (error) {
+        console.error("Error fetching price data:", error);
+        res.status(500).json({ error: "Internal Server Error" });
     }
-
-    const { tickers } = req.body;
-    const response = await fetch("https://vercel-server-production.up.railway.app/api/price", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ tickers }),
-    });
-
-    const data = await response.json();
-    res.status(200).json(data);
-};
+}

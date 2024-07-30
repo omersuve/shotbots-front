@@ -7,7 +7,7 @@
 }
 
 .table-container {
-    width: 80%;
+    width: 90%;
     height: auto; /* Set a fixed height for the table container */
     display: flex;
     flex-direction: column;
@@ -29,6 +29,20 @@
     border-radius: 10px; /* Rounded corners for the entire table */
     overflow: hidden; /* Ensure rounded corners are applied properly */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Add a subtle shadow */
+}
+
+.flash {
+    animation: flash 0.5s ease-in-out;
+}
+
+@keyframes flash {
+    0% {
+        background-color: #b6a8a8;
+
+    }
+    100% {
+        background-color: inherit;
+    }
 }
 
 .table th, .table td {
@@ -83,26 +97,6 @@
 
 .priceChangeNegative {
     color: red;
-}
-
-.pagination {
-    display: flex;
-    justify-content: center;
-}
-
-.pagination button {
-    margin: 0 4px;
-    padding: 6px 12px;
-    border: 1px solid #ddd;
-    background-color: #f2f2f2;
-    cursor: pointer;
-}
-
-.pagination .activePage {
-    background-color: #000000;
-    color: white;
-    border: 1px solid #ffffff;
-    border-radius: 10px;
 }
 
 .activeHeader {
@@ -184,13 +178,6 @@
     }
 
     .table td:nth-child(1) {
-        opacity: 50%;
-        pointer-events: none;
-        background-color: #e0e0e0;
-        padding: 0;
-    }
-
-    .table th:nth-child(1) {
         width: 4%;
         opacity: 50%;
         pointer-events: none;
@@ -198,25 +185,33 @@
         padding: 0;
     }
 
+    .table th:nth-child(1) {
+        opacity: 50%;
+        pointer-events: none;
+        background-color: #e0e0e0;
+        padding: 0;
+    }
+
     .table td:nth-child(2) {
+        width: 40%;
         padding: 4px;
     }
 
     .table th:nth-child(2) {
-        width: 40%;
         padding: 0;
     }
 
     .table td:nth-child(3) {
+        width: 10%;
         padding: 0;
     }
 
     .table th:nth-child(3) {
         padding: 0;
-        width: 10%;
     }
 
     .table td:nth-child(4) {
+        width: 10%;
         font-weight: lighter;
         font-size: 8px;
         overflow: hidden;
@@ -226,29 +221,50 @@
     }
 
     .table th:nth-child(4) {
-        width: 10%;
         padding: 0;
     }
 
     .table td:nth-child(5) {
+        width: 12%;
         font-weight: lighter;
         font-size: 8px;
         padding: 0;
     }
 
     .table th:nth-child(5) {
-        width: 12%;
         padding: 0;
     }
 
     .table td:nth-child(6) {
+        width: 12%;
         font-weight: lighter;
         font-size: 8px;
         padding: 0;
     }
 
     .table th:nth-child(6) {
-        width: 12%;
         padding: 0;
+    }
+
+    .table td:nth-child(7) {
+        width: 10%;
+        font-weight: lighter;
+        font-size: 8px;
+        padding: 0;
+    }
+
+    .table th:nth-child(7) {
+        padding: 0;
+    }
+
+    .table td:nth-child(8) {
+        font-size: 8px;
+        padding: 0;
+        font-weight: lighter;
+    }
+
+    .table th:nth-child(8) {
+        padding: 0;
+        width: 12%;
     }
 }

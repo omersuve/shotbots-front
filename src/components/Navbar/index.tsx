@@ -32,6 +32,8 @@ const Navbar: React.FC = () => {
     const profileButtonRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false); // State for controlling the mobile menu
     const [fearGreedIndex, setFearGreedIndex] = useState<{ value: string, classification: string } | null>(null);
+    const [keys, setKeys] = useState<{ [key: string]: number }>({}); // State to control flash effect keys
+    const [lastPrices, setLastPrices] = useState<{ [key: string]: { price: string, change: string } }>({});
 
 
     useEffect(() => {
@@ -134,6 +136,32 @@ const Navbar: React.FC = () => {
         }
     }, [publicKey]);
 
+    useEffect(() => {
+
+        console.log("keys", keys);
+        console.log("lastPrices", lastPrices);
+
+        const newKeys: { [key: string]: number } = { ...keys };
+        const newLastPrices: { [key: string]: { price: string, change: string } } = { ...lastPrices };
+
+        for (const key in prices) {
+            if (
+              !lastPrices[key] ||
+              lastPrices[key].price !== prices[key].price ||
+              lastPrices[key].change !== prices[key].change
+            ) {
+                newKeys[key] = (newKeys[key] || 0) + 1;
+                newLastPrices[key] = { price: prices[key].price, change: prices[key].change };
+            }
+        }
+
+        setKeys(newKeys);
+        setLastPrices(newLastPrices);
+
+        console.log("newKeys", newKeys);
+        console.log("newLastPrices", newLastPrices);
+    }, [prices]);
+
     const toggleMenu = () => {
         setIsOpen(!isOpen); // Toggle the mobile menu
         setIsProfileOpen(false);
@@ -158,48 +186,47 @@ const Navbar: React.FC = () => {
                   </button>
                   <div
                     className="flex ml-6 lg:ml-0 items-center justify-center text-xs flex-grow pointer-events-none">
-                      <div className="flex flex-col items-center lg:px-1 w-12 lg:w-16">
+                      <div key={`btc-${keys["bitcoin"] || 0}`}
+                           className={`${styles.flash} flex flex-col items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">BTC</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
                               {loading ? (
                                 <MyLoader size="small" inline /> // Use size="small" and inline prop
                               ) : (
                                 <>
-                                    <p className="lg:px-1">{prices["bitcoin"].price}</p>
+                                    <p className={`lg:px-1`}>{prices["bitcoin"].price}</p>
                                     <p
-                                      className={`lg:px-1 ${getChangeClass(prices["bitcoin"].change)}`}>
-                                        {prices["bitcoin"].change}
-                                    </p>
+                                      className={`lg:px-1 ${getChangeClass(prices["bitcoin"].change)}`}>{prices["bitcoin"].change}</p>
                                 </>
                               )}
                           </div>
                       </div>
-                      <div className="flex flex-col items-center lg:px-1 w-12 lg:w-16">
+                      <div key={`eth-${keys["ethereum"] || 0}`}
+                           className={`${styles.flash} flex flex-col items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">ETH</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
                               {loading ? (
                                 <MyLoader size="small" inline /> // Use size="small" and inline prop
                               ) : (
                                 <>
-                                    <p className="lg:px-1">{prices["ethereum"].price}</p>
-                                    <p className={`lg:px-1 ${getChangeClass(prices["ethereum"].change)}`}>
-                                        {prices["ethereum"].change}
-                                    </p>
+                                    <p className={`lg:px-1`}>{prices["ethereum"].price}</p>
+                                    <p
+                                      className={`lg:px-1 ${getChangeClass(prices["ethereum"].change)}`}>{prices["ethereum"].change}</p>
                                 </>
                               )}
                           </div>
                       </div>
-                      <div className="flex flex-col items-center lg:px-1 w-12 lg:w-16">
+                      <div key={`sol-${keys["solana"] || 0}`}
+                           className={`${styles.flash} flex flex-col items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">SOL</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
                               {loading ? (
                                 <MyLoader size="small" inline={true} /> // Use size="small" and inline prop
                               ) : (
                                 <>
-                                    <p className="lg:px-1">{prices["solana"].price}</p>
-                                    <p className={`lg:px-1 ${getChangeClass(prices["solana"].change)}`}>
-                                        {prices["solana"].change}
-                                    </p>
+                                    <p className={`lg:px-1`}>{prices["solana"].price}</p>
+                                    <p
+                                      className={`lg:px-1 ${getChangeClass(prices["solana"].change)}`}>{prices["solana"].change}</p>
                                 </>
                               )}
                           </div>

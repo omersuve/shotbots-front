@@ -10,7 +10,7 @@ import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
 import Ph from "../../../public/placeholder.png";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
-import { useMemecoins } from "../../contexts/MemecoinContext";
+import { Memecoin, useMemecoins } from "../../contexts/MemecoinContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
 import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
@@ -25,10 +25,11 @@ type SortConfig = {
 
 export const MemecoinView: FC = () => {
     const { memecoins, loading, error } = useMemecoins();
-    const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
+    const [keys, setKeys] = useState<{ [key: string]: number }>({});
+    const [lastPrices, setLastPrices] = useState<{ [key: string]: Memecoin }>({});
     const { publicKey } = useWallet();
 
     const fetchMemeVotes = async () => {
@@ -111,11 +112,9 @@ export const MemecoinView: FC = () => {
     };
 
 
-    const indexOfLastItem = currentPage * itemsPerPage;
+    const indexOfLastItem = itemsPerPage;
     const indexOfFirstItem = indexOfLastItem - itemsPerPage;
     const currentItems = sortedMemecoins.slice(indexOfFirstItem, indexOfLastItem).slice(0, 15);
-
-    const totalPages = Math.ceil(memecoins.length / itemsPerPage);
 
     const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
         if (!publicKey) {
@@ -159,6 +158,26 @@ export const MemecoinView: FC = () => {
         }
     };
 
+    useEffect(() => {
+        if (!loading) {
+            const newKeys = { ...keys };
+            const newLastPrices = { ...lastPrices };
+
+            memecoins.forEach((coin) => {
+                if (
+                  !lastPrices[coin.baseAddress] ||
+                  JSON.stringify(lastPrices[coin.baseAddress]) !== JSON.stringify(coin)
+                ) {
+                    newKeys[coin.baseAddress] = (keys[coin.baseAddress] || 0) + 1;
+                    newLastPrices[coin.baseAddress] = coin;
+                }
+            });
+
+            setKeys(newKeys);
+            setLastPrices(newLastPrices);
+        }
+    }, [memecoins]);
+
     return (
       <div className={styles.container}>
           {loading ? (
@@ -196,7 +215,7 @@ export const MemecoinView: FC = () => {
                     </thead>
                     <tbody>
                     {currentItems.map((coin, index) => (
-                      <tr key={coin.baseAddress}>
+                      <tr key={keys[coin.baseAddress] || coin.baseAddress} className={styles.flash}>
                           <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
                           <td>
                               <div className="flex items-center">
@@ -220,7 +239,7 @@ export const MemecoinView: FC = () => {
                                       )}
                                   </div>
                                   <div
-                                    className="hidden lg:block lg:w-48 text-left truncate pointer-events-none">
+                                    className="hidden lg:block lg:w-32 text-left truncate pointer-events-none">
                                       {coin.name}
                                   </div>
                                   <div
@@ -294,26 +313,8 @@ export const MemecoinView: FC = () => {
                     ))}
                     </tbody>
                 </table>
-
-                {/*<div className={styles.pagination}>*/}
-                {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
-                {/*        <button*/}
-                {/*            key={index + 1}*/}
-                {/*            onClick={() => setCurrentPage(index + 1)}*/}
-                {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
-                {/*        >*/}
-                {/*            {index + 1}*/}
-                {/*        </button>*/}
-                {/*    ))}*/}
-                {/*</div>*/}
             </div>
           )}
-          {/*<div className={styles["table-sentiment-container"]}>*/}
-          {/*    <div className={styles["table-wrapper-sentiment"]} style={{ height: "350px", width: "350px" }}>*/}
-          {/*        <p className="text-center fs-6 fw-bold mb-4">OUR SELECTIONS</p>*/}
-          {/*        <Bar data={sentimentData} options={sentimentOptions} />*/}
-          {/*    </div>*/}
-          {/*</div>*/}
       </div>
     );
 };

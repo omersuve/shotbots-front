@@ -1,6 +1,11 @@
 import React, { createContext, useContext, useEffect, useState, ReactNode } from "react";
+import Pusher from "pusher-js";
 
-type Memecoin = {
+const pusher = new Pusher(process.env.NEXT_PUBLIC_PUSHER_KEY!, {
+    cluster: process.env.NEXT_PUBLIC_PUSHER_CLUSTER!,
+});
+
+export type Memecoin = {
     baseAddress: string;
     logoUrl: string;
     name: string;
@@ -32,14 +37,16 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
     const [topMemecoins, setTopMemecoins] = useState<Memecoin[]>([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState<string | null>(null);
+    const [refetchMemecoins, setRefetchMemecoins] = useState(false);
+    const [refetchTopMemecoins, setRefetchTopMemecoins] = useState(false);
 
-    const fetchMemeCoins = async () => {
+
+    const fetchMemecoins = async () => {
         try {
             const response = await fetch("/api/memecoin");
             if (response.ok) {
                 const data: Memecoin[] = await response.json();
-                const filteredData = data.filter((item) => item !== null); // Filter out null values
-                setMemecoins(filteredData.slice(0, 10));
+                setMemecoins(data.slice(0, 10));
             }
         } catch (err) {
             let errorMessage = "An unknown error occurred";
@@ -47,15 +54,17 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
                 errorMessage = err.message;
             }
             setError(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
-    const fetchTopMemeCoins = async () => {
+    const fetchTopMemecoins = async () => {
         try {
-            const responseTop = await fetch("/api/getTopMemecoins");
-            if (responseTop.ok) {
-                const dataTop: Memecoin[] = await responseTop.json();
-                setTopMemecoins(dataTop.slice(0, 10));
+            const topResponse = await fetch("/api/getTopMemecoins");
+            if (topResponse.ok) {
+                const data: Memecoin[] = await topResponse.json();
+                setTopMemecoins(data.slice(0, 10));
             }
         } catch (err) {
             let errorMessage = "An unknown error occurred";
@@ -63,20 +72,49 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
                 errorMessage = err.message;
             }
             setError(errorMessage);
+        } finally {
+            setLoading(false);
         }
     };
 
     useEffect(() => {
-        fetchMemeCoins().then(r => fetchTopMemeCoins().then(r => setLoading(false)));
+        fetchMemecoins().then();
+        fetchTopMemecoins().then();
+
+        const channel = pusher.subscribe("memecoin-channel");
+
+        channel.bind("memecoins-event", (data: { message: string }) => {
+            console.log(data);
+            setRefetchMemecoins(prev => !prev); // Toggle reFetch state
+        });
+
+        channel.bind("top-memecoins-event", (data: { message: string }) => {
+            console.log(data);
+            setRefetchTopMemecoins(prev => !prev); // Toggle reFetch state
+        });
+
+        channel.bind("pusher:subscription_succeeded", () => {
+            console.log("success-connect");
+        });
+
+        channel.bind("pusher:subscription_error", () => {
+            console.log("error-connect");
+        });
+
+        return () => {
+            channel.unbind_all();
+            channel.unsubscribe();
+        };
+
     }, []);
 
     useEffect(() => {
-        const interval = setInterval(() => {
-            fetchMemeCoins().then(); // Fetch every 1 min
-        }, 60000);
+        fetchMemecoins().then();
+    }, [refetchMemecoins]);
 
-        return () => clearInterval(interval); // Cleanup on component unmount
-    }, []);
+    useEffect(() => {
+        fetchTopMemecoins().then();
+    }, [refetchTopMemecoins]);
 
     return (
       <MemecoinContext.Provider value={{ memecoins, topMemecoins, loading, error }}>

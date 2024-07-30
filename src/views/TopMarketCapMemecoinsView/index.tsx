@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import styles from "./index.module.css";
 import Image from "next/image";
 import Sol from "../../../public/solana-sol-logo.svg";
@@ -8,16 +8,25 @@ import Ph from "../../../public/placeholder.png";
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
-import { useMemecoins } from "../../contexts/MemecoinContext";
+import { Memecoin, useMemecoins } from "../../contexts/MemecoinContext";
 import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
 import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
+import { MemecoinData } from "../../types";
+
+type SortConfig = {
+    key: keyof MemecoinData | null;
+    direction: "ascending" | "descending";
+};
 
 export const TopMarketCapMemecoinsView: FC = () => {
     const { topMemecoins, loading } = useMemecoins();
+    const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
+    const [keys, setKeys] = useState<{ [key: string]: number }>({});
+    const [lastPrices, setLastPrices] = useState<{ [key: string]: Memecoin }>({});
     const { publicKey } = useWallet();
 
     const fetchMemeVotes = async () => {
@@ -56,6 +65,53 @@ export const TopMarketCapMemecoinsView: FC = () => {
 
         if (publicKey) getVotes().then();
     }, [publicKey]);
+
+    const itemsPerPage = 30;
+
+    const sortedMemecoins = useMemo(() => {
+        let sortableItems = [...topMemecoins].map((coin) => ({
+            ...coin,
+            upVote: votes[coin.baseAddress]?.upVote || 0,
+            downVote: votes[coin.baseAddress]?.downVote || 0,
+        }));
+        if (sortConfig.key) {
+            sortableItems.sort((a, b) => {
+                const aValue = a[sortConfig.key!];
+                const bValue = b[sortConfig.key!];
+                if (aValue === null || bValue === null) {
+                    return 0;
+                }
+                if (aValue < bValue) {
+                    return sortConfig.direction === "ascending" ? -1 : 1;
+                }
+                if (aValue > bValue) {
+                    return sortConfig.direction === "ascending" ? 1 : -1;
+                }
+                return 0;
+            });
+        }
+        return sortableItems;
+    }, [topMemecoins, sortConfig]);
+
+    const requestSort = (key: keyof MemecoinData) => {
+        let direction: "ascending" | "descending" = "descending";
+        if (sortConfig.key === key && sortConfig.direction === "descending") {
+            direction = "ascending";
+        }
+        setSortConfig({ key, direction });
+    };
+
+    const getSortIndicator = (key: keyof MemecoinData) => {
+        if (sortConfig.key !== key) {
+            return null;
+        }
+        return sortConfig.direction === "ascending" ? "↑" : "↓";
+    };
+
+    const indexOfLastItem = itemsPerPage;
+    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
+    const currentItems = sortedMemecoins.slice(indexOfFirstItem, indexOfLastItem).slice(0, 15);
+
 
     const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
         if (!publicKey) {
@@ -99,6 +155,26 @@ export const TopMarketCapMemecoinsView: FC = () => {
         }
     };
 
+    useEffect(() => {
+        if (!loading) {
+            const newKeys = { ...keys };
+            const newLastPrices = { ...lastPrices };
+
+            topMemecoins.forEach((coin) => {
+                if (
+                  !lastPrices[coin.baseAddress] ||
+                  JSON.stringify(lastPrices[coin.baseAddress]) !== JSON.stringify(coin)
+                ) {
+                    newKeys[coin.baseAddress] = (keys[coin.baseAddress] || 0) + 1;
+                    newLastPrices[coin.baseAddress] = coin;
+                }
+            });
+
+            setKeys(newKeys);
+            setLastPrices(newLastPrices);
+        }
+    }, [topMemecoins]);
+
     return (
       <div className={styles.container}>
           {loading ? (
@@ -109,17 +185,35 @@ export const TopMarketCapMemecoinsView: FC = () => {
                     <thead>
                     <tr>
                         <th>#</th>
-                        <th>Name</th>
-                        <th>Symbol</th>
-                        <th>Price</th>
-                        <th>Change (1D)</th>
-                        <th>Market Cap</th>
+                        <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
+                            Name {getSortIndicator("name")}
+                        </th>
+                        <th onClick={() => requestSort("symbol")} className={styles.sortableHeader}>
+                            Symbol {getSortIndicator("symbol")}
+                        </th>
+                        <th onClick={() => requestSort("price")} className={styles.sortableHeader}>
+                            Price {getSortIndicator("price")}
+                        </th>
+                        <th onClick={() => requestSort("price_change_1d")}
+                            className={styles.sortableHeader}>
+                            Change (1D) {getSortIndicator("price_change_1d")}
+                        </th>
+                        <th onClick={() => requestSort("real_volume_1d")} className={styles.sortableHeader}>
+                            Volume (1D) {getSortIndicator("real_volume_1d")}
+                        </th>
+                        <th onClick={() => requestSort("liquidity")} className={styles.sortableHeader}>
+                            Liquidity {getSortIndicator("liquidity")}
+                        </th>
+                        <th onClick={() => requestSort("circulating_marketcap")}
+                            className={styles.sortableHeader}>
+                            Market Cap {getSortIndicator("circulating_marketcap")}
+                        </th>
                     </tr>
                     </thead>
                     <tbody>
-                    {topMemecoins.map((coin, index) => (
-                      <tr key={coin.baseAddress}>
-                          <td>{index + 1}</td>
+                    {currentItems.map((coin, index) => (
+                      <tr key={keys[coin.baseAddress] || coin.baseAddress} className={styles.flash}>
+                          <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
                           <td>
                               <div className="flex items-center">
                                   <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
@@ -192,12 +286,14 @@ export const TopMarketCapMemecoinsView: FC = () => {
                               </div>
                           </td>
                           <td className="pointer-events-none text-center">{coin.symbol?.toUpperCase()}</td>
-                          <td>{formatPrice(coin.price)}</td>
+                          <td className="pointer-events-none">{formatPrice(coin.price)}</td>
                           <td
                             className={`${coin.price_change_1d !== null && coin.price_change_1d >= 0 ? styles.priceChangePositive : styles.priceChangeNegative} pointer-events-none`}>
                               {formatPriceChange(coin.price_change_1d)}
                           </td>
-                          <td>{formatLargeNumber(coin.circulating_marketcap)}</td>
+                          <td className="pointer-events-none">{formatLargeNumber(coin.real_volume_1d)}</td>
+                          <td className="pointer-events-none">{formatLargeNumber(coin.liquidity)}</td>
+                          <td className="pointer-events-none">{formatLargeNumber(coin.circulating_marketcap)}</td>
                       </tr>
                     ))}
                     </tbody>
