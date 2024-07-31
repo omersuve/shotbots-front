@@ -19,8 +19,8 @@
     text-align: center;
 }
 
-
 .table {
+    width: 100%;
     border-collapse: collapse;
     font-size: 12px; /* Reduced font size */
     font-weight: bolder;

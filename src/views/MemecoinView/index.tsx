@@ -1,4 +1,4 @@
-import React, { FC, useEffect, useMemo, useRef, useState } from "react";
+import React, { FC, useEffect, useMemo, useState } from "react";
 import styles from "./index.module.css";
 import MyLoader from "../../components/MyLoader";
 import Image from "next/image";
