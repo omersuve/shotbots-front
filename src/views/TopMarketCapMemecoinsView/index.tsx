@@ -66,7 +66,6 @@ export const TopMarketCapMemecoinsView: FC = () => {
         if (publicKey) getVotes().then();
     }, [publicKey]);
 
-    const itemsPerPage = 30;
 
     const sortedMemecoins = useMemo(() => {
         let sortableItems = [...topMemecoins].map((coin) => ({
@@ -107,11 +106,6 @@ export const TopMarketCapMemecoinsView: FC = () => {
         }
         return sortConfig.direction === "ascending" ? "↑" : "↓";
     };
-
-    const indexOfLastItem = itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = sortedMemecoins.slice(indexOfFirstItem, indexOfLastItem).slice(0, 15);
-
 
     const handleVote = async (baseAddress: string, vote: "upvote" | "downvote") => {
         if (!publicKey) {
@@ -156,6 +150,7 @@ export const TopMarketCapMemecoinsView: FC = () => {
     };
 
     useEffect(() => {
+        console.log("sortedMemecoins", sortedMemecoins);
         if (!loading) {
             const newKeys = { ...keys };
             const newLastPrices = { ...lastPrices };
@@ -211,11 +206,11 @@ export const TopMarketCapMemecoinsView: FC = () => {
                     </tr>
                     </thead>
                     <tbody>
-                    {currentItems.map((coin, index) => (
-                      <tr key={keys[coin.baseAddress] || coin.baseAddress} className={styles.flash}>
-                          <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                    {sortedMemecoins.map((coin, index) => (
+                      <tr key={`${coin.baseAddress}-${keys[coin.baseAddress]}`} className={styles.flash}>
+                          <td className="pointer-events-none">{index + 1}</td>
                           <td>
-                              <div className="flex items-center">
+                              <div className="flex items-center h-9">
                                   <div className="w-12 lg:w-16 flex justify-center pointer-events-none">
                                       {coin.chainId == "solana" ? (
                                         <Image src={Sol} alt="solana" style={{ width: "16px", marginRight: "8px" }} />
