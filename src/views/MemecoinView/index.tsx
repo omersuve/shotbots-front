@@ -28,8 +28,7 @@ export const MemecoinView: FC = () => {
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
-    const [keys, setKeys] = useState<{ [key: string]: number }>({});
-    const [lastPrices, setLastPrices] = useState<{ [key: string]: Memecoin }>({});
+    const [flash, setFlash] = useState<number>(1);
     const { publicKey } = useWallet();
 
     const fetchMemeVotes = async () => {
@@ -153,23 +152,7 @@ export const MemecoinView: FC = () => {
     };
 
     useEffect(() => {
-        if (!loading) {
-            const newKeys = { ...keys };
-            const newLastPrices = { ...lastPrices };
-
-            memecoins.forEach((coin) => {
-                if (
-                  !lastPrices[coin.baseAddress] ||
-                  JSON.stringify(lastPrices[coin.baseAddress]) !== JSON.stringify(coin)
-                ) {
-                    newKeys[coin.baseAddress] = (keys[coin.baseAddress] || 0) + 1;
-                    newLastPrices[coin.baseAddress] = coin;
-                }
-            });
-
-            setKeys(newKeys);
-            setLastPrices(newLastPrices);
-        }
+        setFlash(flash + 1);
     }, [memecoins]);
 
     return (
@@ -207,9 +190,9 @@ export const MemecoinView: FC = () => {
                         </th>
                     </tr>
                     </thead>
-                    <tbody>
+                    <tbody key={flash} className={styles.flash}>
                     {sortedMemecoins.map((coin, index) => (
-                      <tr key={`${coin.baseAddress}-${keys[coin.baseAddress]}`} className={styles.flash}>
+                      <tr key={`${coin.baseAddress}`}>
                           <td className="pointer-events-none">{index + 1}</td>
                           <td>
                               <div className="flex items-center h-9">
