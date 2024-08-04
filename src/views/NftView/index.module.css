@@ -45,10 +45,24 @@
     font-size: 12px;
     font-weight: bolder;
     table-layout: fixed; /* Ensure fixed table layout */
-    background-color: #f2f2f2;
+    background-color: #eaeaea;
     border-radius: 10px;
     overflow: hidden; /* Ensure rounded corners are applied properly */
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.flash {
+    animation: flash 0.5s ease-in-out;
+}
+
+@keyframes flash {
+    0% {
+        background-color: #b6a8a8;
+
+    }
+    100% {
+        background-color: inherit;
+    }
 }
 
 .table th, .table td {

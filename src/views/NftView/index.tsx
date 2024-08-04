@@ -11,7 +11,6 @@ import Me from "../../../public/me.png";
 import Ph from "../../../public/placeholder.png";
 import { toast } from "react-toastify";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { usePrices } from "../../contexts/PricesContext";
 
 type SortConfig = {
     key: keyof NftData | null;
@@ -20,11 +19,10 @@ type SortConfig = {
 
 export const NftView: FC = () => {
     const { nfts, loading, error } = useNfts();
-    const { prices, loading: loadingPrice } = usePrices();
-    const [currentPage, setCurrentPage] = useState(1);
     const [sortConfig, setSortConfig] = useState<SortConfig>({ key: null, direction: "descending" });
     const [votes, setVotes] = useState<{ [key: string]: { upVote: number, downVote: number } }>({});
     const [uVotes, setUVotes] = useState<string[]>([]);
+    const [flash, setFlash] = useState<number>(1);
     const { publicKey } = useWallet();
 
     const fetchNftVotes = async () => {
@@ -63,8 +61,6 @@ export const NftView: FC = () => {
 
         getVotes().then();
     }, [publicKey]);
-
-    const itemsPerPage = 30;
 
     const sortedNfts = useMemo(() => {
         let sortableItems = [...nfts].map((nft) => ({
@@ -148,20 +144,18 @@ export const NftView: FC = () => {
         return sortConfig.direction === "ascending" ? "↑" : "↓";
     };
 
-    const indexOfLastItem = currentPage * itemsPerPage;
-    const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-    const currentItems = sortedNfts.slice(indexOfFirstItem, indexOfLastItem);
-
-    const totalPages = Math.ceil(nfts.length / itemsPerPage);
+    useEffect(() => {
+        setFlash(flash + 1);
+    }, [nfts]);
 
     return (
       <div className={styles.container}>
-          {loading || loadingPrice ? (
+          {loading ? (
             <MyLoader />
           ) : (
             <div className={styles["tables-container"]}>
                 <div className={styles["table-container"]}>
-                    <p className="text-center fs-6 fw-bold mb-4 mt-3 lg:mt-1">TOP PERFORMING NFTs</p>
+                    <p className="text-center text-xs fw-bold mb-4 mt-3 lg:mt-0.5">TOP PERFORMING NFTs</p>
                     <div className={styles["table-wrapper"]}>
                         <table className={styles.table}>
                             <thead>
@@ -170,15 +164,6 @@ export const NftView: FC = () => {
                                 <th onClick={() => requestSort("name")} className={styles.sortableHeader}>
                                     Name {getSortIndicator("name")}
                                 </th>
-                                {/*<th onClick={() => requestSort("totalSupply")} className={styles.sortableHeader}>*/}
-                                {/*    Supply {getSortIndicator("totalSupply")}*/}
-                                {/*</th>*/}
-                                {/*<th onClick={() => requestSort("uniqueHolders")} className={styles.sortableHeader}>*/}
-                                {/*    Holders {getSortIndicator("uniqueHolders")}*/}
-                                {/*</th>*/}
-                                {/*<th onClick={() => requestSort("floorPriceSol")} className={styles.sortableHeader}>*/}
-                                {/*    Price {getSortIndicator("floorPriceSol")}*/}
-                                {/*</th>*/}
                                 <th onClick={() => requestSort("avgPrice")} className={styles.sortableHeader}>
                                     Price {getSortIndicator("avgPrice")}
                                 </th>
@@ -205,13 +190,12 @@ export const NftView: FC = () => {
                                 </th>
                             </tr>
                             </thead>
-                            <tbody>
-                            {currentItems.map((nft, index) => (
-                              <tr key={nft.name}
-                                  className={`${publicKey && uVotes.includes(nft.name) ? "bg-gray-300 pointer-events-none" : ""}`}>
-                                  <td className="pointer-events-none">{indexOfFirstItem + index + 1}</td>
+                            <tbody key={flash} className={styles.flash}>
+                            {sortedNfts.map((nft, index) => (
+                              <tr key={nft.name}>
+                                  <td className="pointer-events-none">{index + 1}</td>
                                   <td>
-                                      <div className="flex items-center">
+                                      <div className="flex items-center h-9">
                                           <div className="w-12 lg:w-24 mr-1 flex justify-center pointer-events-none">
                                               <Image src={nft.logoUrl} alt={`${nft.name} logo`} width={35}
                                                      height={35} className={styles.logo} />
@@ -220,7 +204,8 @@ export const NftView: FC = () => {
                                             className="w-16 mr-1 lg:block lg:w-48 text-left truncate pointer-events-none">
                                               {nft.name}
                                           </div>
-                                          <div className="w-12 lg:w-20 flex justify-center opacity-75">
+                                          <div
+                                            className={`w-12 lg:w-20 flex justify-center ${publicKey && uVotes.includes(nft.name) ? "opacity-75 pointer-events-none" : "opacity-50"}`}>
                                               <button
                                                 onClick={() => handleVote(nft.name, "upvote")}
                                                 className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
@@ -234,7 +219,8 @@ export const NftView: FC = () => {
                                               <span
                                                 className="w-1 text-center text-sm ml-0.5 lg:ml-1.5 pointer-events-none">{votes[nft.name]?.upVote || 0}</span> {/* Upvote count */}
                                           </div>
-                                          <div className="ml-2 w-12 lg:w-20 flex justify-center opacity-75">
+                                          <div
+                                            className={`ml-2 w-12 lg:w-20 flex justify-center ${publicKey && uVotes.includes(nft.name) ? "opacity-75 pointer-events-none" : "opacity-50"}`}>
                                               <button
                                                 onClick={() => handleVote(nft.name, "downvote")}
                                                 className="bg-none border-none cursor-pointer text-l hover:text-blue-500 transition-transform duration-100 ease-in-out transform hover:scale-125"
@@ -265,15 +251,6 @@ export const NftView: FC = () => {
                                           </div>
                                       </div>
                                   </td>
-                                  {/*<td*/}
-                                  {/*  className="pointer-events-none">{nft.totalSupply}*/}
-                                  {/*</td>*/}
-                                  {/*<td*/}
-                                  {/*  className="pointer-events-none">{nft.uniqueHolders}*/}
-                                  {/*</td>*/}
-                                  {/*<td*/}
-                                  {/*  className="pointer-events-none">{formatPrice(nft.floorPriceSol / 1000000000 * parseFloat(prices["solana"].price))}$*/}
-                                  {/*</td>*/}
                                   <td
                                     className="pointer-events-none">{formatPrice(nft.avgPrice)}$
                                   </td>
@@ -301,17 +278,6 @@ export const NftView: FC = () => {
                             </tbody>
                         </table>
                     </div>
-                    {/*<div className={styles.pagination}>*/}
-                    {/*    {Array.from({ length: totalPages }, (_, index) => (*/}
-                    {/*        <button*/}
-                    {/*            key={index + 1}*/}
-                    {/*            onClick={() => setCurrentPage(index + 1)}*/}
-                    {/*            className={currentPage === index + 1 ? styles.activePage : ""}*/}
-                    {/*        >*/}
-                    {/*            {index + 1}*/}
-                    {/*        </button>*/}
-                    {/*    ))}*/}
-                    {/*</div>*/}
                 </div>
             </div>
           )}

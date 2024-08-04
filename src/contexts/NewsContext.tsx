@@ -22,7 +22,7 @@ export const NewsProvider: FC<NewsProviderProps> = ({ children }) => {
     useEffect(() => {
         async function fetchData() {
             setLoading(true);
-            const collections = ["bitcoin-news", "ethereum-news", "solana-news", "nft-news"];
+            const collections = ["bitcoin-news", "ethereum-news", "solana-news", "nft-news", "cmc"];
             const requestOptions = {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
@@ -40,8 +40,7 @@ export const NewsProvider: FC<NewsProviderProps> = ({ children }) => {
             }
         }
 
-        fetchData().then(r => {
-        });
+        fetchData().then();
     }, []);
 
     function initializeTimers(newsData: { [collectionName: string]: News[] }) {

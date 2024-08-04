@@ -10,7 +10,7 @@ import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
 import Ph from "../../../public/placeholder.png";
 import { BarElement, CategoryScale, Chart as ChartJS, Legend, LinearScale, Title, Tooltip } from "chart.js";
-import { Memecoin, useMemecoins } from "../../contexts/MemecoinContext";
+import { useMemecoins } from "../../contexts/MemecoinContext";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { toast } from "react-toastify";
 import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
@@ -192,7 +192,7 @@ export const MemecoinView: FC = () => {
                     </thead>
                     <tbody key={flash} className={styles.flash}>
                     {sortedMemecoins.map((coin, index) => (
-                      <tr key={`${coin.baseAddress}`}>
+                      <tr key={coin.baseAddress}>
                           <td className="pointer-events-none">{index + 1}</td>
                           <td>
                               <div className="flex items-center h-9">
