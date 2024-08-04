@@ -10,10 +10,15 @@ interface PriceData {
     change: string;
 }
 
+interface FearGreedData {
+    value: string;
+    classification: string;
+}
+
 interface PricesContextProps {
     prices: { [key: string]: PriceData };
+    fearGreed: FearGreedData | null;
     loading: boolean;
-    setPrices: (data: { [key: string]: PriceData }) => void;
 }
 
 const PricesContext = createContext<PricesContextProps | undefined>(undefined);
@@ -24,8 +29,10 @@ interface PricesProviderProps {
 
 export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
     const [prices, setPrices] = useState<{ [key: string]: PriceData }>({});
+    const [fearGreed, setFearGreed] = useState<FearGreedData | null>(null);
     const [loading, setLoading] = useState<boolean>(true);
-    const [refetch, setRefetch] = useState(false);
+    const [refetchPrices, setRefetchPrices] = useState(false);
+    const [refetchFearGreed, setRefetchFearGreed] = useState(false);
 
     const fetchPrices = async () => {
         try {
@@ -41,14 +48,34 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
         }
     };
 
+    const fetchFearGreed = async () => {
+        try {
+            const response = await fetch("/api/fearGreed");
+            if (response.ok) {
+                const data = await response.json();
+                setFearGreed(data);
+            }
+        } catch (error) {
+            console.error("Error fetching initial fear greed data:", error);
+        } finally {
+            setLoading(false);
+        }
+    };
+
     useEffect(() => {
         fetchPrices().then();
+        fetchFearGreed().then();
 
         const channel = pusher.subscribe("price-channel");
 
-        channel.bind("prices-event", (data: { message: string, differences: any }) => {
+        channel.bind("prices-event", (data: { message: string }) => {
             console.log(data);
-            setRefetch(prev => !prev); // Toggle reFetch state
+            setRefetchPrices(prev => !prev); // Toggle reFetch state
+        });
+
+        channel.bind("fg-event", (data: { message: string }) => {
+            console.log(data);
+            setRefetchFearGreed(prev => !prev); // Toggle reFetch state
         });
 
         channel.bind("pusher:subscription_succeeded", () => {
@@ -68,10 +95,14 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
 
     useEffect(() => {
         fetchPrices().then();
-    }, [refetch]);
+    }, [refetchPrices]);
+
+    useEffect(() => {
+        fetchFearGreed().then();
+    }, [refetchFearGreed]);
 
     return (
-      <PricesContext.Provider value={{ prices, loading, setPrices }}>
+      <PricesContext.Provider value={{ prices, fearGreed, loading }}>
           {children}
       </PricesContext.Provider>
     );

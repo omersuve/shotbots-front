@@ -24,14 +24,13 @@ interface User {
 
 const Navbar: React.FC = () => {
     const router = useRouter();
-    const { prices, loading } = usePrices();
+    const { prices, fearGreed, loading } = usePrices();
     const { publicKey } = useWallet();
     const [isProfileOpen, setIsProfileOpen] = useState(false);
     const [profileInfo, setProfileInfo] = useState<User | null>(null);
     const profileRef = useRef<HTMLDivElement>(null);
     const profileButtonRef = useRef<HTMLButtonElement>(null);
     const [isOpen, setIsOpen] = useState(false); // State for controlling the mobile menu
-    const [fearGreedIndex, setFearGreedIndex] = useState<{ value: string, classification: string } | null>(null);
     const [keys, setKeys] = useState<{ [key: string]: number }>({}); // State to control flash effect keys
     const [lastPrices, setLastPrices] = useState<{ [key: string]: { price: string, change: string } }>({});
 
@@ -109,25 +108,6 @@ const Navbar: React.FC = () => {
             console.error("Error fetching profile info:", error);
         }
     };
-
-    const fetchFearGreedIndex = async () => {
-        try {
-            const response = await fetch("https://api.alternative.me/fng/?limit=1");
-            const data = await response.json();
-            if (data && data.data && data.data.length > 0) {
-                setFearGreedIndex({
-                    value: data.data[0].value,
-                    classification: data.data[0].value_classification,
-                });
-            }
-        } catch (error) {
-            console.error("Error fetching Fear & Greed Index:", error);
-        }
-    };
-
-    useEffect(() => {
-        fetchFearGreedIndex().then();
-    }, []);
 
     useEffect(() => {
         if (publicKey) {
@@ -232,16 +212,16 @@ const Navbar: React.FC = () => {
                       </div>
                       <div
                         className="ml-0.5 text-center border-2 border-dotted bg-gray-100 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-6 w-20 lg:w-36">
-                          {fearGreedIndex ? (
+                          {fearGreed ? (
                             <>
                                 <p className={`${styles["prices-fear-greed"]} font-bold`}>Fear & Greed</p>
                                 <div className="flex items-center mt-2 justify-center text-center">
                                     <p
-                                      className={`${styles["prices-fear-greed"]} lg:fs-6 lg:px-1 ${getClassificationColor(fearGreedIndex.classification)}`}>
-                                        %{fearGreedIndex.value}</p>
+                                      className={`${styles["prices-fear-greed"]} lg:fs-6 lg:px-1 ${getClassificationColor(fearGreed.classification)}`}>
+                                        %{fearGreed.value}</p>
                                     <p
-                                      className={`px-1 ${styles["prices-fear-greed"]} ${getClassificationColor(fearGreedIndex.classification)}`}>
-                                        {fearGreedIndex.classification}
+                                      className={`px-1 ${styles["prices-fear-greed"]} ${getClassificationColor(fearGreed.classification)}`}>
+                                        {fearGreed.classification}
                                     </p>
                                 </div>
                             </>
