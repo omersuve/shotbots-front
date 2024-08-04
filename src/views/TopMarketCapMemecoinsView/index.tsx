@@ -8,7 +8,7 @@ import Ph from "../../../public/placeholder.png";
 import Up from "../../../public/up.jpg";
 import Down from "../../../public/down.jpg";
 import Dex from "../../../public/dex.png";
-import { Memecoin, useMemecoins } from "../../contexts/MemecoinContext";
+import { useMemecoins } from "../../contexts/MemecoinContext";
 import { formatLargeNumber, formatPrice, formatPriceChange } from "../../utils/formatting";
 import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";

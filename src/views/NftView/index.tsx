@@ -155,7 +155,6 @@ export const NftView: FC = () => {
           ) : (
             <div className={styles["tables-container"]}>
                 <div className={styles["table-container"]}>
-                    <p className="text-center text-xs fw-bold mb-4 mt-3 lg:mt-0.5">TOP PERFORMING NFTs</p>
                     <div className={styles["table-wrapper"]}>
                         <table className={styles.table}>
                             <thead>

@@ -1,0 +1,43 @@
+.tabContainer {
+    display: flex;
+    justify-content: center;
+    font-size: 12px;
+    margin-bottom: 15px;
+    width: 100%;
+    @media (max-width: 768px) {
+        font-size: 8px;
+        margin-top: 7px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+}
+
+.tabButton {
+    --tw-text-opacity: 1;
+    color: rgba(107, 114, 128, var(--tw-text-opacity));
+    border-left-width: 1px;
+    border-right-width: 1px;
+    border-bottom-width: 2px;
+    width: 300px;
+    /*width: auto;*/
+    /*width: 100%;*/
+    padding: 0.25rem 3rem;
+    transition: background-color 0.3s;
+    @media (max-width: 768px) {
+        height: 30px;
+        width: auto; /* Let the buttons adjust their width automatically */
+        flex: 1 1 33%; /* Allow each button to take up a third of the row */
+        padding: 0.25rem; /* Adjust padding for better fit */
+        border-width: 1px;
+    }
+}
+
+.tabButton:hover {
+    --tw-bg-opacity: 1;
+    background-color: rgba(249, 250, 251, var(--tw-bg-opacity));
+}
+
+.tabButton.active {
+    --tw-bg-opacity: 1;
+    background-color: rgba(229, 231, 235, var(--tw-bg-opacity));
+}

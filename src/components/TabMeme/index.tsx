@@ -6,7 +6,7 @@ type TabNavigationProps = {
     setSelectedTab: (tab: string) => void;
 };
 
-const TabNavigation: FC<TabNavigationProps> = ({ selectedTab, setSelectedTab }) => {
+const TabMeme: FC<TabNavigationProps> = ({ selectedTab, setSelectedTab }) => {
     return (
       <div className={styles.tabContainer}>
           <button
@@ -31,4 +31,4 @@ const TabNavigation: FC<TabNavigationProps> = ({ selectedTab, setSelectedTab }) 
     );
 };
 
-export default TabNavigation;
+export default TabMeme;
