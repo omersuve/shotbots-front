@@ -182,7 +182,7 @@ const Navbar: React.FC = () => {
                            className={`${styles.flash} flex flex-col mx-0.5 items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">ETH</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
-                              {loading ? (
+                              {loading || !prices["ethereum"] ? (
                                 <MyLoader size="small" inline /> // Use size="small" and inline prop
                               ) : (
                                 <>
@@ -197,7 +197,7 @@ const Navbar: React.FC = () => {
                            className={`${styles.flash} flex flex-col mx-0.5 items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">SOL</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
-                              {loading ? (
+                              {loading || !prices["solana"] ? (
                                 <MyLoader size="small" inline={true} /> // Use size="small" and inline prop
                               ) : (
                                 <>
