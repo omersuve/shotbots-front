@@ -84,12 +84,10 @@ export const MemecoinProvider: React.FC<MemecoinProviderProps> = ({ children }) 
         const channel = pusher.subscribe("memecoin-channel");
 
         channel.bind("memecoins-event", (data: { message: string }) => {
-            console.log(data);
             setRefetchMemecoins(prev => !prev); // Toggle reFetch state
         });
 
         channel.bind("top-memecoins-event", (data: { message: string }) => {
-            console.log(data);
             setRefetchTopMemecoins(prev => !prev); // Toggle reFetch state
         });
 

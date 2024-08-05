@@ -69,12 +69,10 @@ export const PricesProvider: FC<PricesProviderProps> = ({ children }) => {
         const channel = pusher.subscribe("price-channel");
 
         channel.bind("prices-event", (data: { message: string }) => {
-            console.log(data);
             setRefetchPrices(prev => !prev); // Toggle reFetch state
         });
 
         channel.bind("fg-event", (data: { message: string }) => {
-            console.log(data);
             setRefetchFearGreed(prev => !prev); // Toggle reFetch state
         });
 

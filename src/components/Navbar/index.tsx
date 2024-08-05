@@ -116,29 +116,24 @@ const Navbar: React.FC = () => {
     }, [publicKey]);
 
     useEffect(() => {
+        if (prices) {
+            const newKeys: { [key: string]: number } = { ...keys };
+            const newLastPrices: { [key: string]: { price: string, change: string } } = { ...lastPrices };
 
-        console.log("keys", keys);
-        console.log("lastPrices", lastPrices);
-
-        const newKeys: { [key: string]: number } = { ...keys };
-        const newLastPrices: { [key: string]: { price: string, change: string } } = { ...lastPrices };
-
-        for (const key in prices) {
-            if (
-              !lastPrices[key] ||
-              lastPrices[key].price !== prices[key].price ||
-              lastPrices[key].change !== prices[key].change
-            ) {
-                newKeys[key] = (newKeys[key] || 0) + 1;
-                newLastPrices[key] = { price: prices[key].price, change: prices[key].change };
+            for (const key in prices) {
+                if (
+                  !lastPrices[key] ||
+                  lastPrices[key].price !== prices[key].price ||
+                  lastPrices[key].change !== prices[key].change
+                ) {
+                    newKeys[key] = (newKeys[key] || 0) + 1;
+                    newLastPrices[key] = { price: prices[key].price, change: prices[key].change };
+                }
             }
+
+            setKeys(newKeys);
+            setLastPrices(newLastPrices);
         }
-
-        setKeys(newKeys);
-        setLastPrices(newLastPrices);
-
-        console.log("newKeys", newKeys);
-        console.log("newLastPrices", newLastPrices);
     }, [prices]);
 
     const toggleMenu = () => {
@@ -169,7 +164,7 @@ const Navbar: React.FC = () => {
                            className={`${styles.flash} flex flex-col mx-0.5 items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">BTC</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
-                              {loading ? (
+                              {loading || !prices ? (
                                 <MyLoader size="small" inline /> // Use size="small" and inline prop
                               ) : (
                                 <>

@@ -48,7 +48,6 @@ export const NftProvider: React.FC<NftProviderProps> = ({ children }) => {
         const channel = pusher.subscribe("nft-channel");
 
         channel.bind("nfts-event", (data: { message: string }) => {
-            console.log(data);
             setRefetchNfts(prev => !prev); // Toggle reFetch state
         });
 
