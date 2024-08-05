@@ -23,7 +23,7 @@ interface ResponseData {
 export const NewsView: FC = () => {
     const { newsData, loading, timers } = useNews();
     const [selectedTabIdx, setSelectedTabIdx] = useState(0);
-    const [selectedTab, setSelectedTab] = useState("bitcoin-news");
+    const [selectedTab, setSelectedTab] = useState("cmc");
     const { publicKey } = useWallet();
     const [selectedNewsId, setSelectedNewsId] = useState<{ [key: string]: string }>({});
     const [votedNews, setVotedNews] = useState<string[]>([]);
