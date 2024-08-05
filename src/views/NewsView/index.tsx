@@ -14,7 +14,7 @@ import { toast } from "react-toastify";
 import { formatDate, handleSendVote } from "../../utils";
 import { useNews } from "../../contexts/NewsContext";
 
-const tags = ["BITCOIN", "ETHEREUM", "SOLANA", "NFT"];
+const tags = ["GENERAL", "BITCOIN", "ETHEREUM", "SOLANA", "NFT"];
 
 interface ResponseData {
     [collectionName: string]: News[]; // Define the type of data returned for each collection
@@ -62,13 +62,24 @@ export const NewsView: FC = () => {
     }, [newsData, selectedTab]);
 
     const handleTabChange = (newTab: string, idx: number) => {
-        setSelectedTab(newTab);
-        setSelectedTabIdx(idx);
-        if (!selectedNewsId[newTab] && newsData[newTab] && newsData[newTab].length > 0) {
-            setSelectedNewsId(prevState => ({
-                ...prevState,
-                [newTab]: newsData[newTab][0]._id.toString(),
-            }));
+        if (newTab != "general-news") {
+            setSelectedTab(newTab);
+            setSelectedTabIdx(idx);
+            if (!selectedNewsId[newTab] && newsData[newTab] && newsData[newTab].length > 0) {
+                setSelectedNewsId(prevState => ({
+                    ...prevState,
+                    [newTab]: newsData[newTab][0]._id.toString(),
+                }));
+            }
+        } else {
+            setSelectedTab("cmc");
+            setSelectedTabIdx(idx);
+            if (!selectedNewsId["cmc"] && newsData["cmc"] && newsData["cmc"].length > 0) {
+                setSelectedNewsId(prevState => ({
+                    ...prevState,
+                    ["cmc"]: newsData["cmc"][0]._id.toString(),
+                }));
+            }
         }
     };
 
@@ -88,9 +99,9 @@ export const NewsView: FC = () => {
         if (publicKey) {
             fetchVotes().then((r: SendVoteBody[]) => {
                 r.map(v =>
-                    setVotesOfNews(prev => ({
-                        ...prev, [v.assetId]: v.vote,
-                    })));
+                  setVotesOfNews(prev => ({
+                      ...prev, [v.assetId]: v.vote,
+                  })));
                 setVotedNews(r.map(v => v.assetId));
             });
         }
@@ -105,118 +116,118 @@ export const NewsView: FC = () => {
     }
 
     return (
-        <div>
-            <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
-                {tags.map((t, i) => (
-                    <li key={i} className={`lg:flex-none flex-1 ${styles["tab-item"]}`}>
-                        <button
-                            className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
-                            onClick={() => handleTabChange(`${t.toLowerCase()}-news`, i)}
-                        >
-                            {t}
-                        </button>
-                    </li>
-                ))}
-            </ul>
-            <p className="text-center fs-6 fw-bold my-3">RECENT HOT NEWS</p>
-            {loading ? (
-                <MyLoader />
-            ) : (
-                <div className="relative flex lg:mx-12 lg:mt-4">
-                    <div className="block w-1/4 lg:w-1/3 relative">
-                        {
-                            news &&
-                            news.map((n, j) => (
-                                <button
-                                    key={`${selectedTab}-${j}`}
-                                    ref={(el) => {
-                                        cardRefs.current[n._id.toString()] = el;
-                                    }}
-                                    className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-2 lg:m-6 w-full`}
-                                    onClick={() => setSelectedNewsId(prevState => ({
-                                        ...prevState,
-                                        [selectedTab]: n._id.toString(), // Set the selected news index for the current tab
-                                    }))}>
-                                    <div className={`${styles["box"]} shadow flex flex-col justify-between`}>
-                                        <div className="flex-1 flex">
-                                            <h3 className="relative text-black lg:mr-16">
-                                                {parse(n.title)}
-                                            </h3>
-                                        </div>
-                                        {/*<div*/}
-                                        {/*    className="flex-1 flex items-center justify-center content-center mt-2 mx-1 min-h-8">*/}
-                                        {/*    {publicKey && n._id.toString() === selectedNewsId[selectedTab] && !n.isVoteEnded && (*/}
-                                        {/*        <>*/}
-                                        {/*            <Box sx={{*/}
-                                        {/*                display: "flex",*/}
-                                        {/*                flex: 3,*/}
-                                        {/*                justifyContent: "center",*/}
-                                        {/*                textAlign: "center",*/}
-                                        {/*            }}>*/}
-                                        {/*                <Slider*/}
-                                        {/*                    key={`slider-${n._id.toString()}`}*/}
-                                        {/*                    aria-label="Vote"*/}
-                                        {/*                    defaultValue={votesOfNews[n._id.toString()] ?? 0}*/}
-                                        {/*                    valueLabelDisplay="auto"*/}
-                                        {/*                    shiftStep={1}*/}
-                                        {/*                    onChange={(event, newValue) => {*/}
-                                        {/*                        setVotesOfNews(prev => ({*/}
-                                        {/*                            ...prev, [n._id.toString()]: newValue as number,*/}
-                                        {/*                        }));*/}
-                                        {/*                    }}*/}
-                                        {/*                    step={1}*/}
-                                        {/*                    min={-3}*/}
-                                        {/*                    max={3}*/}
-                                        {/*                    disabled={votedNews.includes(n._id.toString())}*/}
-                                        {/*                    color={`${votesOfNews[n._id.toString()] > 1 ? "success" : votesOfNews[n._id.toString()] < -1 ? "error" : "info"}`}*/}
-                                        {/*                />*/}
-                                        {/*            </Box>*/}
-                                        {/*            <p*/}
-                                        {/*                className="ml-8 w-8 fs-5 font-bold">{votesOfNews[n._id.toString()] ?? 0}</p>*/}
-                                        {/*            <div className="flex-1 items-center">*/}
-                                        {/*                <button*/}
-                                        {/*                    className={`bg-gray-200 ${!votedNews.includes(n._id.toString()) ? "hover:bg-gray-300 active:bg-gray-400" : ""}  w-20 rounded px-2 py-1 ml-4`}*/}
-                                        {/*                    onClick={() => {*/}
-                                        {/*                        handleSendVote(n._id.toString(), votesOfNews[n._id.toString()], selectedTab, publicKey?.toString()).then((v) => {*/}
-                                        {/*                            if (v != undefined) submitVote(n._id.toString(), v);*/}
-                                        {/*                        });*/}
-                                        {/*                    }}*/}
-                                        {/*                    disabled={votedNews.includes(n._id.toString())}*/}
-                                        {/*                > {votedNews.includes(n._id.toString()) ? "Submitted" : "Submit"}*/}
-                                        {/*                </button>*/}
-                                        {/*            </div>*/}
-                                        {/*        </>*/}
-                                        {/*    )}*/}
-                                        {/*</div>*/}
-                                        {/*<div className="flex-1 mt-1 flex justify-between items-end">*/}
-                                        {/*    <div className="text-sm text-gray-500 flex-1">*/}
-                                        {/*        {n.isVoteEnded ? "Voting ended" : (timers[n._id.toString()] || "Calculating...")}*/}
-                                        {/*    </div>*/}
-                                        {/*</div>*/}
-                                        <div className={styles["toggle-btn"]}>
-                                            {n._id.toString() === selectedNewsId[selectedTab] &&
-                                              <FontAwesomeIcon
-                                                icon={faArrowRight as IconProp}
-                                                className="fa-xl" />
-                                            }
-                                        </div>
-                                        <div className={`${styles.formatDate} absolute right-2 top-2 text-gray-400`}>
-                                            {formatDate(n["timestamp"])}
-                                        </div>
-                                    </div>
-                                </button>
-                            ))
-                        }
-                    </div>
+      <div>
+          <ul className={`${styles["tabs"]} flex flex-wrap text-center text-gray-500`}>
+              {tags.map((t, i) => (
+                <li key={i} className={`lg:flex-none flex-1 ${styles["tab-item"]}`}>
+                    <button
+                      className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${i === selectedTabIdx ? "bg-gray-200" : ""} ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
+                      onClick={() => handleTabChange(`${t.toLowerCase()}-news`, i)}
+                    >
+                        {t}
+                    </button>
+                </li>
+              ))}
+          </ul>
+          <p className="text-center fs-6 fw-bold my-3">RECENT HOT NEWS</p>
+          {loading ? (
+            <MyLoader />
+          ) : (
+            <div className="relative flex lg:mx-12 lg:mt-4">
+                <div className="block w-1/4 lg:w-1/3 relative">
                     {
-                        news.length > 0 &&
-                      <div ref={newsBodyRef} className="lg:w-2/3" style={{ width: "70%" }}>
-                        <NewsBody
-                          body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
-                      </div>
+                      news &&
+                      news.map((n, j) => (
+                        <button
+                          key={`${selectedTab}-${j}`}
+                          ref={(el) => {
+                              cardRefs.current[n._id.toString()] = el;
+                          }}
+                          className={`flex text-center items-center ${n._id.toString() !== selectedNewsId[selectedTab] ? "active:bg-yellow-200" : ""} ${n._id.toString() !== selectedNewsId[selectedTab] ? "hover:bg-yellow-100" : ""} ${n._id.toString() === selectedNewsId[selectedTab] ? "bg-yellow-300" : ""} m-2 lg:m-6 w-full`}
+                          onClick={() => setSelectedNewsId(prevState => ({
+                              ...prevState,
+                              [selectedTab]: n._id.toString(), // Set the selected news index for the current tab
+                          }))}>
+                            <div className={`${styles["box"]} shadow flex flex-col justify-between`}>
+                                <div className="flex-1 flex">
+                                    <h3 className="relative text-black lg:mr-16">
+                                        {parse(n.title)}
+                                    </h3>
+                                </div>
+                                {/*<div*/}
+                                {/*    className="flex-1 flex items-center justify-center content-center mt-2 mx-1 min-h-8">*/}
+                                {/*    {publicKey && n._id.toString() === selectedNewsId[selectedTab] && !n.isVoteEnded && (*/}
+                                {/*        <>*/}
+                                {/*            <Box sx={{*/}
+                                {/*                display: "flex",*/}
+                                {/*                flex: 3,*/}
+                                {/*                justifyContent: "center",*/}
+                                {/*                textAlign: "center",*/}
+                                {/*            }}>*/}
+                                {/*                <Slider*/}
+                                {/*                    key={`slider-${n._id.toString()}`}*/}
+                                {/*                    aria-label="Vote"*/}
+                                {/*                    defaultValue={votesOfNews[n._id.toString()] ?? 0}*/}
+                                {/*                    valueLabelDisplay="auto"*/}
+                                {/*                    shiftStep={1}*/}
+                                {/*                    onChange={(event, newValue) => {*/}
+                                {/*                        setVotesOfNews(prev => ({*/}
+                                {/*                            ...prev, [n._id.toString()]: newValue as number,*/}
+                                {/*                        }));*/}
+                                {/*                    }}*/}
+                                {/*                    step={1}*/}
+                                {/*                    min={-3}*/}
+                                {/*                    max={3}*/}
+                                {/*                    disabled={votedNews.includes(n._id.toString())}*/}
+                                {/*                    color={`${votesOfNews[n._id.toString()] > 1 ? "success" : votesOfNews[n._id.toString()] < -1 ? "error" : "info"}`}*/}
+                                {/*                />*/}
+                                {/*            </Box>*/}
+                                {/*            <p*/}
+                                {/*                className="ml-8 w-8 fs-5 font-bold">{votesOfNews[n._id.toString()] ?? 0}</p>*/}
+                                {/*            <div className="flex-1 items-center">*/}
+                                {/*                <button*/}
+                                {/*                    className={`bg-gray-200 ${!votedNews.includes(n._id.toString()) ? "hover:bg-gray-300 active:bg-gray-400" : ""}  w-20 rounded px-2 py-1 ml-4`}*/}
+                                {/*                    onClick={() => {*/}
+                                {/*                        handleSendVote(n._id.toString(), votesOfNews[n._id.toString()], selectedTab, publicKey?.toString()).then((v) => {*/}
+                                {/*                            if (v != undefined) submitVote(n._id.toString(), v);*/}
+                                {/*                        });*/}
+                                {/*                    }}*/}
+                                {/*                    disabled={votedNews.includes(n._id.toString())}*/}
+                                {/*                > {votedNews.includes(n._id.toString()) ? "Submitted" : "Submit"}*/}
+                                {/*                </button>*/}
+                                {/*            </div>*/}
+                                {/*        </>*/}
+                                {/*    )}*/}
+                                {/*</div>*/}
+                                {/*<div className="flex-1 mt-1 flex justify-between items-end">*/}
+                                {/*    <div className="text-sm text-gray-500 flex-1">*/}
+                                {/*        {n.isVoteEnded ? "Voting ended" : (timers[n._id.toString()] || "Calculating...")}*/}
+                                {/*    </div>*/}
+                                {/*</div>*/}
+                                <div className={styles["toggle-btn"]}>
+                                    {n._id.toString() === selectedNewsId[selectedTab] &&
+                                      <FontAwesomeIcon
+                                        icon={faArrowRight as IconProp}
+                                        className="fa-xl" />
+                                    }
+                                </div>
+                                <div className={`${styles.formatDate} absolute right-2 top-2 text-gray-400`}>
+                                    {formatDate(n["timestamp"])}
+                                </div>
+                            </div>
+                        </button>
+                      ))
                     }
                 </div>
-            )}
-        </div>
+                {
+                  news.length > 0 &&
+                  <div ref={newsBodyRef} className="lg:w-2/3" style={{ width: "70%" }}>
+                    <NewsBody
+                      body={news.find(newsItem => newsItem._id.toString() === selectedNewsId[selectedTab])?.body || ""} />
+                  </div>
+                }
+            </div>
+          )}
+      </div>
     );
 };

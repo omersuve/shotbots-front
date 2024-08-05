@@ -2,7 +2,6 @@ import clientPromise from "../../../lib/mongodb";
 import { NextApiRequest, NextApiResponse } from "next";
 import { load } from "cheerio";
 
-
 interface ResponseData {
     [collectionName: string]: any[]; // Define the type of data returned for each collection
 }
@@ -76,6 +75,12 @@ const cleanTitleContent = (html: string): string | null => {
         return `<div class="at-headline"><h1>${headline}</h1></div><br><div class="at-subheadline"><h2>${subheadline}</h2></div>`;
     }
 
+    // Handle plain text titles
+    const bodyContent = $("body").text();
+    if (bodyContent) {
+        return `<div class="at-headline"><h1>${bodyContent}</h1></div>`;
+    }
+
     // Return the cleaned HTML as a string
     return $.html();
 };
@@ -102,22 +107,24 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         for (const collectionName of requestBody) {
             // Query the collection and fetch all documents
             const data = await db
-                .collection(collectionName)
-                .find({})
-                .sort({ timestamp: -1 })
-                .limit(5)
-                .toArray();
+              .collection(collectionName)
+              .find({})
+              .sort({ timestamp: -1 })
+              .limit(5)
+              .toArray();
 
             // Store the data in the map using the collection name as the key
-            resultMap[collectionName] = data.map((item: any) => {
-                const cleanedHtml = cleanHtmlContent(item.body);
-                const cleanedTitle = cleanTitleContent(item.title);
-                return {
-                    ...item,
-                    title: cleanedTitle,
-                    body: cleanedHtml,
-                };
-            });
+            resultMap[collectionName] = data
+              .filter((item: any) => !item.title.includes("What Happened in Crypto Today"))
+              .map((item: any) => {
+                  const cleanedHtml = cleanHtmlContent(item.body);
+                  const cleanedTitle = cleanTitleContent(item.title);
+                  return {
+                      ...item,
+                      title: cleanedTitle,
+                      body: cleanedHtml,
+                  };
+              });
         }
         // Return the map as JSON
         res.json(resultMap);
