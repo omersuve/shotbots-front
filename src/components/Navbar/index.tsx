@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
     }, [publicKey]);
 
     useEffect(() => {
-        if (prices) {
+        if (prices["bitcoin"]) {
 
             console.log("prices", prices);
 
@@ -167,7 +167,7 @@ const Navbar: React.FC = () => {
                            className={`${styles.flash} flex flex-col mx-0.5 items-center lg:px-1 w-12 lg:w-16`}>
                           <p className="text-xs font-bold">BTC</p>
                           <div className={`${styles["prices-fear-greed"]} contents`}>
-                              {loading || !prices ? (
+                              {loading || !prices["bitcoin"] ? (
                                 <MyLoader size="small" inline /> // Use size="small" and inline prop
                               ) : (
                                 <>
