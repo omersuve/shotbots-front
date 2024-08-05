@@ -117,6 +117,9 @@ const Navbar: React.FC = () => {
 
     useEffect(() => {
         if (prices) {
+
+            console.log("prices", prices);
+
             const newKeys: { [key: string]: number } = { ...keys };
             const newLastPrices: { [key: string]: { price: string, change: string } } = { ...lastPrices };
 
