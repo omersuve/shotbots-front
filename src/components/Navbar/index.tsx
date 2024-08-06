@@ -209,7 +209,7 @@ const Navbar: React.FC = () => {
                           </div>
                       </div>
                       <div
-                        className="ml-0.5 text-center border-2 border-dotted bg-gray-100 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-6 w-20 lg:w-36">
+                        className="ml-0.5 text-center border-2 border-dotted bg-gray-100 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-3 w-20 lg:w-40">
                           {fearGreed ? (
                             <>
                                 <p className={`${styles["prices-fear-greed"]} font-bold`}>Fear & Greed</p>
