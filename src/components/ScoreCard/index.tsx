@@ -10,9 +10,10 @@ import Image from "next/image";
 interface ScoreCardProps {
     tag: "Bitcoin" | "Solana" | "NFTs" | "Ethereum";
     score: number;
+    onClick: (tag: "Bitcoin" | "Solana" | "NFTs" | "Ethereum", event: React.MouseEvent) => void;
 }
 
-function ScoreCard({ tag, score }: ScoreCardProps) {
+function ScoreCard({ tag, score, onClick }: ScoreCardProps) {
 
     const getProgressBarColor = (score: number) => {
         const percentage = score * 10;
@@ -42,7 +43,7 @@ function ScoreCard({ tag, score }: ScoreCardProps) {
     const textColor = getTextColor(score);
 
     return (
-      <div className={`${styles["box"]} shadow h-44`}>
+      <div className={`${styles["box"]} shadow h-44 hover:bg-gray-100 cursor-pointer`} onClick={(e) => onClick(tag, e)}>
           {tag == "NFTs" && <Image
             src={nftLogo}
             alt="nft SVG"
