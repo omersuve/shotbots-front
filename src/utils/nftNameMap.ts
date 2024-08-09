@@ -18,4 +18,6 @@ export const NFT_NAME_MAP = new Map<string, string>([
     ["degen-fat-cats", "degenfatcats"],
     ["flash-trade-1", "flashtrade"],
     ["traptardio", "traptardio_"],
+    ["stylish-studs", "stylish_studs"],
+    ["kanpai-pandas-2", "kanpaipandas"],
 ]);
