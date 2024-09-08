@@ -41,8 +41,8 @@ export const TrendingView: FC = () => {
         signTransaction: signTransaction,
         inputMint: "So11111111111111111111111111111111111111112",
         outputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        amount: 0.1,
-        slippage: 1,
+        amount: "0.1",
+        slippage: "1",
         pk: publicKey,
       }),
     });
@@ -131,7 +131,9 @@ export const TrendingView: FC = () => {
                   <GraphComponent scores={scores} startDate={message.date} />
                 </div>
               )}
-              <button onClick={() => swapToken}>Buy Token</button>
+              <button className="bg-yellow-200" onClick={swapToken}>
+                Buy Token
+              </button>
             </li>
           );
         })}
