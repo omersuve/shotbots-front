@@ -14,11 +14,13 @@ import {
   Legend,
 } from "chart.js";
 import { formatLargeNumber } from "../../utils/formatting";
-import { useWallet } from "@solana/wallet-adapter-react";
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { VersionedTransaction } from "@solana/web3.js";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
-  const { signTransaction, publicKey } = useWallet();
+  const wallet = useWallet();
+  const { connection } = useConnection();
 
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
@@ -31,25 +33,64 @@ export const TrendingView: FC = () => {
     }));
   };
 
-  const swapToken = async () => {
-    const response = await fetch("/api/buyToken", {
+  const quoteAndSwap = async () => {
+    // Swapping SOL to USDC with input 0.1 SOL and 0.5% slippage
+    const quote = await fetch(
+      "https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000&slippageBps=50"
+    );
+
+    const quoteResponse = await quote.json();
+    console.log({ quoteResponse });
+
+    // get serialized transactions for the swap
+    const swap = await fetch("https://quote-api.jup.ag/v6/swap", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
       },
       body: JSON.stringify({
-        signTransaction: signTransaction,
-        inputMint: "So11111111111111111111111111111111111111112",
-        outputMint: "EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v",
-        amount: "0.1",
-        slippage: "1",
-        pk: publicKey,
+        quoteResponse,
+        // user public key to be used for the swap
+        userPublicKey: wallet.publicKey?.toString(),
+        // auto wrap and unwrap SOL. default is true
+        wrapAndUnwrapSol: true,
+        // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
+        // feeAccount: "fee_account_public_key"
       }),
     });
-    if (!response.ok) {
-      throw new Error("Failed to fetch meme votes");
+
+    const { swapTransaction } = await swap.json();
+
+    try {
+      // deserialize the transaction
+      const swapTransactionBuf = Buffer.from(swapTransaction, "base64");
+      var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+      console.log(transaction);
+
+      // @ts-expect-error wallet connection
+      const signedTransaction = await wallet.signTransaction(transaction);
+
+      const rawTransaction = signedTransaction.serialize();
+      const txid = await connection.sendRawTransaction(rawTransaction, {
+        skipPreflight: true,
+        maxRetries: 2,
+      });
+
+      // get the latest block hash
+      const latestBlockHash = await connection.getLatestBlockhash();
+
+      await connection.confirmTransaction(
+        {
+          blockhash: latestBlockHash.blockhash,
+          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
+          signature: txid,
+        },
+        "confirmed"
+      );
+      console.log(`https://solscan.io/tx/${txid}`);
+    } catch (error) {
+      console.error("Error signing or sending the transaction", error);
     }
-    return await response.json();
   };
 
   const extractInfo = (text: string) => {
@@ -131,7 +172,7 @@ export const TrendingView: FC = () => {
                   <GraphComponent scores={scores} startDate={message.date} />
                 </div>
               )}
-              <button className="bg-yellow-200" onClick={swapToken}>
+              <button className="bg-yellow-200" onClick={quoteAndSwap}>
                 Buy Token
               </button>
             </li>
