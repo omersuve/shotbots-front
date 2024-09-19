@@ -7,10 +7,7 @@ export async function middleware(req: NextRequest) {
   // Allow access to home page, specific API routes, and assets (like static files)
   if (
     pathname === "/" ||
-    pathname.startsWith("/api/checkReferred") ||
-    pathname.startsWith("/api/useReferralCode") ||
-    pathname.startsWith("/api/setWalletAddress") ||
-    pathname.startsWith("/api/removeWalletAddress") ||
+    pathname.startsWith("/api") || // Allow all API routes
     pathname.startsWith("/_next") || // Allow Next.js internal requests
     pathname.startsWith("/static") || // Allow static assets
     pathname.startsWith("/favicon.ico") || // Allow favicon requests
