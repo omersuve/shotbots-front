@@ -22,4 +22,5 @@ export const NFT_NAME_MAP = new Map<string, string>([
   ["kanpai-pandas-2", "kanpaipandas"],
   ["play-solana-nft", "play_solana"],
   ["the-backwoods-1", "backwoods"],
+  ["elites", "marketelites"],
 ]);
