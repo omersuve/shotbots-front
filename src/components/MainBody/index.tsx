@@ -111,7 +111,13 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
       <div id="stars"></div>
 
       {/* Wallet Button Positioned at Top-Right */}
-      <div className="absolute top-4 right-4">
+      <div className="absolute flex top-4 right-4">
+        {/* Show referral count if available */}
+        {publicKey && referralCount !== null && (
+          <p className={styles["referral-count"]}>
+            Your referral count: {referralCount}
+          </p>
+        )}
         <WalletMultiButton
           className="flex md:order-2 space-x-3 md:space-x-0 rtl:space-x-reverse"
           style={{
@@ -120,13 +126,6 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
             color: "black",
           }}
         />
-
-        {/* Show referral count if available */}
-        {publicKey && referralCount !== null && (
-          <p className={styles["referral-count"]}>
-            Your referral count: {referralCount}
-          </p>
-        )}
       </div>
 
       <div className={`${styles["img-rectangular-top"]} object-cover`}>

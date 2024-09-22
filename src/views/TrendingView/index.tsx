@@ -40,7 +40,6 @@ export const TrendingView: FC = () => {
     );
 
     const quoteResponse = await quote.json();
-    console.log({ quoteResponse });
 
     // get serialized transactions for the swap
     const swap = await fetch("https://quote-api.jup.ag/v6/swap", {
@@ -65,7 +64,6 @@ export const TrendingView: FC = () => {
       // deserialize the transaction
       const swapTransactionBuf = Buffer.from(swapTransaction, "base64");
       var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
-      console.log(transaction);
 
       // @ts-expect-error wallet connection
       const signedTransaction = await wallet.signTransaction(transaction);

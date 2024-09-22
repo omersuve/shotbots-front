@@ -92,7 +92,11 @@
 .referral-count {
   font-family: "jersey", serif;
   color: black;
-  margin-top: 10px;
+  margin-right: 10px;
+  background-color: #fce9998c;
+  padding-inline: 10px;
+  border-radius: 10px;
+  align-content: center;
 }
 
 .referral-section h2 {

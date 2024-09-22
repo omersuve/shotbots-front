@@ -20,8 +20,6 @@ export async function middleware(req: NextRequest) {
   // Check if the wallet_address cookie exists
   const walletAddress = req.cookies.get("wallet_address")?.value;
 
-  console.log("walletAddress", walletAddress);
-
   if (!walletAddress) {
     // If no wallet is connected, redirect to home
     return NextResponse.redirect(new URL("/", req.url));
@@ -32,8 +30,6 @@ export async function middleware(req: NextRequest) {
     `${req.nextUrl.origin}/api/checkReferred?wallet_address=${walletAddress}`
   );
   const referralData = await referralResponse.json();
-
-  console.log(referralData);
 
   // If wallet is not referred, redirect to home
   if (!referralData.isReferred) {
