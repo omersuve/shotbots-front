@@ -6,9 +6,8 @@ body {
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-size: 18px;
-  min-height: 100vh; /* Change from height to min-height */
+  height: 100vh;
   width: 100%;
-  overflow-x: hidden; /* Prevent horizontal scroll */
 }
 
 code {
