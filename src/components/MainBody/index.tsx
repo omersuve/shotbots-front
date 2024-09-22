@@ -23,6 +23,7 @@ export const Jumbotron = (props: any) => {
 
 const MainBody = ({ gradient, message, message2, icons }: any) => {
   const [referralCode, setReferralCode] = useState<string>("");
+  const [userReferralCode, setUserReferralCode] = useState<string | null>(null); // Store the user's referral code
   const [isReferred, setIsReferred] = useState<boolean>(false);
   const [referralCount, setReferralCount] = useState<number | null>(null); // Store referral count here
   const router = useRouter();
@@ -47,7 +48,11 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
   useEffect(() => {
     if (connected && publicKey) {
       // Check if the user is already referred
-      checkIfReferred();
+      checkIfReferred().then((f) => {
+        if (f) {
+          fetchUserReferralCode(publicKey.toString()).then(); // Fetch user's referral code
+        }
+      });
     } else {
       setIsReferred(false);
       setReferralCount(null);
@@ -64,9 +69,25 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
     if (data.isReferred) {
       setIsReferred(true);
       setReferralCount(data.referrals_count); // Set referral count
+      return true;
     } else {
       setIsReferred(false);
       setReferralCount(null);
+      return false;
+    }
+  };
+
+  // Fetch the user's referral code from the backend
+  const fetchUserReferralCode = async (walletAddress: string) => {
+    const response = await fetch(
+      `/api/getUserReferralCode?wallet_address=${walletAddress}`
+    );
+    const data = await response.json();
+
+    if (data.referral_code) {
+      setUserReferralCode(data.referral_code);
+    } else {
+      setUserReferralCode(null); // If no referral code is available
     }
   };
 
@@ -95,8 +116,17 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
 
     if (data.success) {
       setIsReferred(true); // Update state to indicate successful referral
-    } else {
-      toast(data.message);
+      setUserReferralCode(data.referral_code);
+    }
+    toast(data.message);
+  };
+
+  // Copy referral code URL to clipboard
+  const copyToClipboard = () => {
+    if (userReferralCode) {
+      const referralUrl = `https://shotbots.app/?ref=${userReferralCode}`; // Full URL
+      navigator.clipboard.writeText(referralUrl);
+      toast("Referral URL copied to clipboard!");
     }
   };
 
@@ -200,6 +230,20 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
                 Take a Shot!
               </div>
             </Link>
+            {/* Display user's referral code with a copy button */}
+            {userReferralCode && (
+              <div className="mt-5">
+                <p className="text-black">
+                  Your referral code: <strong>{userReferralCode}</strong>
+                </p>
+                <button
+                  className="bg-yellow-100 hover:bg-yellow-50 btn mt-2 text-black border-2 border-black"
+                  onClick={copyToClipboard}
+                >
+                  Copy Referral Code
+                </button>
+              </div>
+            )}
           </>
         )}
 
