@@ -11,7 +11,6 @@ import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { toast } from "react-toastify";
-import { removeWalletCookie, setWalletCookie } from "../../utils";
 
 export const Jumbotron = (props: any) => {
   const bgStyle = props.style ?? { backgroundColor: "#e9ecef" };
@@ -48,10 +47,8 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
   useEffect(() => {
     if (connected && publicKey) {
       // Check if the user is already referred
-      setWalletCookie(publicKey.toString()).then();
       checkIfReferred();
     } else {
-      removeWalletCookie().then();
       setIsReferred(false);
       setReferralCount(null);
     }

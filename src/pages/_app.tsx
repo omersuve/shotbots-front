@@ -18,6 +18,7 @@ import {
   SolflareWalletAdapter,
 } from "@solana/wallet-adapter-wallets";
 import { WalletModalProvider } from "@solana/wallet-adapter-react-ui";
+import WalletHandler from "../utils/WalletHandler";
 
 import("@solana/wallet-adapter-react-ui/styles.css" as any);
 
@@ -46,6 +47,7 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
+          <WalletHandler />
           <PricesProvider>
             <ScoresProvider>
               <NewsProvider>
