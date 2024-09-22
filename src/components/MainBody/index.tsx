@@ -27,18 +27,35 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
   const [isReferred, setIsReferred] = useState<boolean>(false);
   const [referralCount, setReferralCount] = useState<number | null>(null); // Store referral count here
   const router = useRouter();
-  const { publicKey } = useWallet();
+  const { publicKey, connected } = useWallet();
+
+  // Set referral code if present in URL query and auto-submit after a delay
+  useEffect(() => {
+    const { ref } = router.query;
+    if (ref) {
+      setReferralCode(ref as string);
+
+      // Automatically submit the referral code after a 2-second delay
+      if (connected && publicKey) {
+        setTimeout(() => {
+          handleReferralSubmit(ref as string, publicKey.toString());
+        }, 500); // Adjust the delay as needed
+      }
+    }
+  }, [router.query, connected, publicKey]);
 
   // Capture referral code from query parameter and auto-submit
   useEffect(() => {
-    if (publicKey) {
+    if (connected && publicKey) {
       // Check if the user is already referred
-      checkIfReferred();
       setWalletCookie(publicKey.toString()).then();
+      checkIfReferred();
     } else {
       removeWalletCookie().then();
+      setIsReferred(false);
+      setReferralCount(null);
     }
-  }, [publicKey]);
+  }, [connected, publicKey]);
 
   // Check if the user is referred by calling the API
   const checkIfReferred = async () => {
@@ -56,26 +73,15 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
     }
   };
 
-  // Capture referral code from query parameter and auto-submit
-  useEffect(() => {
-    const { ref } = router.query;
-    if (ref) {
-      setReferralCode(ref as string);
-    }
-  }, [router.query]);
-
-  // Automatically submit the referral code if wallet is connected and referral code is available
-  useEffect(() => {
-    if (publicKey && referralCode) {
-      handleReferralSubmit(referralCode); // Automatically submit the referral code
-    }
-  }, [publicKey, referralCode]); // Run this when wallet connects or referral code is set
-
   // Handle form submission for wallet connection and referral code use
-  const handleReferralSubmit = async (referralCodeToSubmit?: string) => {
+  const handleReferralSubmit = async (
+    referralCodeToSubmit?: string,
+    publicKey?: string
+  ) => {
     const codeToSubmit = referralCodeToSubmit || referralCode; // Use either parameter or state value
-    if (!publicKey) {
-      toast("Please connect your wallet first.");
+
+    if (!codeToSubmit || !publicKey) {
+      toast("Missing referral code or wallet address");
       return;
     }
 
@@ -83,7 +89,7 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        wallet_address: publicKey.toString(),
+        wallet_address: publicKey,
         referral_code: codeToSubmit,
       }),
     });
@@ -172,7 +178,9 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
             />
             <button
               className="bg-yellow-100 hover:bg-yellow-50 btn mt-2 text-black border-2 border-black"
-              onClick={() => handleReferralSubmit()}
+              onClick={() =>
+                handleReferralSubmit(referralCode, publicKey?.toString())
+              }
             >
               Submit
             </button>
