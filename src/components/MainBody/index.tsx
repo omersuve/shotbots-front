@@ -158,7 +158,7 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
           alt="Picture of a Pistol"
         />
       </div>
-      <Container className="text-center overflow-y-auto max-h-screen relative pb-24 md:pb-0">
+      <Container className="text-center">
         {/* Conditional rendering: show referral form if not yet referred */}
         <div className={`${styles["notice"]} p-2 mb-3`}>
           <p>Mobile Support Available!</p>

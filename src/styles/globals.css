@@ -3,15 +3,15 @@
 @tailwind utilities;
 
 html {
-    height: 100%;
-    overflow: hidden;
+  height: 100%;
+  overflow: hidden;
 }
 
 body {
-    @apply bg-custom-bg bg-cover bg-center h-screen w-full;
-    height: 100%;
-    overflow: auto;
-    background-size: cover;
-    background-position: center;
-    background-attachment: fixed;
+  @apply bg-custom-bg bg-cover bg-center h-screen w-full;
+  min-height: 100vh;
+  overflow-y: auto; /* Ensure vertical scrolling */
+  background-size: cover;
+  background-position: center;
+  background-attachment: fixed;
 }
