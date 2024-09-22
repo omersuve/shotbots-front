@@ -8,7 +8,7 @@
   width: 100%;
   display: flex;
   font-style: italic;
-  margin-top: 100px;
+  margin-top: 60px;
 }
 
 .rights {
@@ -26,7 +26,7 @@
   text-align: center;
   justify-content: center;
   align-items: center;
-  margin-top: 80px;
+  margin-top: 40px;
 }
 
 .img-rectangular-left {
@@ -147,7 +147,7 @@
   .stay-tuned {
     font-size: small;
     width: 100px;
-    margin-top: 60px;
+    margin-top: 40px;
   }
 
   .rights {
@@ -155,7 +155,7 @@
   }
 
   .typist-font {
-    margin-top: 60px;
+    margin-top: 40px;
   }
 
   .img-rectangular-top {
@@ -167,7 +167,7 @@
   .stay-tuned {
     font-size: small;
     width: 80px;
-    margin-top: 40px;
+    margin-top: 20px;
   }
 
   .rights {
