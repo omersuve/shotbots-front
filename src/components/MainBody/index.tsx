@@ -200,38 +200,34 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
                 Take a Shot!
               </div>
             </Link>
-            <div className="p-4 mt-2 opacity-75 justify-items-center text-center items-center">
-              {icons.map(
-                (
-                  icon: { url: string | undefined; image: string },
-                  index: any
-                ) => (
-                  <Link
-                    href={icon.url!}
-                    passHref={true}
-                    key={`social-icon-${index}`}
-                    target="_blank"
-                  >
-                    <i className={`fab ${icon.image}  fa-2x socialicons`} />
-                  </Link>
-                )
-              )}
-            </div>
-            <p
-              className={`${styles["rights"]} md:absolute md:right-10 md:bottom-10 text-center fs-6`}
-            >
-              &copy; {new Date().getFullYear()} Shot Bots. All rights reserved.
-            </p>
-            <p
-              className={`${styles["rights"]} md:absolute md:left-10 md:bottom-8 text-center fs-6 grid`}
-            >
-              <span className="fs-6 ml-2 fw-bolder">
-                REACH OUT FOR INQUIRIES:
-              </span>
-              <span className="fs-6 ml-2">theshotbots@gmail.com</span>
-            </p>
           </>
         )}
+
+        <div className="p-4 mt-2 opacity-75 justify-items-center text-center items-center">
+          {icons.map(
+            (icon: { url: string | undefined; image: string }, index: any) => (
+              <Link
+                href={icon.url!}
+                passHref={true}
+                key={`social-icon-${index}`}
+                target="_blank"
+              >
+                <i className={`fab ${icon.image}  fa-2x socialicons`} />
+              </Link>
+            )
+          )}
+        </div>
+        <p
+          className={`${styles["rights"]} md:absolute md:right-10 md:bottom-10 text-center fs-6`}
+        >
+          &copy; {new Date().getFullYear()} Shot Bots. All rights reserved.
+        </p>
+        <p
+          className={`${styles["rights"]} md:absolute md:left-10 md:bottom-8 text-center fs-6 grid`}
+        >
+          <span className="fs-6 ml-2 fw-bolder">REACH OUT FOR INQUIRIES:</span>
+          <span className="fs-6 ml-2">theshotbots@gmail.com</span>
+        </p>
       </Container>
     </Jumbotron>
   );
