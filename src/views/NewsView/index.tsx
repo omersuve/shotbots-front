@@ -10,11 +10,24 @@ import Box from "@mui/material/Box";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
 import { IconProp } from "@fortawesome/fontawesome-svg-core";
-import { toast } from "react-toastify";
 import { formatDate, handleSendVote } from "../../utils";
 import { useNews } from "../../contexts/NewsContext";
 
-const tags = ["GENERAL", "BITCOIN", "ETHEREUM", "SOLANA", "NFT"];
+const tags = [
+  " COINMARKETCAP ",
+  "COINDESK BTC",
+  "COINDESK ETH",
+  "COINDESK SOL",
+  "COINDESK NFT",
+];
+
+const tagToCollectionMap: { [key: string]: string } = {
+  " COINMARKETCAP ": "cmc",
+  "COINDESK BTC": "bitcoin-news",
+  "COINDESK ETH": "ethereum-news",
+  "COINDESK SOL": "solana-news",
+  "COINDESK NFT": "nft-news",
+};
 
 interface ResponseData {
   [collectionName: string]: News[]; // Define the type of data returned for each collection
@@ -69,32 +82,18 @@ export const NewsView: FC = () => {
   }, [newsData, selectedTab]);
 
   const handleTabChange = (newTab: string, idx: number) => {
-    if (newTab != "general-news") {
-      setSelectedTab(newTab);
-      setSelectedTabIdx(idx);
-      if (
-        !selectedNewsId[newTab] &&
-        newsData[newTab] &&
-        newsData[newTab].length > 0
-      ) {
-        setSelectedNewsId((prevState) => ({
-          ...prevState,
-          [newTab]: newsData[newTab][0]._id.toString(),
-        }));
-      }
-    } else {
-      setSelectedTab("cmc");
-      setSelectedTabIdx(idx);
-      if (
-        !selectedNewsId["cmc"] &&
-        newsData["cmc"] &&
-        newsData["cmc"].length > 0
-      ) {
-        setSelectedNewsId((prevState) => ({
-          ...prevState,
-          ["cmc"]: newsData["cmc"][0]._id.toString(),
-        }));
-      }
+    const collectionKey = tagToCollectionMap[newTab];
+    setSelectedTab(collectionKey);
+    setSelectedTabIdx(idx);
+    if (
+      !selectedNewsId[collectionKey] &&
+      newsData[collectionKey] &&
+      newsData[collectionKey].length > 0
+    ) {
+      setSelectedNewsId((prevState) => ({
+        ...prevState,
+        [collectionKey]: newsData[collectionKey][0]._id.toString(),
+      }));
     }
   };
 
@@ -143,7 +142,7 @@ export const NewsView: FC = () => {
               className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${
                 i === selectedTabIdx ? "bg-gray-200" : ""
               } ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
-              onClick={() => handleTabChange(`${t.toLowerCase()}-news`, i)}
+              onClick={() => handleTabChange(t, i)}
             >
               {t}
             </button>
