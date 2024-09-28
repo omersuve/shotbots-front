@@ -19,7 +19,7 @@ import { VersionedTransaction } from "@solana/web3.js";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
-  const wallet = useWallet();
+  const { publicKey, signTransaction } = useWallet();
   const { connection } = useConnection();
 
   const [visibleGraphs, setVisibleGraphs] = useState<{
@@ -34,60 +34,63 @@ export const TrendingView: FC = () => {
   };
 
   const quoteAndSwap = async () => {
-    // Swapping SOL to USDC with input 0.1 SOL and 0.5% slippage
-    const quote = await fetch(
-      "https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000&slippageBps=50"
-    );
-
-    const quoteResponse = await quote.json();
-
-    // get serialized transactions for the swap
-    const swap = await fetch("https://quote-api.jup.ag/v6/swap", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        quoteResponse,
-        // user public key to be used for the swap
-        userPublicKey: wallet.publicKey?.toString(),
-        // auto wrap and unwrap SOL. default is true
-        wrapAndUnwrapSol: true,
-        // feeAccount is optional. Use if you want to charge a fee.  feeBps must have been passed in /quote API.
-        // feeAccount: "fee_account_public_key"
-      }),
-    });
-
-    const { swapTransaction } = await swap.json();
-
     try {
-      // deserialize the transaction
-      const swapTransactionBuf = Buffer.from(swapTransaction, "base64");
-      var transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+      if (!publicKey || !signTransaction) {
+        console.error("Wallet not connected or signTransaction not available");
+        return;
+      }
 
-      // @ts-expect-error wallet connection
-      const signedTransaction = await wallet.signTransaction(transaction);
+      // Step 1: Get the quote from the Jupiter API
+      const quoteResponse = await fetch(
+        "https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000&slippageBps=50"
+      ).then((res) => res.json());
 
-      const rawTransaction = signedTransaction.serialize();
-      const txid = await connection.sendRawTransaction(rawTransaction, {
-        skipPreflight: true,
-        maxRetries: 2,
-      });
-
-      // get the latest block hash
-      const latestBlockHash = await connection.getLatestBlockhash();
-
-      await connection.confirmTransaction(
+      // Step 2: Request serialized transaction from the backend
+      const getTransactionResponse = await fetch(
+        "/api/getSerializedTransaction",
         {
-          blockhash: latestBlockHash.blockhash,
-          lastValidBlockHeight: latestBlockHash.lastValidBlockHeight,
-          signature: txid,
-        },
-        "confirmed"
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quoteResponse,
+            userPublicKey: publicKey?.toString(),
+          }),
+        }
       );
-      console.log(`https://solscan.io/tx/${txid}`);
+
+      const { success, transaction } = await getTransactionResponse.json();
+
+      if (!success) {
+        throw new Error("Failed to create transaction");
+      }
+
+      // Step 3: Client signs the transaction
+      const transactionBuffer = Buffer.from(transaction, "base64");
+      const versionedTransaction =
+        VersionedTransaction.deserialize(transactionBuffer);
+
+      // Sign the transaction with the connected wallet
+      const signedTransaction = await signTransaction(versionedTransaction);
+
+      // Step 4: Send the signed transaction back to the server for submission
+      const submitTransactionResponse = await fetch(
+        "/api/submitSignedTransaction",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            signedTransaction: Buffer.from(
+              signedTransaction.serialize()
+            ).toString("base64"),
+          }),
+        }
+      );
+
+      const { txid } = await submitTransactionResponse.json();
+
+      console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
     } catch (error) {
-      console.error("Error signing or sending the transaction", error);
+      console.error("Error during the swap process:", error);
     }
   };
 
