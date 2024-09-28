@@ -43,6 +43,18 @@ export default async function handler(
     const rawTransaction = Buffer.from(signedTransaction, "base64");
     const transaction = VersionedTransaction.deserialize(rawTransaction);
 
+    // Simulate the transaction to get detailed error information
+    const simulationResult = await heliusConnection.simulateTransaction(
+      transaction
+    );
+    console.log("Simulation result:", simulationResult);
+
+    if (simulationResult.value.err) {
+      throw new Error(
+        `Simulation failed: ${JSON.stringify(simulationResult.value.err)}`
+      );
+    }
+
     // Send the signed transaction to the Solana network
     const txid: TransactionSignature =
       await heliusConnection.sendRawTransaction(rawTransaction, {
