@@ -33,26 +33,33 @@ export default async function handler(
       "confirmed"
     );
 
-    // Deserialize the swap transaction provided by the quote response
-    const swapTransactionBuf = Buffer.from(
-      quoteResponse.swapTransaction,
-      "base64"
-    );
-    const transaction = VersionedTransaction.deserialize(swapTransactionBuf);
+    // Make a request to Jupiter's /swap endpoint to create a serialized transaction
+    const swapResponse = await fetch("https://quote-api.jup.ag/v6/swap", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        quoteResponse,
+        userPublicKey, // User's public key to include in the swap
+        wrapAndUnwrapSol: true, // Optional: auto wrap and unwrap SOL during the swap
+      }),
+    });
 
-    // Create a public key object from the provided string
-    const userPublicKeyObj = new PublicKey(userPublicKey);
+    const swapData = await swapResponse.json();
 
-    // Add a dummy signature for the user's public key (Uint8Array of zeroes)
-    const signaturePlaceholder = new Uint8Array(64); // Length of Solana signatures is 64 bytes
-    transaction.signatures.push(signaturePlaceholder);
+    if (!swapData.swapTransaction) {
+      return res.status(500).json({
+        success: false,
+        error: "Failed to create swap transaction",
+      });
+    }
 
-    // Serialize the transaction for the client to sign
-    const serializedTransaction = transaction.serialize();
+    const swapTransaction = swapData.swapTransaction;
 
     return res.status(200).json({
       success: true,
-      transaction: Buffer.from(transaction.serialize()).toString("base64"),
+      transaction: swapTransaction,
     });
   } catch (error) {
     console.error("Error creating transaction:", error);
