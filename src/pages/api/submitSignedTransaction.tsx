@@ -1,6 +1,12 @@
 // pages/api/submitSignedTransaction.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Connection, VersionedTransaction } from "@solana/web3.js";
+import {
+  Connection,
+  VersionedTransaction,
+  TransactionSignature,
+  RpcResponseAndContext,
+  SignatureResult,
+} from "@solana/web3.js";
 
 type ResponseData = {
   success: boolean;
@@ -38,10 +44,33 @@ export default async function handler(
     const transaction = VersionedTransaction.deserialize(rawTransaction);
 
     // Send the signed transaction to the Solana network
-    const txid = await heliusConnection.sendRawTransaction(rawTransaction, {
-      skipPreflight: true,
-      maxRetries: 2,
-    });
+    const txid: TransactionSignature =
+      await heliusConnection.sendRawTransaction(rawTransaction, {
+        skipPreflight: true,
+        maxRetries: 2,
+      });
+
+    // Get the latest block hash and block height
+    const latestBlockhash = await heliusConnection.getLatestBlockhash();
+
+    // Confirm the transaction using the new `TransactionConfirmationStrategy`
+    const confirmation: RpcResponseAndContext<SignatureResult> =
+      await heliusConnection.confirmTransaction(
+        {
+          signature: txid,
+          blockhash: latestBlockhash.blockhash,
+          lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+        },
+        "confirmed"
+      );
+
+    if (confirmation.value.err) {
+      throw new Error(
+        `Transaction confirmation failed: ${JSON.stringify(
+          confirmation.value.err
+        )}`
+      );
+    }
 
     return res.status(200).json({
       success: true,
