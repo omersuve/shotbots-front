@@ -47,7 +47,7 @@ export const TrendingView: FC = () => {
         : selectedAmount;
 
       // Convert selected amount from SOL to lamports
-      const amountInLamports = selectedAmount * 1_000_000_000;
+      const amountInLamports = amountToBuy * 1_000_000_000;
 
       // Extract the address from the Dexscreener URL
       const tokenAddress = dexScreenerUrl.split("/").pop();
@@ -198,40 +198,45 @@ export const TrendingView: FC = () => {
                 </div>
               )}
               {/* Buy Token Button and Amount Selection */}
-              <div className="flex items-center justify-center gap-2 mt-4">
+              <div className="flex items-center justify-center gap-10 mt-3">
                 {/* Predefined Amount Buttons */}
-                <button
-                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                  onClick={() => setSelectedAmount(0.1)}
-                >
-                  0.1 SOL
-                </button>
-                <button
-                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                  onClick={() => setSelectedAmount(0.5)}
-                >
-                  0.5 SOL
-                </button>
-                <button
-                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                  onClick={() => setSelectedAmount(1)}
-                >
-                  1 SOL
-                </button>
-                {/* Custom Amount Input */}
-                <input
-                  type="number"
-                  min="0"
-                  step="0.1"
-                  value={customAmount}
-                  onChange={handleCustomAmountChange}
-                  className="bg-gray-100 text-sm py-1 px-2 rounded shadow w-20"
-                  placeholder="Custom"
-                />
+                <div className="flex flex-col items-center justify-center gap-2">
+                  <div className="flex items-center justify-center gap-2">
+                    <button
+                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                      onClick={() => setSelectedAmount(0.1)}
+                    >
+                      0.1
+                    </button>
+                    <button
+                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                      onClick={() => setSelectedAmount(0.5)}
+                    >
+                      0.5
+                    </button>
+                    <button
+                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                      onClick={() => setSelectedAmount(1)}
+                    >
+                      1
+                    </button>
+                  </div>
+                  {/* Custom Amount Input */}
+                  <input
+                    type="number"
+                    min="0"
+                    step="0.1"
+                    value={customAmount}
+                    onChange={handleCustomAmountChange}
+                    className="bg-gray-200 py-1 px-2 border-2 border-gray-300 rounded shadow text-center w-40"
+                    placeholder="Custom"
+                  />
+                </div>
+
                 {/* Buy Button */}
                 <button
-                  className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-black font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
-                  style={{ width: "160px" }} // Fixed width for the button
+                  className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-xs text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
+                  style={{ width: "150px", height: "60px" }} // Fixed width for the button
                   onClick={() => {
                     if (url) {
                       quoteAndSwap(url);
@@ -240,7 +245,7 @@ export const TrendingView: FC = () => {
                     }
                   }}
                 >
-                  Buy {selectedAmount} SOL Token
+                  Buy {selectedAmount} SOL {token}
                 </button>
               </div>
             </li>
