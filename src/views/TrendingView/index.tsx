@@ -207,7 +207,8 @@ export const TrendingView: FC = () => {
                   1 SOL
                 </button>
                 <button
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:from-yellow-500 hover:to-yellow-700"
+                  className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-black font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
+                  style={{ width: "160px" }} // Fixed width for the button
                   onClick={() => {
                     if (url) {
                       quoteAndSwap(url);
