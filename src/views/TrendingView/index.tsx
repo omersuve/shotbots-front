@@ -25,6 +25,7 @@ export const TrendingView: FC = () => {
     [key: number]: boolean;
   }>({});
   const [selectedAmount, setSelectedAmount] = useState<number>(0.1); // Default to 0.1 SOL
+  const [customAmount, setCustomAmount] = useState<string>(""); // Input field for custom amount
 
   const toggleGraphVisibility = (index: number) => {
     setVisibleGraphs((prevState) => ({
@@ -39,6 +40,11 @@ export const TrendingView: FC = () => {
         console.error("Wallet not connected or signTransaction not available");
         return;
       }
+
+      // Determine the amount to use for the transaction
+      const amountToBuy = customAmount
+        ? parseFloat(customAmount)
+        : selectedAmount;
 
       // Convert selected amount from SOL to lamports
       const amountInLamports = selectedAmount * 1_000_000_000;
@@ -119,6 +125,11 @@ export const TrendingView: FC = () => {
     };
   };
 
+  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomAmount(e.target.value);
+    setSelectedAmount(parseFloat(e.target.value) || 0);
+  };
+
   return (
     <div className={styles.container}>
       <ul className={styles.messageList}>
@@ -188,6 +199,7 @@ export const TrendingView: FC = () => {
               )}
               {/* Buy Token Button and Amount Selection */}
               <div className="flex items-center justify-center gap-2 mt-4">
+                {/* Predefined Amount Buttons */}
                 <button
                   className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
                   onClick={() => setSelectedAmount(0.1)}
@@ -206,6 +218,17 @@ export const TrendingView: FC = () => {
                 >
                   1 SOL
                 </button>
+                {/* Custom Amount Input */}
+                <input
+                  type="number"
+                  min="0"
+                  step="0.1"
+                  value={customAmount}
+                  onChange={handleCustomAmountChange}
+                  className="bg-gray-100 text-sm py-1 px-2 rounded shadow w-20"
+                  placeholder="Custom"
+                />
+                {/* Buy Button */}
                 <button
                   className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-black font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
                   style={{ width: "160px" }} // Fixed width for the button
