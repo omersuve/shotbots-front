@@ -24,8 +24,7 @@ export const TrendingView: FC = () => {
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
   }>({});
-  const [selectedAmount, setSelectedAmount] = useState<number>(0.1); // Default to 0.1 SOL
-  const [customAmount, setCustomAmount] = useState<string>(""); // Input field for custom amount
+  const [amounts, setAmounts] = useState<{ [key: number]: number }>({}); // Track the amount for each item
 
   const toggleGraphVisibility = (index: number) => {
     setVisibleGraphs((prevState) => ({
@@ -34,20 +33,34 @@ export const TrendingView: FC = () => {
     }));
   };
 
-  const quoteAndSwap = async (dexScreenerUrl: string) => {
+  const handlePredefinedAmountChange = (index: number, amount: number) => {
+    setAmounts((prevState) => ({
+      ...prevState,
+      [index]: amount, // Update amount for the specific item
+    }));
+  };
+
+  const handleCustomAmountChange = (
+    index: number,
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    const value = parseFloat(event.target.value);
+    if (!isNaN(value)) {
+      setAmounts((prevState) => ({
+        ...prevState,
+        [index]: value, // Update custom amount for the specific item
+      }));
+    }
+  };
+
+  const quoteAndSwap = async (index: number, dexScreenerUrl: string) => {
     try {
       if (!publicKey || !signTransaction) {
         console.error("Wallet not connected or signTransaction not available");
         return;
       }
 
-      // Determine the amount to use for the transaction
-      const amountToBuy = customAmount
-        ? parseFloat(customAmount)
-        : selectedAmount;
-
-      // Convert selected amount from SOL to lamports
-      const amountInLamports = amountToBuy * 1_000_000_000;
+      const amount = amounts[index] || 0; // Get the selected amount for the specific item
 
       // Extract the address from the Dexscreener URL
       const tokenAddress = dexScreenerUrl.split("/").pop();
@@ -57,7 +70,9 @@ export const TrendingView: FC = () => {
 
       // Step 1: Get the quote from the Jupiter API
       const quoteResponse = await fetch(
-        `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${amountInLamports}&slippageBps=200`
+        `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
+          amount * 1e9
+        }&slippageBps=200`
       ).then((res) => res.json());
 
       // Step 2: Request serialized transaction from the backend
@@ -125,17 +140,13 @@ export const TrendingView: FC = () => {
     };
   };
 
-  const handleCustomAmountChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setCustomAmount(e.target.value);
-    setSelectedAmount(parseFloat(e.target.value) || 0);
-  };
-
   return (
     <div className={styles.container}>
       <ul className={styles.messageList}>
         {messages.slice().map((message, index) => {
           const { url, token, telegram } = extractInfo(message.text);
-          const scores = message.scores; // Example scores, replace with real scores
+          const scores = message.scores;
+          const selectedAmount = amounts[index] || 0.1; // Default amount for each item
           return (
             <li key={index} className={styles.messageItem}>
               <div className={styles.messageDate}>
@@ -204,19 +215,19 @@ export const TrendingView: FC = () => {
                   <div className="flex items-center justify-center gap-2">
                     <button
                       className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => setSelectedAmount(0.1)}
+                      onClick={() => handlePredefinedAmountChange(index, 0.1)}
                     >
                       0.1
                     </button>
                     <button
                       className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => setSelectedAmount(0.5)}
+                      onClick={() => handlePredefinedAmountChange(index, 0.5)}
                     >
                       0.5
                     </button>
                     <button
                       className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => setSelectedAmount(1)}
+                      onClick={() => handlePredefinedAmountChange(index, 1)}
                     >
                       1
                     </button>
@@ -226,8 +237,8 @@ export const TrendingView: FC = () => {
                     type="number"
                     min="0"
                     step="0.1"
-                    value={customAmount}
-                    onChange={handleCustomAmountChange}
+                    value={selectedAmount}
+                    onChange={(e) => handleCustomAmountChange(index, e)}
                     className="bg-gray-200 py-1 px-2 border-2 border-gray-300 rounded shadow text-center w-40"
                     placeholder="Custom"
                   />
@@ -239,7 +250,7 @@ export const TrendingView: FC = () => {
                   style={{ width: "150px", height: "60px" }} // Fixed width for the button
                   onClick={() => {
                     if (url) {
-                      quoteAndSwap(url);
+                      quoteAndSwap(index, url);
                     } else {
                       console.error("Invalid URL. Cannot perform swap.");
                     }
