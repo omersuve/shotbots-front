@@ -187,29 +187,27 @@ export const TrendingView: FC = () => {
                 </div>
               )}
               {/* Buy Token Button and Amount Selection */}
-              <div className="flex flex-col items-center justify-center gap-1 my-2">
-                <div className="flex gap-2">
-                  <button
-                    className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                    onClick={() => setSelectedAmount(0.1)}
-                  >
-                    0.1 SOL
-                  </button>
-                  <button
-                    className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                    onClick={() => setSelectedAmount(0.5)}
-                  >
-                    0.5 SOL
-                  </button>
-                  <button
-                    className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
-                    onClick={() => setSelectedAmount(1)}
-                  >
-                    1 SOL
-                  </button>
-                </div>
+              <div className="flex items-center justify-center gap-2 mt-4">
                 <button
-                  className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:from-yellow-500 hover:to-yellow-700 mt-2"
+                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
+                  onClick={() => setSelectedAmount(0.1)}
+                >
+                  0.1 SOL
+                </button>
+                <button
+                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
+                  onClick={() => setSelectedAmount(0.5)}
+                >
+                  0.5 SOL
+                </button>
+                <button
+                  className="bg-gray-200 text-sm py-1 px-2 rounded shadow"
+                  onClick={() => setSelectedAmount(1)}
+                >
+                  1 SOL
+                </button>
+                <button
+                  className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold text-sm py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:from-yellow-500 hover:to-yellow-700"
                   onClick={() => {
                     if (url) {
                       quoteAndSwap(url);
