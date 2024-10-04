@@ -14,17 +14,17 @@ import {
   Legend,
 } from "chart.js";
 import { formatLargeNumber } from "../../utils/formatting";
-import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import { useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
   const { publicKey, signTransaction } = useWallet();
-  const { connection } = useConnection();
 
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
   }>({});
+  const [selectedAmount, setSelectedAmount] = useState<number>(0.1); // Default to 0.1 SOL
 
   const toggleGraphVisibility = (index: number) => {
     setVisibleGraphs((prevState) => ({
@@ -33,16 +33,25 @@ export const TrendingView: FC = () => {
     }));
   };
 
-  const quoteAndSwap = async () => {
+  const quoteAndSwap = async (dexScreenerUrl: string) => {
     try {
       if (!publicKey || !signTransaction) {
         console.error("Wallet not connected or signTransaction not available");
         return;
       }
 
+      // Convert selected amount from SOL to lamports
+      const amountInLamports = selectedAmount * 1_000_000_000;
+
+      // Extract the address from the Dexscreener URL
+      const tokenAddress = dexScreenerUrl.split("/").pop();
+      if (!tokenAddress) {
+        throw new Error("Invalid Dexscreener URL");
+      }
+
       // Step 1: Get the quote from the Jupiter API
       const quoteResponse = await fetch(
-        "https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=EPjFWdd5AufqSSqeM2qN1xzybapC8G4wEGGkZwyTDt1v&amount=10000&slippageBps=50"
+        `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${amountInLamports}&slippageBps=200`
       ).then((res) => res.json());
 
       // Step 2: Request serialized transaction from the backend
@@ -66,8 +75,12 @@ export const TrendingView: FC = () => {
 
       // Step 3: Client signs the transaction
       const transactionBuffer = Buffer.from(transaction, "base64");
-      const versionedTransaction =
-        VersionedTransaction.deserialize(transactionBuffer);
+      const transactionUint8Array = new Uint8Array(transactionBuffer);
+
+      // Deserialize the transaction using the converted Uint8Array
+      const versionedTransaction = VersionedTransaction.deserialize(
+        transactionUint8Array
+      );
 
       // Sign the transaction with the connected wallet
       const signedTransaction = await signTransaction(versionedTransaction);
@@ -173,8 +186,38 @@ export const TrendingView: FC = () => {
                   <GraphComponent scores={scores} startDate={message.date} />
                 </div>
               )}
-              <button className="bg-yellow-200" onClick={quoteAndSwap}>
-                Buy Token
+              {/* Buy Token Button and Amount Selection */}
+              <div className="flex gap-2 my-4">
+                <button
+                  className="bg-gray-200 py-1 px-3 rounded shadow"
+                  onClick={() => setSelectedAmount(0.1)}
+                >
+                  0.1 SOL
+                </button>
+                <button
+                  className="bg-gray-200 py-1 px-3 rounded shadow"
+                  onClick={() => setSelectedAmount(0.5)}
+                >
+                  0.5 SOL
+                </button>
+                <button
+                  className="bg-gray-200 py-1 px-3 rounded shadow"
+                  onClick={() => setSelectedAmount(1)}
+                >
+                  1 SOL
+                </button>
+              </div>
+              <button
+                className="bg-gradient-to-r from-yellow-400 to-yellow-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 hover:from-yellow-500 hover:to-yellow-700"
+                onClick={() => {
+                  if (url) {
+                    quoteAndSwap(url);
+                  } else {
+                    console.error("Invalid URL. Cannot perform swap.");
+                  }
+                }}
+              >
+                Buy {selectedAmount} SOL Token
               </button>
             </li>
           );
