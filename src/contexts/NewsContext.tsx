@@ -91,13 +91,12 @@ export const NewsProvider: FC<NewsProviderProps> = ({ children }) => {
     Object.entries(newsData).forEach(([collection, newsArr]) => {
       newsArr.forEach((n) => {
         if (!n.isVoteEnded) {
-          const now = new Date();
-          let endTime = new Date();
-          endTime.setUTCHours(20, 0, 0, 0);
+          // Parse the timestamp to create a Date object
+          const startTime = new Date(n.timestamp);
 
-          if (now >= endTime) {
-            endTime.setUTCDate(endTime.getUTCDate() + 1);
-          }
+          // Add 6 hours to the start time to get the voting end time
+          const endTime = new Date(startTime.getTime() + 6 * 60 * 60 * 1000);
+
           const timer = setInterval(() => {
             const currentTime = new Date().getTime();
             const distance = endTime.getTime() - currentTime;

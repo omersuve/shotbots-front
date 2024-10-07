@@ -193,7 +193,8 @@ export const NewsView: FC = () => {
                     </div>
 
                     {/* Show voting results if voting has ended */}
-                    {n.isVoteEnded ? (
+                    {n.isVoteEnded ||
+                    timers[n._id.toString()] === "Voting ended" ? (
                       <VotingResultsTable
                         votes={{ ...defaultVoteValues, ...n.votes }}
                         userVote={votesOfNews[n._id.toString()] || null}
