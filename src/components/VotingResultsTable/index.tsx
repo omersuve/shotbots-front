@@ -161,7 +161,7 @@ const VotingResultsTable: FC<VotingResultsTableProps> = ({
                 🎉 Congratulations, you win!
               </div>
             ) : (
-              <div style={{ color: "red" }}>You didn't win this time.</div>
+              <div style={{ color: "red" }}>You did not win this time.</div>
             )}
           </div>
         )}
