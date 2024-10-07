@@ -12,6 +12,7 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
+  console.log("Received request with body:", req.body);
   if (req.method !== "POST") {
     return res
       .status(405)
@@ -19,18 +20,24 @@ export default async function handler(
   }
 
   const { quoteResponse, userPublicKey } = req.body;
+  console.log(
+    "Parameters received - quoteResponse:",
+    quoteResponse,
+    "userPublicKey:",
+    userPublicKey
+  );
 
   if (!quoteResponse || !userPublicKey) {
+    console.error("Missing parameters:", { quoteResponse, userPublicKey });
     return res
       .status(400)
       .json({ success: false, error: "Missing parameters" });
   }
 
   try {
-    const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
-    const heliusConnection = new Connection(
-      `https://rpc.helius.xyz?api-key=${HELIUS_API_KEY}`,
-      "confirmed"
+    console.log(
+      "Attempting to create transaction with quoteResponse:",
+      quoteResponse
     );
 
     // Make a request to Jupiter's /swap endpoint to create a serialized transaction
@@ -47,8 +54,10 @@ export default async function handler(
     });
 
     const swapData = await swapResponse.json();
+    console.log("Response from Jupiter API:", swapData);
 
     if (!swapData.swapTransaction) {
+      console.error("No swap transaction received:", swapData);
       return res.status(500).json({
         success: false,
         error: "Failed to create swap transaction",
