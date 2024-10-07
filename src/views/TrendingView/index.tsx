@@ -16,6 +16,7 @@ import {
 import { formatLargeNumber } from "../../utils/formatting";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
+import { toast } from "react-toastify";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
@@ -61,6 +62,8 @@ export const TrendingView: FC = () => {
       }
 
       const amount = amounts[index] || 0; // Get the selected amount for the specific item
+
+      toast.info("Transaction is being processed...");
 
       // Extract the address from the Dexscreener URL
       const tokenAddress = dexScreenerUrl.split("/").pop();
@@ -122,9 +125,13 @@ export const TrendingView: FC = () => {
 
       const { txid } = await submitTransactionResponse.json();
 
+      toast.success("Transaction successful!");
+
       console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
     } catch (error) {
       console.error("Error during the swap process:", error);
+
+      toast.error("Transaction failed!");
     }
   };
 
