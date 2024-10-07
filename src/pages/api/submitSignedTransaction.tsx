@@ -89,7 +89,7 @@ export default async function handler(
           blockhash: latestBlockhash.blockhash,
           lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
         },
-        "confirmed"
+        "processed"
       );
     console.log(
       `Transaction confirmed at: ${new Date(
