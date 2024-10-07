@@ -106,7 +106,7 @@ export default async function handler(
     }
 
     const endTime = Date.now();
-    console.log(`Total execution time: ${endTime - startTime}ms`);
+    console.log(`Total execution time: ${endTime - startTime} ms`);
 
     return res.status(200).json({
       success: true,
