@@ -123,14 +123,20 @@ export const TrendingView: FC = () => {
         }
       );
 
-      const { txid } = await submitTransactionResponse.json();
-
-      toast.success("Transaction successful!");
-
-      console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+      try {
+        const { txid } = await submitTransactionResponse.json();
+        toast.success("Transaction successful!");
+        console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+      } catch (parseError) {
+        console.error("Failed to parse response as JSON:", parseError);
+        const textResponse = await submitTransactionResponse.text();
+        console.error("Raw response:", textResponse);
+        throw new Error(
+          "Failed to submit transaction due to invalid response format."
+        );
+      }
     } catch (error) {
       console.error("Error during the swap process:", error);
-
       toast.error("Transaction failed!");
     }
   };

@@ -37,7 +37,10 @@ export default async function handler(
     const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
     const heliusConnection = new Connection(
       `https://rpc.helius.xyz?api-key=${HELIUS_API_KEY}`,
-      "confirmed"
+      {
+        commitment: "confirmed",
+        confirmTransactionInitialTimeout: 10 * 1000, // 10 seconds initial timeout
+      }
     );
 
     console.log(
