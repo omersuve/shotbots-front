@@ -2,10 +2,11 @@ import React, { FC, useEffect, useRef, useState } from "react";
 import styles from "./index.module.css";
 import NewsBody from "../../components/NewsBody";
 import MyLoader from "../../components/MyLoader";
+import CustomSlider from "../../components/CustomSlider";
+import VotingResultsTable from "../../components/VotingResultsTable";
 import { useWallet } from "@solana/wallet-adapter-react";
-import { News, SendVoteBody } from "../../types";
+import { SendVoteBody, MarketSentiment, defaultVoteValues } from "../../types";
 import parse from "html-react-parser";
-import Slider from "@mui/material/Slider";
 import Box from "@mui/material/Box";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faArrowRight } from "@fortawesome/free-solid-svg-icons";
@@ -14,7 +15,7 @@ import { formatDate, handleSendVote } from "../../utils";
 import { useNews } from "../../contexts/NewsContext";
 
 const tags = [
-  " COINMARKETCAP ",
+  "COINMARKETCAP",
   "COINDESK BTC",
   "COINDESK ETH",
   "COINDESK SOL",
@@ -22,16 +23,12 @@ const tags = [
 ];
 
 const tagToCollectionMap: { [key: string]: string } = {
-  " COINMARKETCAP ": "cmc",
+  COINMARKETCAP: "cmc",
   "COINDESK BTC": "bitcoin-news",
   "COINDESK ETH": "ethereum-news",
   "COINDESK SOL": "solana-news",
   "COINDESK NFT": "nft-news",
 };
-
-interface ResponseData {
-  [collectionName: string]: News[]; // Define the type of data returned for each collection
-}
 
 export const NewsView: FC = () => {
   const { newsData, loading, timers } = useNews();
@@ -42,7 +39,9 @@ export const NewsView: FC = () => {
     [key: string]: string;
   }>({});
   const [votedNews, setVotedNews] = useState<string[]>([]);
-  const [votesOfNews, setVotesOfNews] = useState<{ [key: string]: number }>({});
+  const [votesOfNews, setVotesOfNews] = useState<{
+    [key: string]: MarketSentiment;
+  }>({});
 
   const news = newsData[selectedTab] || [];
 
@@ -70,6 +69,8 @@ export const NewsView: FC = () => {
 
     // Call the function initially and on tab change
     updatePosition();
+
+    console.log("votesOfNews", votesOfNews);
   }, [selectedNewsId, selectedTab, news]);
 
   useEffect(() => {
@@ -104,7 +105,7 @@ export const NewsView: FC = () => {
         headers: {
           "Content-Type": "application/json", // Specify JSON content type
         },
-        body: JSON.stringify({ pk: publicKey, type: "news" }), // Convert collections array to JSON string and pass in body
+        body: JSON.stringify({ pk: publicKey }), // Convert collections array to JSON string and pass in body
       };
       const response = await fetch("/api/votes", requestOptionsVotes);
       return await response.json();
@@ -123,7 +124,7 @@ export const NewsView: FC = () => {
     }
   }, [publicKey]);
 
-  function submitVote(newsId: string, vote: number) {
+  function submitVote(newsId: string, vote: MarketSentiment) {
     setVotedNews((prevState) => [...prevState, newsId]);
     setVotesOfNews((prev) => ({
       ...prev,
@@ -191,78 +192,78 @@ export const NewsView: FC = () => {
                       </h3>
                     </div>
 
-                    <div className="flex-1 flex items-center justify-center content-center mt-2 mx-1 min-h-8">
-                      {publicKey &&
-                        n._id.toString() === selectedNewsId[selectedTab] &&
-                        !n.isVoteEnded && (
-                          <>
-                            <Box
-                              sx={{
-                                display: "flex",
-                                flex: 3,
-                                justifyContent: "center",
-                                textAlign: "center",
-                              }}
-                            >
-                              <Slider
-                                key={`slider-${n._id.toString()}`}
-                                aria-label="Vote"
-                                defaultValue={
-                                  votesOfNews[n._id.toString()] ?? 0
-                                }
-                                valueLabelDisplay="auto"
-                                shiftStep={1}
-                                onChange={(event, newValue) => {
-                                  setVotesOfNews((prev) => ({
-                                    ...prev,
-                                    [n._id.toString()]: newValue as number,
-                                  }));
+                    {/* Show voting results if voting has ended */}
+                    {n.isVoteEnded ? (
+                      <VotingResultsTable
+                        votes={{ ...defaultVoteValues, ...n.votes }}
+                        userVote={votesOfNews[n._id.toString()] || null}
+                      />
+                    ) : (
+                      <div className="flex-1 flex items-center justify-center content-center mt-2 mx-1 min-h-8">
+                        {publicKey &&
+                          n._id.toString() === selectedNewsId[selectedTab] &&
+                          !n.isVoteEnded && (
+                            <>
+                              <Box
+                                sx={{
+                                  display: "flex",
+                                  flex: 3,
+                                  justifyContent: "center",
+                                  textAlign: "center",
                                 }}
-                                step={1}
-                                min={-3}
-                                max={3}
-                                disabled={votedNews.includes(n._id.toString())}
-                                color={`${
-                                  votesOfNews[n._id.toString()] > 1
-                                    ? "success"
-                                    : votesOfNews[n._id.toString()] < -1
-                                    ? "error"
-                                    : "info"
-                                }`}
-                              />
-                            </Box>
-                            <p className="ml-8 w-8 fs-5 font-bold">
-                              {votesOfNews[n._id.toString()] ?? 0}
-                            </p>
-                            <div className="flex-1 items-center">
-                              <button
-                                className={`bg-gray-200 ${
-                                  !votedNews.includes(n._id.toString())
-                                    ? "hover:bg-gray-300 active:bg-gray-400"
-                                    : ""
-                                }  w-20 rounded px-2 py-1 ml-4`}
-                                onClick={() => {
-                                  handleSendVote(
-                                    n._id.toString(),
-                                    votesOfNews[n._id.toString()],
-                                    selectedTab,
-                                    publicKey?.toString()
-                                  ).then((v) => {
-                                    if (v != undefined)
-                                      submitVote(n._id.toString(), v);
-                                  });
-                                }}
-                                disabled={votedNews.includes(n._id.toString())}
                               >
-                                {" "}
-                                {votedNews.includes(n._id.toString())
-                                  ? "Submitted"
-                                  : "Submit"}
-                              </button>
-                            </div>
-                          </>
-                        )}
-                    </div>
+                                <CustomSlider
+                                  value={
+                                    votesOfNews[n._id.toString()] ??
+                                    MarketSentiment.NEUTRAL
+                                  }
+                                  onChange={(newValue) => {
+                                    setVotesOfNews((prev) => ({
+                                      ...prev,
+                                      [n._id.toString()]: newValue,
+                                    }));
+                                  }}
+                                  disabled={votedNews.includes(
+                                    n._id.toString()
+                                  )}
+                                />
+                              </Box>
+                              <p className="ml-8 w-8 fs-5 font-bold">
+                                {votesOfNews[n._id.toString()] ??
+                                  MarketSentiment.NEUTRAL}
+                              </p>
+                              <div className="flex-1 items-center">
+                                <button
+                                  className={`bg-gray-200 ${
+                                    !votedNews.includes(n._id.toString())
+                                      ? "hover:bg-gray-300 active:bg-gray-400"
+                                      : ""
+                                  }  w-20 rounded px-2 py-1 ml-4`}
+                                  onClick={() => {
+                                    handleSendVote(
+                                      n._id.toString(),
+                                      votesOfNews[n._id.toString()],
+                                      selectedTab,
+                                      publicKey?.toString()
+                                    ).then((v) => {
+                                      if (v != undefined)
+                                        submitVote(n._id.toString(), v);
+                                    });
+                                  }}
+                                  disabled={votedNews.includes(
+                                    n._id.toString()
+                                  )}
+                                >
+                                  {" "}
+                                  {votedNews.includes(n._id.toString())
+                                    ? "Submitted"
+                                    : "Submit"}
+                                </button>
+                              </div>
+                            </>
+                          )}
+                      </div>
+                    )}
                     <div className="flex-1 mt-1 flex justify-between items-end">
                       <div className="text-sm text-gray-500 flex-1">
                         {n.isVoteEnded
