@@ -61,7 +61,7 @@ export const TrendingView: FC = () => {
         return;
       }
 
-      const amount = amounts[index] || 0; // Get the selected amount for the specific item
+      const amount = amounts[index] || 0.1; // Get the selected amount for the specific item
 
       toast.info("Transaction is being processed...");
 
@@ -242,7 +242,7 @@ export const TrendingView: FC = () => {
                   {/* Custom Amount Input */}
                   <input
                     type="number"
-                    min="0"
+                    min="0.1"
                     step="0.1"
                     value={selectedAmount}
                     onChange={(e) => handleCustomAmountChange(index, e)}
