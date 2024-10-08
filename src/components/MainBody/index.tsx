@@ -224,11 +224,11 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
               </div>
             </Typist>
             <Link href="/dashboard" passHref>
-              <div
+              <button
                 className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}
               >
                 Take a Shot!
-              </div>
+              </button>
             </Link>
             {/* Display user's referral code with a copy button */}
             {userReferralCode && (
