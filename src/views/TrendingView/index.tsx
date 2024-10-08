@@ -75,7 +75,7 @@ export const TrendingView: FC = () => {
       const quoteResponse = await fetch(
         `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
           amount * 1e9
-        }&slippageBps=200`
+        }&slippageBps=300`
       ).then((res) => res.json());
 
       // Step 2: Request serialized transaction from the backend
@@ -110,29 +110,64 @@ export const TrendingView: FC = () => {
       const signedTransaction = await signTransaction(versionedTransaction);
 
       // Step 4: Send the signed transaction back to the server for submission
-      const submitTransactionResponse = await fetch(
-        "/api/submitSignedTransaction",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            signedTransaction: Buffer.from(
-              signedTransaction.serialize()
-            ).toString("base64"),
-          }),
-        }
-      );
-
+      const submitTransactionResponse = await fetch("/api/sendTransaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          signedTransaction: Buffer.from(
+            signedTransaction.serialize()
+          ).toString("base64"),
+        }),
+      });
+      // Handle the submission response
+      let txid;
       try {
-        const { txid } = await submitTransactionResponse.json();
-        toast.success("Transaction successful!");
-        console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+        const submitResponse = await submitTransactionResponse.json();
+        txid = submitResponse.txid;
+
+        if (!txid) {
+          throw new Error("Failed to submit transaction");
+        }
       } catch (parseError) {
         console.error("Failed to parse response as JSON:", parseError);
         const textResponse = await submitTransactionResponse.text();
         console.error("Raw response:", textResponse);
         throw new Error(
           "Failed to submit transaction due to invalid response format."
+        );
+      }
+
+      // Step 5: Request the backend to confirm the transaction
+      const confirmTransactionResponse = await fetch(
+        "/api/confirmTransaction",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            txid,
+          }),
+        }
+      );
+
+      // Handle the confirmation response
+      try {
+        const { success } = await confirmTransactionResponse.json();
+
+        if (success) {
+          toast.success("Transaction successful!");
+          console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+        } else {
+          throw new Error("Transaction confirmation failed.");
+        }
+      } catch (parseError) {
+        console.error(
+          "Failed to parse confirmation response as JSON:",
+          parseError
+        );
+        const textResponse = await confirmTransactionResponse.text();
+        console.error("Raw confirmation response:", textResponse);
+        throw new Error(
+          "Failed to confirm transaction due to invalid response format."
         );
       }
     } catch (error) {
