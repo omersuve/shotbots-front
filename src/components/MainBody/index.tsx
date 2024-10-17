@@ -29,6 +29,10 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
   const router = useRouter();
   const { publicKey, connected } = useWallet();
 
+  const navigateToDashboard = () => {
+    router.push("/dashboard");
+  };
+
   // Set referral code if present in URL query and auto-submit after a delay
   useEffect(() => {
     const { ref } = router.query;
@@ -223,13 +227,12 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
                 </p>
               </div>
             </Typist>
-            <Link href="/dashboard" passHref>
-              <button
-                className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}
-              >
-                Take a Shot!
-              </button>
-            </Link>
+            <button
+              className={`${styles["stay-tuned"]} btn border-black text-black hover:bg-yellow-900`}
+              onClick={navigateToDashboard}
+            >
+              Take a Shot!
+            </button>
             {/* Display user's referral code with a copy button */}
             {userReferralCode && (
               <div className="mt-5">
