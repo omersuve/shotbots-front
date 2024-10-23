@@ -21,7 +21,7 @@ export const Jumbotron = (props: any) => {
   );
 };
 
-const MainBody = ({ gradient, message, message2, icons }: any) => {
+const MainBody = ({ gradient, message, message2 }: any) => {
   const [referralCode, setReferralCode] = useState<string>("");
   const [userReferralCode, setUserReferralCode] = useState<string | null>(null); // Store the user's referral code
   const [isReferred, setIsReferred] = useState<boolean>(false);
@@ -250,20 +250,18 @@ const MainBody = ({ gradient, message, message2, icons }: any) => {
           </>
         )}
 
-        <div className="p-4 mt-2 opacity-75 justify-items-center text-center items-center">
-          {icons.map(
-            (icon: { url: string | undefined; image: string }, index: any) => (
-              <Link
-                href={icon.url!}
-                passHref={true}
-                key={`social-icon-${index}`}
-                target="_blank"
-              >
-                <i className={`fab ${icon.image}  fa-2x socialicons`} />
-              </Link>
-            )
-          )}
+        <div className="flex items-center justify-center p-4 mt-2 opacity-75">
+          <Link href="https://x.com/theshotbots" passHref target="_blank">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 512 512"
+              className={styles["x-icon"]}
+            >
+              <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172.4L272.9 180.9 389.2 48zM364.4 421.8h39.1L151.1 88h-42L364.4 421.8z" />
+            </svg>
+          </Link>
         </div>
+
         <p
           className={`${styles["rights"]} md:absolute md:right-10 md:bottom-10 text-center fs-6`}
         >

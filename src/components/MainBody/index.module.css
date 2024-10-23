@@ -17,6 +17,17 @@
   opacity: 75%;
 }
 
+.x-icon {
+  width: 40px;
+  height: 40px;
+  fill: black;
+  transition: transform 0.6s ease; /* Smooth transition */
+}
+
+.x-icon:hover {
+  transform: scale(1.4); /* Scale up to 1.5 times its original size */
+}
+
 .stay-tuned {
   font-family: "jersey", serif;
   border-width: 3px;
