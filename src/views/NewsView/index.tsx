@@ -14,20 +14,13 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { formatDate, handleSendVote } from "../../utils";
 import { useNews } from "../../contexts/NewsContext";
 
-const tags = [
-  "COINMARKETCAP",
-  "COINDESK BTC",
-  "COINDESK ETH",
-  "COINDESK SOL",
-  "COINDESK NFT",
-];
+const tags = ["COINMARKETCAP", "COINDESK BTC", "COINDESK ETH", "COINDESK SOL"];
 
 const tagToCollectionMap: { [key: string]: string } = {
   COINMARKETCAP: "cmc",
   "COINDESK BTC": "bitcoin-news",
   "COINDESK ETH": "ethereum-news",
   "COINDESK SOL": "solana-news",
-  "COINDESK NFT": "nft-news",
 };
 
 export const NewsView: FC = () => {

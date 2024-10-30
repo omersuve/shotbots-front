@@ -36,7 +36,6 @@ export const NewsProvider: FC<NewsProviderProps> = ({ children }) => {
         "bitcoin-news",
         "ethereum-news",
         "solana-news",
-        "nft-news",
         "cmc",
       ];
       const requestOptions = {
