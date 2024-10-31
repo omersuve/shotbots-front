@@ -30,7 +30,6 @@
     "daisyui": "^1.16.2",
     "hamburger-react": "^2.5.1",
     "html-react-parser": "^5.1.10",
-    "http-proxy-middleware": "^3.0.0",
     "i": "^0.3.7",
     "lodash.orderby": "^4.6.0",
     "mongodb": "^6.5.0",
