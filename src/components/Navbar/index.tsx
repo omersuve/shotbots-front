@@ -296,18 +296,6 @@ const Navbar: React.FC = () => {
             </li>
             <li className="flex items-center h-full">
               <Link
-                href="/twitter"
-                className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out fs-3 fw-bold ${
-                  router.pathname === "/twitter"
-                    ? "border-b-2 border-blue-500"
-                    : ""
-                }`}
-              >
-                X
-              </Link>
-            </li>
-            <li className="flex items-center h-full">
-              <Link
                 href="/news"
                 className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
                   router.pathname === "/news"
@@ -390,19 +378,6 @@ const Navbar: React.FC = () => {
                   onClick={handleLinkClick}
                 >
                   Home
-                </Link>
-              </li>
-              <li>
-                <Link
-                  href="/twitter"
-                  className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out fs-3 fw-bold ${
-                    router.pathname === "/twitter"
-                      ? "border-b-2 border-blue-500"
-                      : ""
-                  }`}
-                  onClick={handleLinkClick}
-                >
-                  X
                 </Link>
               </li>
               <li>
