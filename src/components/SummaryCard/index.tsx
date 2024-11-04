@@ -2,7 +2,7 @@ import React from "react";
 import styles from "./index.module.css";
 
 interface SummaryCardProps {
-  tag: "Bitcoin" | "Solana" | "NFTs" | "Ethereum";
+  tag: "Bitcoin" | "Solana" | "Memecoins" | "NFTs";
   position: { top: number; left: number };
 }
 
@@ -10,8 +10,8 @@ const SummaryCard: React.FC<SummaryCardProps> = ({ tag, position }) => {
   const getSummaryContent = (tag: string) => {
     switch (tag) {
       case "Bitcoin":
-      case "Ethereum":
       case "Solana":
+      case "Memecoins":
       case "NFTs":
         return "Deeper analysis soon...";
       default:
