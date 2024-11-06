@@ -9,7 +9,7 @@ import { useScores } from "../../contexts/ScoresContext";
 export const HomeView: FC = () => {
   const { scoresHistory, loading } = useScores();
   const [selectedTag, setSelectedTag] = useState<
-    "Bitcoin" | "Solana" | "Memecoins" | "NFTs" | null
+    "Bitcoin" | "Solana" | "Memecoin" | "NFT" | null
   >(null);
   const [position, setPosition] = useState<{ top: number; left: number }>({
     top: 0,
@@ -34,7 +34,7 @@ export const HomeView: FC = () => {
   }, [summaryRef]);
 
   const handleCardClick = (
-    tag: "Bitcoin" | "Solana" | "Memecoins" | "NFTs",
+    tag: "Bitcoin" | "Solana" | "Memecoin" | "NFT",
     event: React.MouseEvent
   ) => {
     setSelectedTag(tag);
@@ -89,7 +89,7 @@ export const HomeView: FC = () => {
                     ? 0
                     : scoresHistory["memecoins-day-scores"][0].day_score * 10
                 }
-                tag={"Memecoins"}
+                tag={"Memecoin"}
                 onClick={handleCardClick}
               />
               <ScoreCard
@@ -100,7 +100,7 @@ export const HomeView: FC = () => {
                     ? 0
                     : scoresHistory["nft-day-scores"][0].day_score * 10
                 }
-                tag={"NFTs"}
+                tag={"NFT"}
                 onClick={handleCardClick}
               />
             </div>

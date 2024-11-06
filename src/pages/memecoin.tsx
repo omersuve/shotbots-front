@@ -9,7 +9,7 @@ import {
 import TabMeme from "../components/TabMeme";
 
 const Memecoin: NextPage = (props) => {
-  const [selectedTab, setSelectedTab] = useState("trending");
+  const [selectedTab, setSelectedTab] = useState("memecoin");
 
   return (
     <div>
@@ -18,7 +18,7 @@ const Memecoin: NextPage = (props) => {
       </Head>
       <TabMeme selectedTab={selectedTab} setSelectedTab={setSelectedTab} />
       {selectedTab === "memecoin" && <MemecoinView />}
-      {selectedTab === "trending" && <TrendingView />}
+      {/* {selectedTab === "trending" && <TrendingView />} */}
       {selectedTab === "top-market-cap" && <TopMarketCapMemecoinsView />}
     </div>
   );

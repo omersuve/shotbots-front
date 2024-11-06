@@ -17,10 +17,12 @@ import { formatLargeNumber } from "../../utils/formatting";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 import { toast } from "react-toastify";
+import Image from "next/image";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
   const { publicKey, signTransaction } = useWallet();
+  const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
 
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
@@ -32,6 +34,10 @@ export const TrendingView: FC = () => {
       ...prevState,
       [index]: !prevState[index],
     }));
+  };
+
+  const handleImageError = (index: number) => {
+    setFailedImages((prev) => new Set(prev).add(index));
   };
 
   const handlePredefinedAmountChange = (index: number, amount: number) => {
@@ -181,10 +187,18 @@ export const TrendingView: FC = () => {
     const tokenMatch = text.match(/[$#][A-Z]+/);
     const telegramMatch = text.match(/(t\.me\/\+[\w\d]+|@[A-Za-z\d_]+)/);
 
+    // Extract token address from the URL if it matches the expected format
+    let tokenAddress = null;
+    if (urlMatch && urlMatch[0].includes("dexscreener.com")) {
+      const urlParts = urlMatch[0].split("/");
+      tokenAddress = urlParts[urlParts.length - 1]; // Get the last part of the URL
+    }
+
     return {
       url: urlMatch ? urlMatch[0] : null,
       token: tokenMatch ? tokenMatch[0] : null,
       telegram: telegramMatch ? telegramMatch[0] : null,
+      tokenAddress: tokenAddress,
     };
   };
 
@@ -192,13 +206,27 @@ export const TrendingView: FC = () => {
     <div className={styles.container}>
       <ul className={styles.messageList}>
         {messages.slice().map((message, index) => {
-          const { url, token, telegram } = extractInfo(message.text);
+          const { url, token, telegram, tokenAddress } = extractInfo(
+            message.text
+          );
           const scores = message.scores;
           const selectedAmount = amounts[index] || 0.1; // Default amount for each item
           return (
             <li key={index} className={styles.messageItem}>
               <div className={styles.messageDate}>
                 {new Date(message.date).toLocaleString()}
+              </div>
+              <div className="flex justify-center items-center w-full">
+                {!failedImages.has(index) && (
+                  <Image
+                    className="rounded-lg"
+                    src={`https://dd.dexscreener.com/ds-data/tokens/solana/${tokenAddress}.png?size=xl`}
+                    width={150}
+                    height={150}
+                    alt="Logo"
+                    onError={() => handleImageError(index)}
+                  />
+                )}
               </div>
               {token && (
                 <p>

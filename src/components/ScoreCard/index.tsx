@@ -1,16 +1,16 @@
 import React from "react";
 import styles from "./index.module.css";
 import btcLogo from "../../../public/bitcoin-btc-logo.svg";
-import nftLogo from "../../../public/nft.svg";
+import nftLogo from "../../../public/retardio.png";
 import memeLogo from "../../../public/memecoins-logo.png";
 import solLogo from "../../../public/solana-sol-logo.svg";
 import Image from "next/image";
 
 interface ScoreCardProps {
-  tag: "Bitcoin" | "Solana" | "Memecoins" | "NFTs";
+  tag: "Bitcoin" | "Solana" | "Memecoin" | "NFT";
   score: number;
   onClick: (
-    tag: "Bitcoin" | "Solana" | "Memecoins" | "NFTs",
+    tag: "Bitcoin" | "Solana" | "Memecoin" | "NFT",
     event: React.MouseEvent
   ) => void;
 }
@@ -48,12 +48,12 @@ function ScoreCard({ tag, score, onClick }: ScoreCardProps) {
       className={`${styles["box"]} shadow h-44 hover:bg-gray-100 cursor-pointer`}
       onClick={(e) => onClick(tag, e)}
     >
-      {tag == "NFTs" && (
+      {tag == "NFT" && (
         <Image
           src={nftLogo}
           alt="nft SVG"
-          width={20}
-          height={20}
+          width={23}
+          height={23}
           style={{ display: "inline-flex", marginBottom: "4px" }}
         />
       )}
@@ -75,7 +75,7 @@ function ScoreCard({ tag, score, onClick }: ScoreCardProps) {
           style={{ display: "inline-flex", marginBottom: "4px" }}
         />
       )}
-      {tag == "Memecoins" && (
+      {tag == "Memecoin" && (
         <Image
           src={memeLogo}
           alt="meme PNG"

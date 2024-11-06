@@ -67,20 +67,6 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
         borderWidth: 2,
       },
       {
-        label: "MEMES",
-        borderColor: "blue",
-        pointRadius: 2,
-        fill: false,
-        backgroundColor: "blue",
-        lineTension: 0.3,
-        data: memecoins
-          .map((r) =>
-            r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10
-          )
-          .reverse(),
-        borderWidth: 2,
-      },
-      {
         label: "SOL",
         borderColor: "purple",
         pointRadius: 2,
@@ -95,11 +81,25 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
         borderWidth: 2,
       },
       {
-        label: "NFTs",
-        borderColor: "black",
+        label: "MEME",
+        borderColor: "#dc2c11",
         pointRadius: 2,
         fill: false,
-        backgroundColor: "black",
+        backgroundColor: "#dc2c11",
+        lineTension: 0.3,
+        data: memecoins
+          .map((r) =>
+            r.day_score > 1 ? 10 : r.day_score < 0 ? 0 : r.day_score * 10
+          )
+          .reverse(),
+        borderWidth: 2,
+      },
+      {
+        label: "NFT",
+        borderColor: "green",
+        pointRadius: 2,
+        fill: false,
+        backgroundColor: "green",
         lineTension: 0.3,
         data: nfts
           .map((r) =>
@@ -163,14 +163,6 @@ const LineGraph: React.FC<LineGraphProps> = ({ scoresHistory }) => {
         display: false,
       },
     },
-  };
-
-  const graphStyle = {
-    height: "16rem",
-    width: "50rem",
-    border: "1px solid #C4C4C4",
-    borderRadius: "0.375rem",
-    padding: "0.5rem",
   };
 
   return (

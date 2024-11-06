@@ -281,7 +281,7 @@ const Navbar: React.FC = () => {
           className="items-center justify-between hidden w-full md:flex md:w-auto md:order-1 relative"
           id="navbar-sticky"
         >
-          <ul className="flex flex-col md:flex-row items-center md:space-x-0 font-medium rounded-lg md:mt-0 md:border-0 absolute right-80 h-full">
+          <ul className="flex flex-col md:flex-row items-center md:space-x-0 text-base font-medium rounded-lg md:mt-0 md:border-0 absolute right-80 h-full">
             <li className="flex items-center h-full">
               <Link
                 href="/dashboard"
@@ -315,7 +315,19 @@ const Navbar: React.FC = () => {
                     : ""
                 }`}
               >
-                Memecoins
+                Memecoin
+              </Link>
+            </li>
+            <li className="flex items-center h-full">
+              <Link
+                href="/trending"
+                className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
+                  router.pathname === "/trending"
+                    ? "border-b-2 border-blue-500"
+                    : ""
+                }`}
+              >
+                Trends
               </Link>
             </li>
             <li className="flex items-center h-full">
@@ -325,7 +337,7 @@ const Navbar: React.FC = () => {
                   router.pathname === "/nft" ? "border-b-2 border-blue-500" : ""
                 }`}
               >
-                NFTs
+                NFT
               </Link>
             </li>
           </ul>
@@ -403,7 +415,20 @@ const Navbar: React.FC = () => {
                   }`}
                   onClick={handleLinkClick}
                 >
-                  Memecoins
+                  Memecoin
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/trending"
+                  className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${
+                    router.pathname === "/trending"
+                      ? "border-b-2 border-blue-500"
+                      : ""
+                  }`}
+                  onClick={handleLinkClick}
+                >
+                  Trends
                 </Link>
               </li>
               <li>
@@ -416,7 +441,7 @@ const Navbar: React.FC = () => {
                   }`}
                   onClick={handleLinkClick}
                 >
-                  NFTs
+                  NFT
                 </Link>
               </li>
               <li>
