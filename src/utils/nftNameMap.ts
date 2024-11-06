@@ -4,6 +4,7 @@ export const NFT_NAME_MAP = new Map<string, string>([
   ["mad-lads", "mad_lads"],
   ["famous-fox-federation-1", "famous_fox_federation"],
   ["retardio-cousins", "retardio_cousins"],
+  ["retardio-cousins-1", "retardio_cousins"],
   ["smb-gen2", "solana_monkey_business"],
   ["urban-node", "urbannode"],
   ["claynosaurz-1", "claynosaurz"],
@@ -11,6 +12,7 @@ export const NFT_NAME_MAP = new Map<string, string>([
   ["blood-io", "blood_solutions"],
   ["sharx-by-sharky-fi", "sharx"],
   ["degods-2", "degods"],
+  ["degods-1", "degods"],
   ["ggsg", "galactic_geckos"],
   ["bando-kids", "bando"],
   ["transdimensional-fox-federation-1", "transdimensional_fox_federation"],
@@ -25,4 +27,7 @@ export const NFT_NAME_MAP = new Map<string, string>([
   ["elites", "marketelites"],
   ["operation-l-i-t-e", "oplite"],
   ["psyop-scouts", "psyopscouts"],
+  ["fomo-mage-77", "mage_v138"],
+  ["vision-aio", "vision_aio"],
+  ["gigabuds", "giga_buds"],
 ]);
