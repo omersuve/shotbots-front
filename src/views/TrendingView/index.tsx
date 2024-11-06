@@ -212,128 +212,143 @@ export const TrendingView: FC = () => {
           const scores = message.scores;
           const selectedAmount = amounts[index] || 0.1; // Default amount for each item
           return (
-            <li key={index} className={styles.messageItem}>
-              <div className={styles.messageDate}>
-                {new Date(message.date).toLocaleString()}
-              </div>
-              <div className="flex justify-center items-center w-full">
-                {!failedImages.has(index) && (
-                  <Image
-                    className="rounded-lg"
-                    src={`https://dd.dexscreener.com/ds-data/tokens/solana/${tokenAddress}.png?size=xl`}
-                    width={150}
-                    height={150}
-                    alt="Logo"
-                    onError={() => handleImageError(index)}
-                  />
-                )}
-              </div>
-              {token && (
-                <p>
-                  <strong>Token:</strong> {token}
-                </p>
-              )}
-              {telegram && (
-                <p>
-                  <strong>Telegram:</strong>{" "}
-                  <Link
-                    href={`https://${
-                      telegram.startsWith("@")
-                        ? `t.me/${telegram.slice(1)}`
-                        : telegram
-                    }`}
-                    target="_blank"
-                  >
-                    {telegram}
-                  </Link>
-                </p>
-              )}
-              {url && (
-                <p>
-                  <strong>Dexscreener:</strong>{" "}
-                  <Link href={url} target="_blank">
-                    {url}
-                  </Link>
-                </p>
-              )}
-              {message.rugcheck && (
-                <div className={styles.rugcheck}>
-                  <p>
-                    <strong>Risks:</strong> {message.rugcheck.risks.join(", ")}
-                  </p>
-                  <p>
-                    <strong>Total LP Providers:</strong>{" "}
-                    {message.rugcheck.totalLPProviders}
-                  </p>
-                  <p>
-                    <strong>Total Market Liquidity:</strong>{" "}
-                    {formatLargeNumber(message.rugcheck.totalMarketLiquidity)}
-                  </p>
-                </div>
-              )}
-              <div className={styles.toggleButtonContainer}>
-                <button
-                  className={styles.toggleButton}
-                  onClick={() => toggleGraphVisibility(index)}
-                >
-                  {visibleGraphs[index] ? "Hide Sentiments" : "Show Sentiments"}
-                </button>
-              </div>
-              {visibleGraphs[index] && (
-                <div className={styles.graphContainer}>
-                  <GraphComponent scores={scores} startDate={message.date} />
-                </div>
-              )}
-              {/* Buy Token Button and Amount Selection */}
-              <div className="flex items-center justify-center gap-10 mt-3">
-                {/* Predefined Amount Buttons */}
-                <div className="flex flex-col items-center justify-center gap-2">
-                  <div className="flex items-center justify-center gap-2">
-                    <button
-                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => handlePredefinedAmountChange(index, 0.1)}
-                    >
-                      0.1
-                    </button>
-                    <button
-                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => handlePredefinedAmountChange(index, 0.5)}
-                    >
-                      0.5
-                    </button>
-                    <button
-                      className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
-                      onClick={() => handlePredefinedAmountChange(index, 1)}
-                    >
-                      1
-                    </button>
+            <li key={index} className={`${styles.messageItem} flex flex-col`}>
+              <div className="flex w-full mb-1 items-center gap-4">
+                <div className="flex-1 pr-1 break-all">
+                  <div className={styles.messageDate}>
+                    {new Date(message.date).toLocaleString()}
                   </div>
-                  {/* Custom Amount Input */}
-                  <input
-                    type="number"
-                    min="0.1"
-                    step="0.1"
-                    value={selectedAmount}
-                    onChange={(e) => handleCustomAmountChange(index, e)}
-                    className="bg-gray-200 py-1 px-2 border-2 border-gray-300 rounded shadow text-center w-40"
-                    placeholder="Custom"
-                  />
+                  {token && (
+                    <p>
+                      <strong>Token:</strong> {token}
+                    </p>
+                  )}
+                  {telegram && (
+                    <p>
+                      <strong>Telegram:</strong>{" "}
+                      <Link
+                        href={`https://${
+                          telegram.startsWith("@")
+                            ? `t.me/${telegram.slice(1)}`
+                            : telegram
+                        }`}
+                        target="_blank"
+                      >
+                        {telegram}
+                      </Link>
+                    </p>
+                  )}
+                  {url && (
+                    <p>
+                      <strong>Dexscreener:</strong>{" "}
+                      <Link href={url} target="_blank">
+                        {url}
+                      </Link>
+                    </p>
+                  )}
+                  {message.rugcheck && (
+                    <div className={styles.rugcheck}>
+                      <p>
+                        <strong>Risks:</strong>{" "}
+                        {message.rugcheck.risks.join(", ")}
+                      </p>
+                      <p>
+                        <strong>Total LP Providers:</strong>{" "}
+                        {message.rugcheck.totalLPProviders}
+                      </p>
+                      <p>
+                        <strong>Total Market Liquidity:</strong>{" "}
+                        {formatLargeNumber(
+                          message.rugcheck.totalMarketLiquidity
+                        )}
+                      </p>
+                    </div>
+                  )}
                 </div>
 
-                {/* Buy Button */}
-                <button
-                  className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-xs text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
-                  style={{ width: "150px", height: "60px" }} // Fixed width for the button
-                  onClick={() => {
-                    if (url) {
-                      quoteAndSwap(index, url);
-                    } else {
-                      console.error("Invalid URL. Cannot perform swap.");
-                    }
-                  }}
-                >
-                  Buy {selectedAmount} SOL {token}
-                </button>
+                <div className="flex-none w-28 h-28 flex justify-center items-center mt-3">
+                  {!failedImages.has(index) && (
+                    <Image
+                      className="rounded-lg"
+                      src={`https://dd.dexscreener.com/ds-data/tokens/solana/${tokenAddress}.png?size=xl`}
+                      width={150}
+                      height={150}
+                      alt="Logo"
+                      onError={() => handleImageError(index)}
+                    />
+                  )}
+                </div>
+              </div>
+
+              {/* Bottom Actions - Show Sentiments and Buy Button */}
+              <div className="w-full">
+                <div className={styles.toggleButtonContainer}>
+                  <button
+                    className={styles.toggleButton}
+                    onClick={() => toggleGraphVisibility(index)}
+                  >
+                    {visibleGraphs[index]
+                      ? "Hide Sentiments"
+                      : "Show Sentiments"}
+                  </button>
+                </div>
+                {visibleGraphs[index] && (
+                  <div className={styles.graphContainer}>
+                    <GraphComponent scores={scores} startDate={message.date} />
+                  </div>
+                )}
+
+                {/* Buy Token Button and Amount Selection */}
+                <div className="flex items-center justify-center gap-10 mt-3">
+                  {/* Predefined Amount Buttons */}
+                  <div className="flex flex-col items-center justify-center gap-2">
+                    <div className="flex items-center justify-center gap-2">
+                      <button
+                        className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                        onClick={() => handlePredefinedAmountChange(index, 0.1)}
+                      >
+                        0.1
+                      </button>
+                      <button
+                        className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                        onClick={() => handlePredefinedAmountChange(index, 0.5)}
+                      >
+                        0.5
+                      </button>
+                      <button
+                        className="bg-gray-300 py-1 px-2 w-12 rounded shadow"
+                        onClick={() => handlePredefinedAmountChange(index, 1)}
+                      >
+                        1
+                      </button>
+                    </div>
+                    {/* Custom Amount Input */}
+                    <input
+                      type="number"
+                      min="0.1"
+                      step="0.1"
+                      value={selectedAmount}
+                      onChange={(e) => handleCustomAmountChange(index, e)}
+                      className="bg-gray-200 py-1 px-2 border-2 border-gray-300 rounded shadow text-center w-40"
+                      placeholder="Custom"
+                    />
+                  </div>
+
+                  {/* Buy Button */}
+                  <button
+                    className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-xs text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
+                    style={{ width: "150px", height: "60px" }} // Fixed width for the button
+                    onClick={() => {
+                      if (url) {
+                        quoteAndSwap(index, url);
+                      } else {
+                        console.error("Invalid URL. Cannot perform swap.");
+                      }
+                    }}
+                  >
+                    Buy {selectedAmount} SOL {token}
+                  </button>
+                </div>
               </div>
             </li>
           );
