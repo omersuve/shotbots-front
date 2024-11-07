@@ -223,7 +223,7 @@ const Navbar: React.FC = () => {
             </div>
             <div
               key={`sol-${keys["solana"] || 0}`}
-              className={`${styles.flash} flex flex-col mx-0.5 items-center lg:px-1 w-12 lg:w-16`}
+              className={`${styles.flash} flex flex-col mx-1.5 items-center lg:px-1 w-12 lg:w-16`}
             >
               <p className="text-xs font-bold">SOL</p>
               <div className={`${styles["prices-fear-greed"]} contents`}>
@@ -243,24 +243,28 @@ const Navbar: React.FC = () => {
                 )}
               </div>
             </div>
-            <div className="ml-0.5 text-center border-2 border-dotted bg-gray-100 text-xs lg:text-sm font-bold rounded-lg flex flex-col items-center lg:px-4 lg:py-1 lg:ml-3 w-20 lg:w-44">
+            <div
+              className={`${styles["fear-greed-container"]} ml-0.5 text-center border-2 border-dotted bg-gray-100 text-xs lg:text-sm font-bold rounded-lg lg:px-4 lg:py-1 w-20 lg:w-44`}
+            >
               {fearGreed ? (
                 <>
                   <p className={`${styles["prices-fear-greed"]} font-bold`}>
                     Fear & Greed
                   </p>
-                  <div className="flex items-center mt-2 justify-center text-center">
+                  <div
+                    className={`${styles["fear-greed-values"]} flex justify-center items-center`}
+                  >
                     <p
                       className={`${
                         styles["prices-fear-greed"]
-                      } lg:fs-6 lg:px-1 ${getClassificationColor(
+                      } lg:fs-6 ${getClassificationColor(
                         fearGreed.classification
                       )}`}
                     >
                       %{fearGreed.value}
                     </p>
                     <p
-                      className={`px-1 ${
+                      className={`${
                         styles["prices-fear-greed"]
                       } ${getClassificationColor(fearGreed.classification)}`}
                     >

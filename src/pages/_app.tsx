@@ -59,7 +59,7 @@ function MyApp({ Component, pageProps }: AppProps) {
                           {router.pathname != "/" && <Navbar />}
                           <div
                             className={`${
-                              router.pathname != "/" && "flex-grow mt-20 mb-12"
+                              router.pathname != "/" && "flex-grow mt-20 mb-2"
                             }`}
                           >
                             <Component {...pageProps} />

@@ -1,37 +1,53 @@
 .navbar {
-    background-color: #f1f1f1;
+  background-color: #f1f1f1;
 }
 
 .logoButton {
-    width: 7rem;
+  width: 7rem;
 }
 
 .flash {
-    border-radius: 10%;
-    animation: flash 0.5s ease-in-out;
+  border-radius: 10%;
+  animation: flash 0.5s ease-in-out;
 }
 
 @keyframes flash {
-    0% {
-        background-color: #b6a8a8;
+  0% {
+    background-color: #b6a8a8;
+  }
+  100% {
+    background-color: inherit;
+  }
+}
 
-    }
-    100% {
-        background-color: inherit;
-    }
+.fear-greed-container {
+  white-space: nowrap; /* Prevent line breaks */
+}
+
+.fear-greed-values {
+  white-space: nowrap; /* Prevents line breaks */
+  gap: 4px; /* Add space between the elements */
 }
 
 @media (max-width: 768px) {
-    .navbar {
-        background-color: #f1f1f1;
-    }
+  .navbar {
+    background-color: #f1f1f1;
+  }
 
-    .prices-fear-greed {
-        font-size: 6px;
-        text-align: center;
-    }
+  .fear-greed-container {
+    font-size: 7px; /* Adjust font size for mobile */
+    margin-left: 5px;
+    width: 100%;
+  }
 
-    .logoButton {
-        width: 7.5rem;
-    }
+  .prices-fear-greed {
+    font-size: 7px;
+    font-weight: bolder;
+    text-align: center;
+    gap: 4px;
+  }
+
+  .logoButton {
+    width: 6rem;
+  }
 }
