@@ -14,13 +14,20 @@ import { IconProp } from "@fortawesome/fontawesome-svg-core";
 import { formatDate, handleSendVote } from "../../utils";
 import { useNews } from "../../contexts/NewsContext";
 
-const tags = ["COINMARKETCAP", "COINDESK BTC", "COINDESK SOL", "COINDESK ETH"];
+const tags = [
+  "COINMARKETCAP",
+  "COINDESK BTC",
+  "COINDESK SOL",
+  "COINDESK ETH",
+  "COINDESK MEMES",
+];
 
 const tagToCollectionMap: { [key: string]: string } = {
   COINMARKETCAP: "cmc",
   "COINDESK BTC": "bitcoin-news",
   "COINDESK SOL": "solana-news",
   "COINDESK ETH": "ethereum-news",
+  "COINDESK MEMES": "memecoins-news",
 };
 
 export const NewsView: FC = () => {
@@ -135,7 +142,9 @@ export const NewsView: FC = () => {
             <button
               className={`${i !== selectedTabIdx ? "hover:bg-gray-50" : ""} ${
                 i === selectedTabIdx ? "bg-gray-200" : ""
-              } ${styles["tab-view"]} w-full lg:w-auto lg:px-12 lg:py-1`}
+              } ${
+                styles["tab-view"]
+              } w-full lg:w-auto lg:px-12 lg:py-1 whitespace-nowrap`}
               onClick={() => handleTabChange(t, i)}
             >
               {t}
