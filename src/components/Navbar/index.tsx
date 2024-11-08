@@ -322,10 +322,12 @@ const Navbar: React.FC = () => {
                 Memecoin
               </Link>
             </li>
-            <li className="flex items-center h-full">
+            <li className="flex items-center h-full cursor-not-allowed">
               <Link
                 href="/trending"
                 className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
+                  styles["disabled-link"]
+                } ${
                   router.pathname === "/trending"
                     ? "border-b-2 border-blue-500"
                     : ""
@@ -334,10 +336,12 @@ const Navbar: React.FC = () => {
                 Trends
               </Link>
             </li>
-            <li className="flex items-center h-full">
+            <li className="flex items-center h-full cursor-not-allowed">
               <Link
                 href="/nft"
                 className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
+                  styles["disabled-link"]
+                } ${
                   router.pathname === "/nft" ? "border-b-2 border-blue-500" : ""
                 }`}
               >
@@ -345,14 +349,16 @@ const Navbar: React.FC = () => {
               </Link>
             </li>
           </ul>
-          <div className="ml-auto flex items-center space-x-4">
+          <div className="ml-auto flex items-center space-x-4 cursor-not-allowed">
             <button
               ref={profileButtonRef}
               disabled={!publicKey}
               onClick={toggleProfile}
               className={`${
                 !publicKey ? "hidden" : ""
-              } flex h-10 rounded-md items-center py-3 px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out pointer-events-auto`}
+              } flex h-10 rounded-md items-center py-3 px-4 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
+                styles["disabled-link"]
+              }`}
               style={{
                 fontFamily: "DM Sans",
                 backgroundColor: isProfileOpen

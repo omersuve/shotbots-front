@@ -29,6 +29,12 @@
   gap: 4px; /* Add space between the elements */
 }
 
+.disabled-link {
+  pointer-events: none;
+  color: gray;
+  opacity: 0.8;
+}
+
 @media (max-width: 768px) {
   .navbar {
     background-color: #f1f1f1;
