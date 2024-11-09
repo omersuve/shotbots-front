@@ -251,7 +251,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
         )}
 
         <div className="flex items-center justify-center p-4 mt-2 opacity-75 gap-4">
-          <Link href="https://x.com/theshotbots" passHref target="_blank">
+          <Link href="https://x.com/shotbots_" passHref target="_blank">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               viewBox="0 0 512 512"
