@@ -21,11 +21,8 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 }) => {
   const { publicKey, signMessage, connected, disconnecting } = useWallet();
   const [isVerified, setIsVerified] = useState(false);
-  // Initialize isSigned state from localStorage
   const [isSigned, setIsSigned] = useState<boolean>(() => {
-    const lastWallet =
-      typeof window !== "undefined" &&
-      localStorage.getItem("lastConnectedWallet");
+    const lastWallet = localStorage.getItem("lastConnectedWallet");
     return Boolean(lastWallet);
   });
 
@@ -56,7 +53,7 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
         publicKey.toBytes()
       );
 
-      if (verified && typeof window !== "undefined") {
+      if (verified) {
         console.log("Signature verified successfully!");
         setIsVerified(true);
         setIsSigned(true);
@@ -73,14 +70,15 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   };
 
+  // Track page refresh using localStorage timestamp
   useEffect(() => {
     const handleBeforeUnload = () => {
-      localStorage.setItem("isPageRefreshed", "true");
+      localStorage.setItem("isPageRefreshed", Date.now().toString());
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        localStorage.setItem("isPageRefreshed", "true");
+        localStorage.setItem("isPageRefreshed", Date.now().toString());
       }
     };
 
@@ -93,8 +91,11 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     };
   }, []);
 
+  // Handle wallet disconnection or explicit disconnect
   useEffect(() => {
-    const isPageRefreshed = localStorage.getItem("isPageRefreshed") === "true";
+    const isPageRefreshed =
+      Date.now() - parseInt(localStorage.getItem("isPageRefreshed") || "0") <
+      5000;
 
     if (!connected && !disconnecting && !isPageRefreshed) {
       console.log("User explicitly disconnected the wallet.");
@@ -116,3 +117,5 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     </WalletAuthContext.Provider>
   );
 };
+
+export default WalletAuthProvider;
