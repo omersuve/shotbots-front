@@ -40,7 +40,9 @@ const Navbar: React.FC = () => {
 
   useEffect(() => {
     const verifyWalletAccess = async () => {
-      if (publicKey && isSigned) {
+      const lastWallet = localStorage.getItem("lastConnectedWallet");
+      // Wait until the wallet connection is fully established
+      if (publicKey && isSigned && publicKey.toBase58() === lastWallet) {
         try {
           const response = await fetch(
             `/api/checkReferred?wallet_address=${publicKey.toBase58()}`
@@ -55,14 +57,11 @@ const Navbar: React.FC = () => {
           console.error("Error verifying referral status:", error);
           router.push("/");
         }
-      } else if (!publicKey) {
-        // Handle wallet disconnection
-        console.log("Wallet disconnected, redirecting to homepage.");
-        router.push("/");
       }
     };
 
-    verifyWalletAccess();
+    // Only run if the wallet is connected and signed
+    if (isSigned) verifyWalletAccess();
   }, [publicKey, isSigned, router]);
 
   useEffect(() => {

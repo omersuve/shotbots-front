@@ -37,7 +37,9 @@ const WalletHandler = () => {
           setPreviousWallet(publicKey.toBase58());
         }
       } else if (!disconnecting && !isSigned) {
+        console.log("Explicit wallet disconnect detected. Removing cookies.");
         await removeWalletCookie();
+        localStorage.removeItem("lastConnectedWallet");
       }
     };
 

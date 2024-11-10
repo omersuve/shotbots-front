@@ -19,9 +19,10 @@ export async function middleware(req: NextRequest) {
 
   // Check if the wallet_address cookie exists
   const walletAddress = req.cookies.get("wallet_address")?.value;
+  console.log("Wallet address from cookie:", walletAddress);
 
   if (!walletAddress) {
-    // If no wallet is connected, redirect to home
+    console.log("No wallet address found in cookies, redirecting to home.");
     return NextResponse.redirect(new URL("/", req.url));
   }
 
