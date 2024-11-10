@@ -74,30 +74,38 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
+    const handleBeforeUnload = () => {
+      sessionStorage.setItem("isPageRefreshed", "true");
+    };
+
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         sessionStorage.setItem("isPageRefreshed", "true");
       } else if (document.visibilityState === "visible") {
-        sessionStorage.removeItem("isPageRefreshed");
+        // Clear only if the wallet is not connected (manual disconnection).
+        if (!connected) {
+          sessionStorage.removeItem("isPageRefreshed");
+        }
       }
     };
 
+    window.addEventListener("beforeunload", handleBeforeUnload);
     document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
+      window.removeEventListener("beforeunload", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
-  }, []);
+  }, [connected]);
 
   useEffect(() => {
-    const isPageRefreshed = sessionStorage.getItem("isPageRefreshed");
-
-    if (!connected && !disconnecting && !isPageRefreshed) {
+    if (!connected && !disconnecting) {
       console.log("User explicitly disconnected the wallet.");
       setIsSigned(false);
       setIsVerified(false);
       localStorage.removeItem("walletSignature");
       localStorage.removeItem("lastConnectedWallet");
+      sessionStorage.removeItem("isPageRefreshed");
     }
   }, [connected, disconnecting]);
 
