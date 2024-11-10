@@ -26,6 +26,7 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const lastWallet = localStorage.getItem("lastConnectedWallet");
     return Boolean(lastWallet);
   });
+  const [requestingSignature, setRequestingSignature] = useState(false);
 
   // Initialize isSigned based on localStorage after mount
   useEffect(() => {
@@ -39,12 +40,14 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   }, []);
 
   const requestSignature = async () => {
-    if (!publicKey || !signMessage || isSigned) {
+    if (!publicKey || !signMessage || isSigned || requestingSignature) {
       console.error(
         "Wallet not connected, signMessage not supported, or already signed"
       );
       return;
     }
+
+    setRequestingSignature(true);
 
     try {
       const message = "Please sign this message to verify ownership.";
@@ -71,6 +74,8 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       }
     } catch (error) {
       console.error("Error during signing:", error);
+    } finally {
+      setRequestingSignature(false);
     }
   };
 
