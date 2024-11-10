@@ -81,11 +81,6 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
         sessionStorage.setItem("isPageRefreshed", "true");
-      } else if (document.visibilityState === "visible") {
-        // Clear only if the wallet is not connected (manual disconnection).
-        if (!connected) {
-          sessionStorage.removeItem("isPageRefreshed");
-        }
       }
     };
 
@@ -95,8 +90,9 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
+      sessionStorage.removeItem("isPageRefreshed");
     };
-  }, [connected]);
+  }, []);
 
   useEffect(() => {
     if (!connected && !disconnecting) {
