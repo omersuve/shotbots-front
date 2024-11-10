@@ -122,7 +122,7 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       Date.now() - parseInt(localStorage.getItem("isPageRefreshed") || "0") <
       5000;
 
-    if (publicKey?.toBase58() !== lastWallet && !isPageRefreshed) {
+    if (connected && publicKey?.toBase58() !== lastWallet && !isPageRefreshed) {
       console.log(
         "Wallet switched. Resetting localStorage and asking for signature."
       );
@@ -131,7 +131,7 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       localStorage.removeItem("walletSignature");
       localStorage.removeItem("lastConnectedWallet");
     }
-  }, [publicKey]);
+  }, [publicKey, connected]);
 
   return (
     <WalletAuthContext.Provider
