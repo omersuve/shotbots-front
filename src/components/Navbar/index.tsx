@@ -11,6 +11,7 @@ import { usePrices } from "../../contexts/PricesContext";
 import MyLoader from "../../components/MyLoader";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { Squash as Hamburger } from "hamburger-react"; // Importing the hamburger menu component
+import { useWalletAuth } from "../../contexts/WalletAuthContext";
 
 interface User {
   publicKey: string;
@@ -35,6 +36,30 @@ const Navbar: React.FC = () => {
   const [lastPrices, setLastPrices] = useState<{
     [key: string]: { price: string; change: string };
   }>({});
+  const { isSigned } = useWalletAuth();
+
+  useEffect(() => {
+    const verifyWalletAccess = async () => {
+      if (publicKey && isSigned) {
+        try {
+          const response = await fetch(
+            `/api/checkReferred?wallet_address=${publicKey.toBase58()}`
+          );
+          const data = await response.json();
+
+          if (!data.isReferred) {
+            console.log("Wallet is not referred, redirecting to homepage.");
+            router.push("/");
+          }
+        } catch (error) {
+          console.error("Error verifying referral status:", error);
+          router.push("/");
+        }
+      }
+    };
+
+    verifyWalletAccess();
+  }, [publicKey, isSigned, router]);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
