@@ -30,16 +30,14 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   // Initialize isSigned based on localStorage after mount
   useEffect(() => {
-    const lastWallet = localStorage.getItem("lastConnectedWallet");
-    const walletSignature = localStorage.getItem("walletSignature");
-
-    if (lastWallet && walletSignature && publicKey?.toBase58() === lastWallet) {
-      console.log("Restoring signed state from localStorage.");
+    const lastWallet =
+      typeof window !== "undefined"
+        ? localStorage.getItem("lastConnectedWallet")
+        : null;
+    if (lastWallet) {
       setIsSigned(true);
-    } else {
-      setIsSigned(false);
     }
-  }, [publicKey]);
+  }, []);
 
   const requestSignature = async (): Promise<boolean> => {
     if (!publicKey || !signMessage || isSigned || requestingSignature) {

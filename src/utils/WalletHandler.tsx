@@ -36,7 +36,7 @@ const WalletHandler = () => {
           await setWalletCookie(publicKey.toBase58());
           setPreviousWallet(publicKey.toBase58());
         }
-      } else if (!disconnecting) {
+      } else if (!disconnecting && !isSigned) {
         await removeWalletCookie();
       }
     };
