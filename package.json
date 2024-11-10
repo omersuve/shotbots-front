@@ -48,7 +48,8 @@
     "react-toastify": "^10.0.5",
     "react-typist-component": "^1.0.6",
     "redis": "^4.6.15",
-    "sass": "^1.54.3"
+    "sass": "^1.54.3",
+    "tweetnacl": "^1.0.3"
   },
   "devDependencies": {
     "@types/node": "^20.12.8",

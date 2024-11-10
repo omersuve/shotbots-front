@@ -2,39 +2,45 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { useEffect } from "react";
 import { setWalletCookie, removeWalletCookie } from "../utils";
 import { useRouter } from "next/router";
+import { useWalletAuth } from "../contexts/WalletAuthContext";
 
 const WalletHandler = () => {
-  const { publicKey, connected } = useWallet();
-  const router = useRouter(); // Use Next.js router for navigation
+  const { publicKey, connected, disconnecting } = useWallet();
+  const { isSigned, requestSignature } = useWalletAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const handleWalletChange = async () => {
+      const lastWallet = localStorage.getItem("lastConnectedWallet");
+
       if (connected && publicKey) {
-        // Set wallet address in cookie
-        await setWalletCookie(publicKey.toString());
-
-        // Check the referral status by calling the API
-        try {
-          const referralResponse = await fetch(
-            `/api/checkReferred?wallet_address=${publicKey.toString()}`
-          );
-          const referralData = await referralResponse.json();
-
-          // If wallet is not referred, redirect to home
-          if (!referralData.isReferred) {
-            router.push("/"); // Use Next.js router to redirect to the home page
-          }
-        } catch (error) {
-          console.error("Error checking referral status:", error);
+        if (!isSigned && publicKey.toBase58() !== lastWallet) {
+          await requestSignature();
         }
-      } else {
-        // Remove the cookie if the wallet is disconnected
+
+        if (isSigned) {
+          await setWalletCookie(publicKey.toBase58());
+
+          try {
+            const referralResponse = await fetch(
+              `/api/checkReferred?wallet_address=${publicKey.toBase58()}`
+            );
+            const referralData = await referralResponse.json();
+
+            if (!referralData.isReferred) {
+              router.push("/");
+            }
+          } catch (error) {
+            console.error("Error checking referral status:", error);
+          }
+        }
+      } else if (!disconnecting) {
         await removeWalletCookie();
       }
     };
 
-    handleWalletChange(); // Call the function whenever the wallet state changes
-  }, [connected, publicKey, router]);
+    handleWalletChange();
+  }, [connected, publicKey, isSigned, disconnecting, router, requestSignature]);
 
   return null;
 };

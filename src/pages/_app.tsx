@@ -31,6 +31,7 @@ import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
 import { NftProvider } from "../contexts/NftContext";
 import { TrendingProvider } from "../contexts/TrendingContext";
+import { WalletAuthProvider } from "../contexts/WalletAuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
   const router = useRouter();
@@ -47,33 +48,35 @@ function MyApp({ Component, pageProps }: AppProps) {
     <ConnectionProvider endpoint={endpoint}>
       <WalletProvider wallets={wallets} autoConnect>
         <WalletModalProvider>
-          <WalletHandler />
-          <PricesProvider>
-            <ScoresProvider>
-              <NewsProvider>
-                <MemecoinProvider>
-                  <NftProvider>
-                    <TwitterProvider>
-                      <TrendingProvider>
-                        <div className="flex flex-col min-h-screen">
-                          {router.pathname != "/" && <Navbar />}
-                          <div
-                            className={`${
-                              router.pathname != "/" && "flex-grow mt-20 mb-2"
-                            }`}
-                          >
-                            <Component {...pageProps} />
+          <WalletAuthProvider>
+            <WalletHandler />
+            <PricesProvider>
+              <ScoresProvider>
+                <NewsProvider>
+                  <MemecoinProvider>
+                    <NftProvider>
+                      <TwitterProvider>
+                        <TrendingProvider>
+                          <div className="flex flex-col min-h-screen">
+                            {router.pathname != "/" && <Navbar />}
+                            <div
+                              className={`${
+                                router.pathname != "/" && "flex-grow mt-20 mb-2"
+                              }`}
+                            >
+                              <Component {...pageProps} />
+                            </div>
+                            {router.pathname != "/" && <Footer />}
                           </div>
-                          {router.pathname != "/" && <Footer />}
-                        </div>
-                        <ToastContainer />
-                      </TrendingProvider>
-                    </TwitterProvider>
-                  </NftProvider>
-                </MemecoinProvider>
-              </NewsProvider>
-            </ScoresProvider>
-          </PricesProvider>
+                          <ToastContainer />
+                        </TrendingProvider>
+                      </TwitterProvider>
+                    </NftProvider>
+                  </MemecoinProvider>
+                </NewsProvider>
+              </ScoresProvider>
+            </PricesProvider>
+          </WalletAuthProvider>
         </WalletModalProvider>
       </WalletProvider>
     </ConnectionProvider>

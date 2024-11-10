@@ -11,6 +11,7 @@ import Link from "next/link";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import { toast } from "react-toastify";
+import { useWalletAuth } from "../../contexts/WalletAuthContext";
 
 export const Jumbotron = (props: any) => {
   const bgStyle = props.style ?? { backgroundColor: "#e9ecef" };
@@ -28,6 +29,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
   const [referralCount, setReferralCount] = useState<number | null>(null); // Store referral count here
   const router = useRouter();
   const { publicKey, connected } = useWallet();
+  const { isSigned } = useWalletAuth();
 
   const navigateToDashboard = () => {
     router.push("/dashboard");
@@ -50,7 +52,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
 
   // Capture referral code from query parameter and auto-submit
   useEffect(() => {
-    if (connected && publicKey) {
+    if (connected && publicKey && isSigned) {
       // Check if the user is already referred
       checkIfReferred().then((f) => {
         if (f) {
@@ -61,7 +63,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
       setIsReferred(false);
       setReferralCount(null);
     }
-  }, [connected, publicKey]);
+  }, [connected, publicKey, isSigned]);
 
   // Check if the user is referred by calling the API
   const checkIfReferred = async () => {
