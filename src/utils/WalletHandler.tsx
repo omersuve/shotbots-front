@@ -19,24 +19,9 @@ const WalletHandler = () => {
           const userSigned = await requestSignature();
 
           if (userSigned) {
-            // Update localStorage and proceed
             await setWalletCookie(publicKey.toBase58());
             setPreviousWallet(publicKey.toBase58());
-
-            try {
-              const referralResponse = await fetch(
-                `/api/checkReferred?wallet_address=${publicKey.toBase58()}`
-              );
-              const referralData = await referralResponse.json();
-
-              if (!referralData.isReferred) {
-                router.push("/");
-              }
-            } catch (error) {
-              console.error("Error checking referral status:", error);
-            }
           } else {
-            // User ignored the signature request, revert to previous wallet state
             console.log(
               "User did not sign the message. Ignoring wallet switch."
             );
@@ -48,7 +33,6 @@ const WalletHandler = () => {
             }
           }
         } else if (isSigned) {
-          // Normal flow when user is already signed
           await setWalletCookie(publicKey.toBase58());
           setPreviousWallet(publicKey.toBase58());
         }

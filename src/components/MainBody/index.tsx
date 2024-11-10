@@ -53,12 +53,6 @@ const MainBody = ({ gradient, message, message2 }: any) => {
   // Capture referral code from query parameter and auto-submit
   useEffect(() => {
     const verifyOwnershipAndCheckReferral = async () => {
-      if (connected && publicKey && !isSigned) {
-        console.log("Requesting ownership signature...");
-        const signed = await requestSignature();
-        if (!signed) return; // Stop if the user did not sign
-      }
-
       if (connected && publicKey && isSigned) {
         // Check if the user is already referred
         const referred = await checkIfReferred();
