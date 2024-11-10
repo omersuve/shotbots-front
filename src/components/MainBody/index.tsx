@@ -29,7 +29,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
   const [referralCount, setReferralCount] = useState<number | null>(null); // Store referral count here
   const router = useRouter();
   const { publicKey, connected } = useWallet();
-  const { isSigned, requestSignature } = useWalletAuth();
+  const { isSigned } = useWalletAuth();
 
   const navigateToDashboard = () => {
     router.push("/dashboard");
@@ -202,7 +202,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
         <div className={`${styles["notice"]} p-2 mb-3`}>
           <p>Mobile Support Available!</p>
         </div>
-        {!isReferred || !publicKey ? (
+        {!isSigned || !isReferred || !publicKey ? (
           <div className={`${styles["referral-section"]} mt-5`}>
             <h2 className="text-black">Enter Referral Code for Early Access</h2>
             <input
