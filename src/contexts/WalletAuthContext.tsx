@@ -113,6 +113,23 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     localStorage.removeItem("isPageRefreshed");
   }, [connected, disconnecting]);
 
+  useEffect(() => {
+    const lastWallet =
+      typeof window !== "undefined"
+        ? localStorage.getItem("lastConnectedWallet")
+        : null;
+
+    if (publicKey?.toBase58() !== lastWallet) {
+      console.log(
+        "Wallet switched. Resetting localStorage and asking for signature."
+      );
+      setIsSigned(false);
+      setIsVerified(false);
+      localStorage.removeItem("walletSignature");
+      localStorage.removeItem("lastConnectedWallet");
+    }
+  }, [publicKey]);
+
   return (
     <WalletAuthContext.Provider
       value={{ isVerified, isSigned, requestSignature }}
