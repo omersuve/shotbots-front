@@ -75,12 +75,12 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
 
   useEffect(() => {
     const handleBeforeUnload = () => {
-      sessionStorage.setItem("isPageRefreshed", "true");
+      localStorage.setItem("isPageRefreshed", "true");
     };
 
     const handleVisibilityChange = () => {
       if (document.visibilityState === "hidden") {
-        sessionStorage.setItem("isPageRefreshed", "true");
+        localStorage.setItem("isPageRefreshed", "true");
       }
     };
 
@@ -90,19 +90,22 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
       document.removeEventListener("visibilitychange", handleVisibilityChange);
-      sessionStorage.removeItem("isPageRefreshed");
     };
   }, []);
 
   useEffect(() => {
-    if (!connected && !disconnecting) {
+    const isPageRefreshed = localStorage.getItem("isPageRefreshed") === "true";
+
+    if (!connected && !disconnecting && !isPageRefreshed) {
       console.log("User explicitly disconnected the wallet.");
       setIsSigned(false);
       setIsVerified(false);
       localStorage.removeItem("walletSignature");
       localStorage.removeItem("lastConnectedWallet");
-      sessionStorage.removeItem("isPageRefreshed");
     }
+
+    // Reset the flag after checking
+    localStorage.removeItem("isPageRefreshed");
   }, [connected, disconnecting]);
 
   return (
