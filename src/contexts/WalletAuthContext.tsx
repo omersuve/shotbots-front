@@ -5,13 +5,13 @@ import nacl from "tweetnacl";
 interface WalletAuthContextProps {
   isVerified: boolean;
   isSigned: boolean;
-  requestSignature: () => Promise<void>;
+  requestSignature: () => Promise<boolean>;
 }
 
 const WalletAuthContext = createContext<WalletAuthContextProps>({
   isVerified: false,
   isSigned: false,
-  requestSignature: async () => {},
+  requestSignature: async () => false,
 });
 
 export const useWalletAuth = () => useContext(WalletAuthContext);
@@ -39,12 +39,12 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
     }
   }, []);
 
-  const requestSignature = async () => {
+  const requestSignature = async (): Promise<boolean> => {
     if (!publicKey || !signMessage || isSigned || requestingSignature) {
       console.error(
         "Wallet not connected, signMessage not supported, or already signed"
       );
-      return;
+      return false;
     }
 
     setRequestingSignature(true);
@@ -69,11 +69,14 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
           JSON.stringify(Array.from(signature))
         );
         localStorage.setItem("lastConnectedWallet", publicKey.toBase58());
+        return true;
       } else {
         console.error("Signature verification failed.");
+        return false;
       }
     } catch (error) {
       console.error("Error during signing:", error);
+      return false;
     } finally {
       setRequestingSignature(false);
     }
