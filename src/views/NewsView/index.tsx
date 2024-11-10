@@ -69,8 +69,6 @@ export const NewsView: FC = () => {
 
     // Call the function initially and on tab change
     updatePosition();
-
-    console.log("votesOfNews", votesOfNews);
   }, [selectedNewsId, selectedTab, news]);
 
   useEffect(() => {
