@@ -22,6 +22,7 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   const { publicKey, signMessage, connected, disconnecting } = useWallet();
   const [isVerified, setIsVerified] = useState(false);
   const [isSigned, setIsSigned] = useState<boolean>(() => {
+    if (typeof window === "undefined") return false;
     const lastWallet = localStorage.getItem("lastConnectedWallet");
     return Boolean(lastWallet);
   });
