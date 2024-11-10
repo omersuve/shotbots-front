@@ -29,7 +29,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
   const [referralCount, setReferralCount] = useState<number | null>(null); // Store referral count here
   const router = useRouter();
   const { publicKey, connected } = useWallet();
-  const { isSigned } = useWalletAuth();
+  const { isSigned, requestSignature } = useWalletAuth();
 
   const navigateToDashboard = () => {
     router.push("/dashboard");
@@ -52,17 +52,26 @@ const MainBody = ({ gradient, message, message2 }: any) => {
 
   // Capture referral code from query parameter and auto-submit
   useEffect(() => {
-    if (connected && publicKey && isSigned) {
-      // Check if the user is already referred
-      checkIfReferred().then((f) => {
-        if (f) {
-          fetchUserReferralCode(publicKey.toString()).then(); // Fetch user's referral code
+    const verifyOwnershipAndCheckReferral = async () => {
+      if (connected && publicKey && !isSigned) {
+        console.log("Requesting ownership signature...");
+        const signed = await requestSignature();
+        if (!signed) return; // Stop if the user did not sign
+      }
+
+      if (connected && publicKey && isSigned) {
+        // Check if the user is already referred
+        const referred = await checkIfReferred();
+        if (referred) {
+          await fetchUserReferralCode(publicKey.toString());
         }
-      });
-    } else {
-      setIsReferred(false);
-      setReferralCount(null);
-    }
+      } else {
+        setIsReferred(false);
+        setReferralCount(null);
+      }
+    };
+
+    verifyOwnershipAndCheckReferral();
   }, [connected, publicKey, isSigned]);
 
   // Check if the user is referred by calling the API
