@@ -55,6 +55,10 @@ const Navbar: React.FC = () => {
           console.error("Error verifying referral status:", error);
           router.push("/");
         }
+      } else if (!publicKey) {
+        // Handle wallet disconnection
+        console.log("Wallet disconnected, redirecting to homepage.");
+        router.push("/");
       }
     };
 
