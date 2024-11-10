@@ -74,15 +74,18 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
   };
 
   useEffect(() => {
-    const handleBeforeUnload = () => {
-      sessionStorage.setItem("isPageRefreshed", "true");
+    const handleVisibilityChange = () => {
+      if (document.visibilityState === "hidden") {
+        sessionStorage.setItem("isPageRefreshed", "true");
+      } else if (document.visibilityState === "visible") {
+        sessionStorage.removeItem("isPageRefreshed");
+      }
     };
 
-    window.addEventListener("beforeunload", handleBeforeUnload);
+    document.addEventListener("visibilitychange", handleVisibilityChange);
 
     return () => {
-      window.removeEventListener("beforeunload", handleBeforeUnload);
-      sessionStorage.removeItem("isPageRefreshed");
+      document.removeEventListener("visibilitychange", handleVisibilityChange);
     };
   }, []);
 
