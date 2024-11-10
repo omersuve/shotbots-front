@@ -118,8 +118,11 @@ export const WalletAuthProvider: React.FC<{ children: React.ReactNode }> = ({
       typeof window !== "undefined"
         ? localStorage.getItem("lastConnectedWallet")
         : null;
+    const isPageRefreshed =
+      Date.now() - parseInt(localStorage.getItem("isPageRefreshed") || "0") <
+      5000;
 
-    if (publicKey?.toBase58() !== lastWallet) {
+    if (publicKey?.toBase58() !== lastWallet && !isPageRefreshed) {
       console.log(
         "Wallet switched. Resetting localStorage and asking for signature."
       );
