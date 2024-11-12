@@ -205,20 +205,77 @@ export const NewsView: FC = () => {
                           n._id.toString() === selectedNewsId[selectedTab] &&
                           !n.isVoteEnded && (
                             <>
-                              <Box
-                                sx={{
-                                  display: "flex",
-                                  flex: 3,
-                                  justifyContent: "center",
-                                  textAlign: "center",
-                                }}
-                              >
-                                <CustomSlider
+                              <div className={styles["desktop-vote-container"]}>
+                                <Box
+                                  sx={{
+                                    display: "flex",
+                                    flex: 3,
+                                    justifyContent: "center",
+                                    textAlign: "center",
+                                  }}
+                                >
+                                  <CustomSlider
+                                    value={
+                                      votesOfNews[n._id.toString()] ??
+                                      MarketSentiment.NEUTRAL
+                                    }
+                                    onChange={(newValue) => {
+                                      setVotesOfNews((prev) => ({
+                                        ...prev,
+                                        [n._id.toString()]: newValue,
+                                      }));
+                                    }}
+                                    disabled={votedNews.includes(
+                                      n._id.toString()
+                                    )}
+                                  />
+                                </Box>
+                                <p className="ml-8 w-8 fs-5 font-bold">
+                                  {votesOfNews[n._id.toString()] ??
+                                    MarketSentiment.NEUTRAL}
+                                </p>
+                                <div className="flex-1 items-center">
+                                  <button
+                                    className={`bg-gray-200 ${
+                                      !votedNews.includes(n._id.toString())
+                                        ? "hover:bg-gray-300 active:bg-gray-400"
+                                        : ""
+                                    }  w-20 rounded px-2 py-1 ml-4`}
+                                    onClick={() => {
+                                      handleSendVote(
+                                        n._id.toString(),
+                                        votesOfNews[n._id.toString()],
+                                        selectedTab,
+                                        publicKey?.toString()
+                                      ).then((v) => {
+                                        if (v != undefined)
+                                          submitVote(n._id.toString(), v);
+                                      });
+                                    }}
+                                    disabled={votedNews.includes(
+                                      n._id.toString()
+                                    )}
+                                  >
+                                    {" "}
+                                    {votedNews.includes(n._id.toString())
+                                      ? "Submitted"
+                                      : "Submit"}
+                                  </button>
+                                </div>
+                              </div>
+
+                              {/* Mobile Input */}
+                              <div className={styles["mobile-vote-container"]}>
+                                <select
                                   value={
                                     votesOfNews[n._id.toString()] ??
                                     MarketSentiment.NEUTRAL
                                   }
-                                  onChange={(newValue) => {
+                                  onChange={(e) => {
+                                    const newValue = parseInt(
+                                      e.target.value,
+                                      10
+                                    ) as MarketSentiment;
                                     setVotesOfNews((prev) => ({
                                       ...prev,
                                       [n._id.toString()]: newValue,
@@ -227,19 +284,26 @@ export const NewsView: FC = () => {
                                   disabled={votedNews.includes(
                                     n._id.toString()
                                   )}
-                                />
-                              </Box>
-                              <p className="ml-8 w-8 fs-5 font-bold">
-                                {votesOfNews[n._id.toString()] ??
-                                  MarketSentiment.NEUTRAL}
-                              </p>
-                              <div className="flex-1 items-center">
+                                  className={styles["vote-select"]}
+                                >
+                                  <option value={MarketSentiment.DOOMED}>
+                                    Doomed (-2)
+                                  </option>
+                                  <option value={MarketSentiment.BEARISH}>
+                                    Bearish (-1)
+                                  </option>
+                                  <option value={MarketSentiment.NEUTRAL}>
+                                    Neutral (0)
+                                  </option>
+                                  <option value={MarketSentiment.BULLISH}>
+                                    Bullish (1)
+                                  </option>
+                                  <option value={MarketSentiment.EUPHORIC}>
+                                    Euphoric (2)
+                                  </option>
+                                </select>
                                 <button
-                                  className={`bg-gray-200 ${
-                                    !votedNews.includes(n._id.toString())
-                                      ? "hover:bg-gray-300 active:bg-gray-400"
-                                      : ""
-                                  }  w-20 rounded px-2 py-1 ml-4`}
+                                  className="bg-gray-200 hover:bg-gray-300 w-20 rounded px-2 py-1"
                                   onClick={() => {
                                     handleSendVote(
                                       n._id.toString(),
@@ -247,7 +311,7 @@ export const NewsView: FC = () => {
                                       selectedTab,
                                       publicKey?.toString()
                                     ).then((v) => {
-                                      if (v != undefined)
+                                      if (v !== undefined)
                                         submitVote(n._id.toString(), v);
                                     });
                                   }}
@@ -255,7 +319,6 @@ export const NewsView: FC = () => {
                                     n._id.toString()
                                   )}
                                 >
-                                  {" "}
                                   {votedNews.includes(n._id.toString())
                                     ? "Submitted"
                                     : "Submit"}
