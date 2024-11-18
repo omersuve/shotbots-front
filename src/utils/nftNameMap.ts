@@ -30,4 +30,7 @@ export const NFT_NAME_MAP = new Map<string, string>([
   ["fomo-mage-77", "mage_v138"],
   ["vision-aio", "vision_aio"],
   ["gigabuds", "giga_buds"],
+  ["goatses", "goat__"],
+  ["sharpaio-1", "sharpaio"],
+  ["retrogoons-traits", ""],
 ]);
