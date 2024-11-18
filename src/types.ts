@@ -163,6 +163,7 @@ export type TelegramMessage = {
     totalLPProviders: number;
     totalMarketLiquidity: number;
   };
+  blink_url: string;
 };
 
 export enum MarketSentiment {

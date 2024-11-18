@@ -301,6 +301,18 @@ export const TrendingView: FC = () => {
                   </div>
                 )}
 
+                {/* Copy Blink URL Button */}
+                <button
+                  disabled={true}
+                  className={`${styles["copyBlinkButton"]}`}
+                  onClick={() => {
+                    navigator.clipboard.writeText(message.blink_url);
+                    toast.success("Blink URL copied!");
+                  }}
+                >
+                  B L I N K
+                </button>
+
                 {/* Buy Token Button and Amount Selection */}
                 <div className="flex items-center justify-center gap-10 mt-3">
                   {/* Predefined Amount Buttons */}
@@ -340,13 +352,10 @@ export const TrendingView: FC = () => {
                   {/* Buy Button */}
                   <button
                     disabled={true}
-                    className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-xs text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
-                    style={{ width: "150px", height: "60px" }} // Fixed width for the button
+                    className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-[10px] sm:text-[12px] text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 cursor-not-allowed sm:w-[150px] sm:h-[50px] w-[120px] h-[40px]"
                     onClick={() => {
                       if (url) {
                         quoteAndSwap(index, url);
-                      } else {
-                        console.error("Invalid URL. Cannot perform swap.");
                       }
                     }}
                   >
