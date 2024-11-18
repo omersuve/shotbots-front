@@ -50,24 +50,26 @@ export const NewsView: FC = () => {
 
   useEffect(() => {
     const updatePosition = () => {
-      if (
-        selectedNewsId[selectedTab] &&
-        cardRefs.current[selectedNewsId[selectedTab]]
-      ) {
-        const cardElement = cardRefs.current[selectedNewsId[selectedTab]];
-        const bodyElement = newsBodyRef.current;
-        if (cardElement && bodyElement) {
-          const { height } = cardElement.getBoundingClientRect();
-          const selectedIndex = news.findIndex(
-            (n) => n._id.toString() === selectedNewsId[selectedTab]
-          );
-          const marginTop = selectedIndex * height; // 16px for margin-bottom of each card
-          bodyElement.style.marginTop = `${marginTop}px`;
+      const bodyElement = newsBodyRef.current;
+      if (!bodyElement || !selectedNewsId[selectedTab]) return;
+
+      const selectedIndex = news.findIndex(
+        (n) => n._id.toString() === selectedNewsId[selectedTab]
+      );
+
+      // Calculate cumulative height up to the selected news card
+      let cumulativeHeight = 0;
+      for (let i = 0; i < selectedIndex; i++) {
+        const cardElement = cardRefs.current[news[i]._id.toString()];
+        if (cardElement) {
+          cumulativeHeight += cardElement.getBoundingClientRect().height + 16; // 16px for margin-bottom
         }
       }
+
+      // Update the margin-top of the news body based on cumulative height
+      bodyElement.style.marginTop = `${cumulativeHeight}px`;
     };
 
-    // Call the function initially and on tab change
     updatePosition();
   }, [selectedNewsId, selectedTab, news]);
 
