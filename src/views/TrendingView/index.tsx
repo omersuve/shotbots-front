@@ -61,125 +61,128 @@ export const TrendingView: FC = () => {
   };
 
   const quoteAndSwap = async (index: number, dexScreenerUrl: string) => {
-    try {
-      if (!publicKey || !signTransaction) {
-        console.error("Wallet not connected or signTransaction not available");
-        return;
-      }
+    toast.info("Swapping will be available soon...");
+    return;
 
-      const amount = amounts[index] || 0.1; // Get the selected amount for the specific item
+    // try {
+    //   if (!publicKey || !signTransaction) {
+    //     console.error("Wallet not connected or signTransaction not available");
+    //     return;
+    //   }
 
-      toast.info("Transaction is being processed...");
+    //   const amount = amounts[index] || 0.1; // Get the selected amount for the specific item
 
-      // Extract the address from the Dexscreener URL
-      const tokenAddress = dexScreenerUrl.split("/").pop();
-      if (!tokenAddress) {
-        throw new Error("Invalid Dexscreener URL");
-      }
+    //   toast.info("Transaction is being processed...");
 
-      // Step 1: Get the quote from the Jupiter API
-      const quoteResponse = await fetch(
-        `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
-          amount * 1e9
-        }&slippageBps=300`
-      ).then((res) => res.json());
+    //   // Extract the address from the Dexscreener URL
+    //   const tokenAddress = dexScreenerUrl.split("/").pop();
+    //   if (!tokenAddress) {
+    //     throw new Error("Invalid Dexscreener URL");
+    //   }
 
-      // Step 2: Request serialized transaction from the backend
-      const getTransactionResponse = await fetch(
-        "/api/getSerializedTransaction",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            quoteResponse,
-            userPublicKey: publicKey?.toString(),
-          }),
-        }
-      );
+    //   // Step 1: Get the quote from the Jupiter API
+    //   const quoteResponse = await fetch(
+    //     `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
+    //       amount * 1e9
+    //     }&slippageBps=300`
+    //   ).then((res) => res.json());
 
-      const { success, transaction } = await getTransactionResponse.json();
+    //   // Step 2: Request serialized transaction from the backend
+    //   const getTransactionResponse = await fetch(
+    //     "/api/getSerializedTransaction",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({
+    //         quoteResponse,
+    //         userPublicKey: publicKey?.toString(),
+    //       }),
+    //     }
+    //   );
 
-      if (!success) {
-        throw new Error("Failed to create transaction");
-      }
+    //   const { success, transaction } = await getTransactionResponse.json();
 
-      // Step 3: Client signs the transaction
-      const transactionBuffer = Buffer.from(transaction, "base64");
-      const transactionUint8Array = new Uint8Array(transactionBuffer);
+    //   if (!success) {
+    //     throw new Error("Failed to create transaction");
+    //   }
 
-      // Deserialize the transaction using the converted Uint8Array
-      const versionedTransaction = VersionedTransaction.deserialize(
-        transactionUint8Array
-      );
+    //   // Step 3: Client signs the transaction
+    //   const transactionBuffer = Buffer.from(transaction, "base64");
+    //   const transactionUint8Array = new Uint8Array(transactionBuffer);
 
-      // Sign the transaction with the connected wallet
-      const signedTransaction = await signTransaction(versionedTransaction);
+    //   // Deserialize the transaction using the converted Uint8Array
+    //   const versionedTransaction = VersionedTransaction.deserialize(
+    //     transactionUint8Array
+    //   );
 
-      // Step 4: Send the signed transaction back to the server for submission
-      const submitTransactionResponse = await fetch("/api/sendTransaction", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          signedTransaction: Buffer.from(
-            signedTransaction.serialize()
-          ).toString("base64"),
-        }),
-      });
-      // Handle the submission response
-      let txid;
-      try {
-        const submitResponse = await submitTransactionResponse.json();
-        txid = submitResponse.txid;
+    //   // Sign the transaction with the connected wallet
+    //   const signedTransaction = await signTransaction(versionedTransaction);
 
-        if (!txid) {
-          throw new Error("Failed to submit transaction");
-        }
-      } catch (parseError) {
-        console.error("Failed to parse response as JSON:", parseError);
-        const textResponse = await submitTransactionResponse.text();
-        console.error("Raw response:", textResponse);
-        throw new Error(
-          "Failed to submit transaction due to invalid response format."
-        );
-      }
+    //   // Step 4: Send the signed transaction back to the server for submission
+    //   const submitTransactionResponse = await fetch("/api/sendTransaction", {
+    //     method: "POST",
+    //     headers: { "Content-Type": "application/json" },
+    //     body: JSON.stringify({
+    //       signedTransaction: Buffer.from(
+    //         signedTransaction.serialize()
+    //       ).toString("base64"),
+    //     }),
+    //   });
+    //   // Handle the submission response
+    //   let txid;
+    //   try {
+    //     const submitResponse = await submitTransactionResponse.json();
+    //     txid = submitResponse.txid;
 
-      // Step 5: Request the backend to confirm the transaction
-      const confirmTransactionResponse = await fetch(
-        "/api/confirmTransaction",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            txid,
-          }),
-        }
-      );
+    //     if (!txid) {
+    //       throw new Error("Failed to submit transaction");
+    //     }
+    //   } catch (parseError) {
+    //     console.error("Failed to parse response as JSON:", parseError);
+    //     const textResponse = await submitTransactionResponse.text();
+    //     console.error("Raw response:", textResponse);
+    //     throw new Error(
+    //       "Failed to submit transaction due to invalid response format."
+    //     );
+    //   }
 
-      // Handle the confirmation response
-      try {
-        const { success } = await confirmTransactionResponse.json();
+    //   // Step 5: Request the backend to confirm the transaction
+    //   const confirmTransactionResponse = await fetch(
+    //     "/api/confirmTransaction",
+    //     {
+    //       method: "POST",
+    //       headers: { "Content-Type": "application/json" },
+    //       body: JSON.stringify({
+    //         txid,
+    //       }),
+    //     }
+    //   );
 
-        if (success) {
-          toast.success("Transaction successful!");
-          console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
-        } else {
-          throw new Error("Transaction confirmation failed.");
-        }
-      } catch (parseError) {
-        console.error(
-          "Failed to parse confirmation response as JSON:",
-          parseError
-        );
-        const textResponse = await confirmTransactionResponse.text();
-        console.error("Raw confirmation response:", textResponse);
-        throw new Error(
-          "Failed to confirm transaction due to invalid response format."
-        );
-      }
-    } catch (error) {
-      console.error("Error during the swap process:", error);
-      toast.error("Transaction failed!");
-    }
+    //   // Handle the confirmation response
+    //   try {
+    //     const { success } = await confirmTransactionResponse.json();
+
+    //     if (success) {
+    //       toast.success("Transaction successful!");
+    //       console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+    //     } else {
+    //       throw new Error("Transaction confirmation failed.");
+    //     }
+    //   } catch (parseError) {
+    //     console.error(
+    //       "Failed to parse confirmation response as JSON:",
+    //       parseError
+    //     );
+    //     const textResponse = await confirmTransactionResponse.text();
+    //     console.error("Raw confirmation response:", textResponse);
+    //     throw new Error(
+    //       "Failed to confirm transaction due to invalid response format."
+    //     );
+    //   }
+    // } catch (error) {
+    //   console.error("Error during the swap process:", error);
+    //   toast.error("Transaction failed!");
+    // }
   };
 
   const extractInfo = (text: string) => {
@@ -336,6 +339,7 @@ export const TrendingView: FC = () => {
 
                   {/* Buy Button */}
                   <button
+                    disabled={true}
                     className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-xs text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105"
                     style={{ width: "150px", height: "60px" }} // Fixed width for the button
                     onClick={() => {
