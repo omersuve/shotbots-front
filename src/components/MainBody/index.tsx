@@ -198,10 +198,6 @@ const MainBody = ({ gradient, message, message2 }: any) => {
         />
       </div>
       <Container className="text-center">
-        {/* Conditional rendering: show referral form if not yet referred */}
-        <div className={`${styles["notice"]} p-2 mb-3`}>
-          <p>Mobile Support Available!</p>
-        </div>
         {!isSigned || !isReferred || !publicKey ? (
           <div className={`${styles["referral-section"]} mt-5`}>
             <h2 className="text-black">Enter Referral Code for Early Access</h2>
