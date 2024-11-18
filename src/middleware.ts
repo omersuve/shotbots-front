@@ -26,6 +26,12 @@ export async function middleware(req: NextRequest) {
     return NextResponse.redirect(new URL("/", req.url));
   }
 
+  // Restrict access to certain paths
+  const restrictedPaths = ["/nft"];
+  if (restrictedPaths.includes(pathname)) {
+    return NextResponse.redirect(new URL("/dashboard", req.url));
+  }
+
   // Check the referral status by calling an internal API
   const referralResponse = await fetch(
     `${req.nextUrl.origin}/api/checkReferred?wallet_address=${walletAddress}`
