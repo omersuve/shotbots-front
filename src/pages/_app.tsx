@@ -31,6 +31,7 @@ import { PricesProvider } from "../contexts/PricesContext";
 import { MemecoinProvider } from "../contexts/MemecoinContext";
 import { NftProvider } from "../contexts/NftContext";
 import { TrendingProvider } from "../contexts/TrendingContext";
+import { PumpfunProvider } from "../contexts/PumpfunContext";
 import { WalletAuthProvider } from "../contexts/WalletAuthContext";
 
 function MyApp({ Component, pageProps }: AppProps) {
@@ -56,20 +57,23 @@ function MyApp({ Component, pageProps }: AppProps) {
                   <MemecoinProvider>
                     <NftProvider>
                       <TwitterProvider>
-                        <TrendingProvider>
-                          <div className="flex flex-col min-h-screen">
-                            {router.pathname != "/" && <Navbar />}
-                            <div
-                              className={`${
-                                router.pathname != "/" && "flex-grow mt-20 mb-2"
-                              }`}
-                            >
-                              <Component {...pageProps} />
+                        <PumpfunProvider>
+                          <TrendingProvider>
+                            <div className="flex flex-col min-h-screen">
+                              {router.pathname != "/" && <Navbar />}
+                              <div
+                                className={`${
+                                  router.pathname != "/" &&
+                                  "flex-grow mt-20 mb-2"
+                                }`}
+                              >
+                                <Component {...pageProps} />
+                              </div>
+                              {router.pathname != "/" && <Footer />}
                             </div>
-                            {router.pathname != "/" && <Footer />}
-                          </div>
-                          <ToastContainer />
-                        </TrendingProvider>
+                            <ToastContainer />
+                          </TrendingProvider>
+                        </PumpfunProvider>
                       </TwitterProvider>
                     </NftProvider>
                   </MemecoinProvider>

@@ -303,7 +303,6 @@ export const TrendingView: FC = () => {
 
                 {/* Copy Blink URL Button */}
                 <button
-                  disabled={true}
                   className={`${styles["copyBlinkButton"]}`}
                   onClick={() => {
                     navigator.clipboard.writeText(message.blink_url);

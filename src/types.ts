@@ -153,6 +153,18 @@ export type FeesInfo = {
   floorListedNftType: string;
 };
 
+export type PumpTokenData = {
+  address: string; // Token mint address
+  name: string; // Token name
+  symbol: string; // Token symbol
+  imageUri: string; // URI of the token image
+  twitter: string; // Twitter handle or URL
+  telegram: string; // Telegram handle or URL
+  website: string; // Website URL
+  marketCap: number; // Market capitalization in USD
+  createdTimestamp: string; // Human-readable creation timestamp
+};
+
 export type TelegramMessage = {
   id: string;
   text: string;

@@ -189,7 +189,10 @@ const Navbar: React.FC = () => {
     <nav
       className={`${styles["navbar"]} fixed w-full z-20 top-0 start-0 border-b border-gray-200 opacity-90`}
     >
-      <div className="max-w-screen-xl flex flex-wrap items-center justify-between mx-auto p-2">
+      <div
+        className="flex flex-wrap items-center justify-between mx-auto p-2"
+        style={{ maxWidth: "1400px" }}
+      >
         <div className="flex items-center lg:space-x-6">
           <button className={styles.logoButton}>
             <Link href="/" passHref={true}>
@@ -362,6 +365,18 @@ const Navbar: React.FC = () => {
                 Trends
               </Link>
             </li>
+            <li className="flex items-center h-full">
+              <Link
+                href="/pumpfun"
+                className={`flex items-center h-full px-3 text-dark md:hover:text-blue-700 hover:bg-gray-300 hover:text-blue-700 transition duration-300 ease-in-out ${
+                  router.pathname === "/pumpfun"
+                    ? "border-b-2 border-blue-500"
+                    : ""
+                }`}
+              >
+                Pumpfun
+              </Link>
+            </li>
             <li className="flex items-center h-full cursor-not-allowed">
               <Link
                 href="/nft"
@@ -463,6 +478,19 @@ const Navbar: React.FC = () => {
                   onClick={handleLinkClick}
                 >
                   Trends
+                </Link>
+              </li>
+              <li>
+                <Link
+                  href="/pumpfun"
+                  className={`text-dark block md:hover:text-blue-700 transition duration-300 ease-in-out ${
+                    router.pathname === "/pumpfun"
+                      ? "border-b-2 border-blue-500"
+                      : ""
+                  }`}
+                  onClick={handleLinkClick}
+                >
+                  Pumpfun
                 </Link>
               </li>
               <li className="cursor-not-allowed">
