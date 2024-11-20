@@ -207,6 +207,7 @@ export const TrendingView: FC = () => {
 
   return (
     <div className={styles.container}>
+      <p className="text-center fs-6 fw-bold my-3">TRENDING MEMECOINS</p>
       <ul className={styles.messageList}>
         {messages.slice().map((message, index) => {
           const { url, token, telegram, tokenAddress } = extractInfo(

@@ -165,6 +165,7 @@ export type PumpTokenData = {
   createdTimestamp: string; // Human-readable creation timestamp
   pumpUrl: string;
   dexUrl: string;
+  blink_url: string;
 };
 
 export type TelegramMessage = {

@@ -66,6 +66,32 @@
   border-radius: 8px;
 }
 
+.copyBlinkButton {
+  position: absolute;
+  right: 10px;
+  bottom: 10px;
+  background-color: #c0b25a;
+  color: rgb(255, 255, 255);
+  border: none;
+  padding: 6px 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  font-weight: bold;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: background-color 0.2s ease;
+  @media (max-width: 768px) {
+    right: 8px;
+    bottom: 8px;
+    color: rgb(255, 255, 255);
+    padding: 4px 8px;
+    font-size: 10px;
+  }
+}
+
+.copyBlinkButton:hover {
+  background-color: #aaa375;
+}
+
 .flash {
   background-color: #fffbcc; /* Highlight color */
   animation: flash 0.3s ease-in-out;

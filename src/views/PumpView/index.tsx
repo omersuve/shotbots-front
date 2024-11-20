@@ -3,6 +3,7 @@ import styles from "./index.module.css";
 import Link from "next/link";
 import Image from "next/image";
 import { usePumpfun } from "../../contexts/PumpfunContext";
+import { toast } from "react-toastify";
 
 export const PumpView: FC = () => {
   const { messages } = usePumpfun();
@@ -36,6 +37,9 @@ export const PumpView: FC = () => {
 
   return (
     <div className={styles.container}>
+      <p className="text-center fs-6 fw-bold my-3">
+        PUMP.FUN BONDING COMPLETIONS
+      </p>
       <ul className={styles.messageList}>
         {messages.map((message, index) => (
           <li
@@ -114,6 +118,18 @@ export const PumpView: FC = () => {
                 )}
               </div>
             </div>
+            {/* Copy Blink URL Button */}
+            {message.blink_url && (
+              <button
+                className={`${styles["copyBlinkButton"]}`}
+                onClick={() => {
+                  navigator.clipboard.writeText(message.blink_url);
+                  toast.success("Blink URL copied!");
+                }}
+              >
+                B L I N K
+              </button>
+            )}
           </li>
         ))}
       </ul>
