@@ -66,18 +66,16 @@
   border-radius: 8px;
 }
 
-@keyframes flash {
-  0% {
-    background-color: #fffbcc; /* Light yellow */
-  }
-  50% {
-    background-color: #fff;
-  }
-  100% {
-    background-color: #fffbcc;
-  }
+.flash {
+  background-color: #fffbcc; /* Highlight color */
+  animation: flash 0.3s ease-in-out;
 }
 
-.flash {
-  animation: flash 3s ease-in-out;
+@keyframes flash {
+  0% {
+    background-color: #fffbcc;
+  }
+  100% {
+    background-color: #ffffff;
+  }
 }

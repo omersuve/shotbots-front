@@ -163,6 +163,8 @@ export type PumpTokenData = {
   website: string; // Website URL
   marketCap: number; // Market capitalization in USD
   createdTimestamp: string; // Human-readable creation timestamp
+  pumpUrl: string;
+  dexUrl: string;
 };
 
 export type TelegramMessage = {

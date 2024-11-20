@@ -22,13 +22,15 @@ export const PumpView: FC = () => {
       setHighlightedItems((prev) => new Set(prev).add(newItemIndex));
 
       // Remove highlight after 3 seconds
-      setTimeout(() => {
+      const timeout = setTimeout(() => {
         setHighlightedItems((prev) => {
           const updated = new Set(prev);
           updated.delete(newItemIndex);
           return updated;
         });
-      }, 3000); // Adjust time to match animation duration
+      }, 3000);
+
+      return () => clearTimeout(timeout); // Cleanup timeout on unmount
     }
   }, [messages]);
 
@@ -39,7 +41,7 @@ export const PumpView: FC = () => {
           <li
             key={index}
             className={`${styles.messageItem} flex flex-col ${
-              highlightedItems.has(index) ? styles.flash : ""
+              highlightedItems.has(index) ? styles["flash"] : ""
             }`}
           >
             <div className="flex w-full mb-1 items-center gap-4">
@@ -78,6 +80,22 @@ export const PumpView: FC = () => {
                     <strong>Website:</strong>{" "}
                     <Link href={message.website} target="_blank">
                       {message.website}
+                    </Link>
+                  </p>
+                )}
+                {message.pumpUrl !== "N/A" && (
+                  <p>
+                    <strong>PumpFun:</strong>{" "}
+                    <Link href={message.pumpUrl} target="_blank">
+                      {message.pumpUrl}
+                    </Link>
+                  </p>
+                )}
+                {message.dexUrl !== "N/A" && (
+                  <p>
+                    <strong>Dexscreener:</strong>{" "}
+                    <Link href={message.dexUrl} target="_blank">
+                      {message.dexUrl}
                     </Link>
                   </p>
                 )}
