@@ -37,7 +37,7 @@ export const PumpView: FC = () => {
 
   return (
     <div className={styles.container}>
-      <p className="text-center fs-6 fw-bold my-3">
+      <p className="text-center fs-6 fw-bold my-2">
         PUMP.FUN BONDING COMPLETIONS
       </p>
       <ul className={styles.messageList}>
