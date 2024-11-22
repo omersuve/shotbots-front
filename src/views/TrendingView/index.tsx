@@ -250,6 +250,16 @@ export const TrendingView: FC = () => {
                       </Link>
                     </p>
                   )}
+                  {/* MarketCap, CreatedAt, and 1h Volume */}
+                  <p>
+                    <strong>Market Cap:</strong> ${message.marketCap || "N/A"}
+                  </p>
+                  <p>
+                    <strong>Created At:</strong> {message.createdAt || "N/A"}
+                  </p>
+                  <p>
+                    <strong>1H Volume:</strong> ${message.volume1h || "N/A"}
+                  </p>
                   {message.rugcheck && (
                     <div className={styles.rugcheck}>
                       <p>
