@@ -1,4 +1,4 @@
-import React, { FC, useState } from "react";
+import React, { FC, useEffect, useState } from "react";
 import styles from "./index.module.css";
 import { useTrending } from "../../contexts/TrendingContext";
 import Link from "next/link";
@@ -23,6 +23,9 @@ export const TrendingView: FC = () => {
   const { messages } = useTrending();
   const { publicKey, signTransaction } = useWallet();
   const [failedImages, setFailedImages] = useState<Set<number>>(new Set());
+  const [highlightedItems, setHighlightedItems] = useState<Set<number>>(
+    new Set()
+  );
 
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
@@ -35,6 +38,19 @@ export const TrendingView: FC = () => {
       [index]: !prevState[index],
     }));
   };
+
+  useEffect(() => {
+    if (messages.length > 0) {
+      setHighlightedItems(new Set([0])); // Highlight only the first index
+
+      // Remove highlight after 3 seconds
+      const timeout = setTimeout(() => {
+        setHighlightedItems(new Set()); // Clear the highlight
+      }, 3000);
+
+      return () => clearTimeout(timeout); // Cleanup timeout on unmount
+    }
+  }, [messages]); // Run this effect every time messages are updated
 
   const handleImageError = (index: number) => {
     setFailedImages((prev) => new Set(prev).add(index));
@@ -216,7 +232,12 @@ export const TrendingView: FC = () => {
           const scores = message.scores;
           const selectedAmount = amounts[index] || 0.1; // Default amount for each item
           return (
-            <li key={index} className={`${styles.messageItem} flex flex-col`}>
+            <li
+              key={index}
+              className={`${styles.messageItem} flex flex-col ${
+                highlightedItems.has(index) ? styles["flash"] : ""
+              }`}
+            >
               <div className="flex w-full mb-1 items-center gap-4">
                 <div className="flex-1 pr-1 break-all">
                   <div className={styles.messageDate}>

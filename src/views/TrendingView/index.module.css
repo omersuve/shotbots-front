@@ -104,3 +104,17 @@
 .copyBlinkButton:hover {
   background-color: #aaa375;
 }
+
+.flash {
+  background-color: #fffbcc; /* Highlight color */
+  animation: flash 0.3s ease-in-out;
+}
+
+@keyframes flash {
+  0% {
+    background-color: #fffbcc;
+  }
+  100% {
+    background-color: #ffffff;
+  }
+}

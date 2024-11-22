@@ -19,21 +19,16 @@ export const PumpView: FC = () => {
 
   useEffect(() => {
     if (messages.length > 0) {
-      const newItemIndex = messages.length - 1;
-      setHighlightedItems((prev) => new Set(prev).add(newItemIndex));
+      setHighlightedItems(new Set([0])); // Highlight only the first index
 
       // Remove highlight after 3 seconds
       const timeout = setTimeout(() => {
-        setHighlightedItems((prev) => {
-          const updated = new Set(prev);
-          updated.delete(newItemIndex);
-          return updated;
-        });
+        setHighlightedItems(new Set()); // Clear the highlight
       }, 3000);
 
       return () => clearTimeout(timeout); // Cleanup timeout on unmount
     }
-  }, [messages]);
+  }, [messages]); // Run this effect every time messages are updated
 
   return (
     <div className={styles.container}>
