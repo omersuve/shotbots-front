@@ -93,15 +93,20 @@
 }
 
 .flash {
-  background-color: #fffbcc; /* Highlight color */
-  animation: flash 0.3s ease-in-out;
+  animation: flash 0.5s ease-out; /* Slightly longer animation for realism */
 }
 
 @keyframes flash {
   0% {
-    background-color: #fffbcc;
+    background-color: #fff5b0; /* Bright yellow at the start */
+  }
+  30% {
+    background-color: #ffe580; /* Slightly softer yellow */
+  }
+  60% {
+    background-color: #fff0d0; /* Fading to a light cream */
   }
   100% {
-    background-color: #ffffff;
+    background-color: #ffffff; /* Fully faded to white */
   }
 }
