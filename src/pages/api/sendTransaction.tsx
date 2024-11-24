@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Connection, TransactionSignature } from "@solana/web3.js";
+import { createRpcConnection } from "utils/createRpcConnection";
+import { transactionSenderAndConfirmationWaiter } from "utils/transactionSender";
 
 type ResponseData = {
   success: boolean;
@@ -17,25 +18,23 @@ export default async function handler(
       .json({ success: false, error: "Method not allowed" });
   }
 
-  const { signedTransaction } = req.body;
+  const { signedTransaction, blockhashWithExpiryBlockHeight } = req.body;
 
-  if (!signedTransaction) {
-    return res
-      .status(400)
-      .json({ success: false, error: "Missing signed transaction" });
+  if (!signedTransaction || !blockhashWithExpiryBlockHeight) {
+    return res.status(400).json({
+      success: false,
+      error: "Missing signed transaction or blockhash information",
+    });
   }
 
   try {
-    const startTime = Date.now(); // Track start time of the entire function
+    const startTime = Date.now();
     console.log(`Request received at: ${new Date(startTime).toISOString()}`);
 
-    const HELIUS_API_KEY = process.env.HELIUS_API_KEY!;
-    const heliusConnection = new Connection(
-      `https://rpc.helius.xyz?api-key=${HELIUS_API_KEY}`,
-      {
-        commitment: "confirmed",
-        confirmTransactionInitialTimeout: 10 * 1000, // 10 seconds initial timeout
-      }
+    const connectionStartTime = Date.now();
+    const connection = createRpcConnection();
+    console.log(
+      `[Time: ${Date.now() - connectionStartTime}ms] RPC connection established`
     );
 
     console.log(
@@ -44,36 +43,41 @@ export default async function handler(
       ).toISOString()} (Elapsed: ${Date.now() - startTime}ms)`
     );
 
-    // Step 1: Convert the Buffer to Uint8Array
     const transactionStartTime = Date.now();
-    const rawTransaction = Buffer.from(signedTransaction, "base64");
-    console.log(
-      `Transaction converted at: ${new Date(
-        Date.now()
-      ).toISOString()} (Elapsed: ${Date.now() - transactionStartTime}ms)`
-    );
-
-    // Step 2: Send the signed transaction to the Solana network
-    const sendStartTime = Date.now();
-    const txid: TransactionSignature =
-      await heliusConnection.sendRawTransaction(rawTransaction, {
-        skipPreflight: true,
-        maxRetries: 2,
-      });
-    console.log(
-      `Transaction sent at: ${new Date(Date.now()).toISOString()} (Elapsed: ${
-        Date.now() - sendStartTime
-      }ms)`
-    );
-
-    return res.status(200).json({
-      success: true,
-      txid,
+    const txResponse = await transactionSenderAndConfirmationWaiter({
+      connection: connection,
+      serializedTransaction: Buffer.from(signedTransaction, "base64"),
+      blockhashWithExpiryBlockHeight,
     });
+    console.log(
+      `[Time: ${
+        Date.now() - transactionStartTime
+      }ms] Transaction sent and confirmed`
+    );
+
+    if (!txResponse) {
+      console.warn(
+        `[Total Time: ${
+          Date.now() - startTime
+        }ms] Transaction expired before confirmation`
+      );
+      return res.status(500).json({
+        success: false,
+        error: "Transaction expired before confirmation",
+      });
+    }
+
+    console.log(
+      `[Total Time: ${
+        Date.now() - startTime
+      }ms] Transaction successfully confirmed: ${txResponse}`
+    );
+    res.status(200).json({ success: true, txid: txResponse });
   } catch (error) {
-    console.error("Error submitting transaction:", error);
-    return res
-      .status(500)
-      .json({ success: false, error: "Failed to submit transaction" });
+    console.error(
+      `[Total Time: ${Date.now() - Date.now()}ms] Error during transaction:`,
+      error
+    );
+    res.status(500).json({ success: false, error: "Transaction failed" });
   }
 }

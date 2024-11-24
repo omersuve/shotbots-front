@@ -18,6 +18,7 @@ import { useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 import { toast } from "react-toastify";
 import Image from "next/image";
+import { wait } from "utils/transactionSender";
 
 export const TrendingView: FC = () => {
   const { messages } = useTrending();
@@ -26,11 +27,33 @@ export const TrendingView: FC = () => {
   const [highlightedItems, setHighlightedItems] = useState<Set<number>>(
     new Set()
   );
-
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
   }>({});
   const [amounts, setAmounts] = useState<{ [key: number]: number }>({}); // Track the amount for each item
+  const [tokenBalances, setTokenBalances] = useState<
+    { mint: string; balance: number }[]
+  >([]);
+
+  const fetchAllTokenBalances = async (walletAddress: string) => {
+    try {
+      const response = await fetch("/api/getTokenAccounts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ walletAddress }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to fetch token balances");
+      }
+
+      const data = await response.json();
+      return data.balances || [];
+    } catch (error) {
+      console.error("Error fetching token balances:", error);
+      return [];
+    }
+  };
 
   const toggleGraphVisibility = (index: number) => {
     setVisibleGraphs((prevState) => ({
@@ -51,6 +74,17 @@ export const TrendingView: FC = () => {
       return () => clearTimeout(timeout); // Cleanup timeout on unmount
     }
   }, [messages]); // Run this effect every time messages are updated
+
+  useEffect(() => {
+    const fetchBalances = async () => {
+      if (!publicKey) return;
+
+      const balances = await fetchAllTokenBalances(publicKey.toString());
+      setTokenBalances(balances);
+    };
+
+    fetchBalances();
+  }, [publicKey]);
 
   const handleImageError = (index: number) => {
     setFailedImages((prev) => new Set(prev).add(index));
@@ -77,128 +111,233 @@ export const TrendingView: FC = () => {
   };
 
   const quoteAndSwap = async (index: number, dexScreenerUrl: string) => {
-    toast.info("Swapping will be available soon...");
-    return;
+    try {
+      if (!publicKey || !signTransaction) {
+        console.error("Wallet not connected or signTransaction not available");
+        return;
+      }
 
-    // try {
-    //   if (!publicKey || !signTransaction) {
-    //     console.error("Wallet not connected or signTransaction not available");
-    //     return;
-    //   }
+      const start = Date.now();
+      // const amount = amounts[index] || 0.1; // Get the selected amount for the specific item
+      const amount = 0.01; // Get the selected amount for the specific item
 
-    //   const amount = amounts[index] || 0.1; // Get the selected amount for the specific item
+      toast.info("Processing...");
 
-    //   toast.info("Transaction is being processed...");
+      // Extract the address from the Dexscreener URL
+      const tokenAddress = dexScreenerUrl.split("/").pop();
+      if (!tokenAddress) {
+        throw new Error("Invalid Dexscreener URL");
+      }
 
-    //   // Extract the address from the Dexscreener URL
-    //   const tokenAddress = dexScreenerUrl.split("/").pop();
-    //   if (!tokenAddress) {
-    //     throw new Error("Invalid Dexscreener URL");
-    //   }
+      // console.log(`[Time: ${Date.now() - start}ms] Extracted token address`);
 
-    //   // Step 1: Get the quote from the Jupiter API
-    //   const quoteResponse = await fetch(
-    //     `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
-    //       amount * 1e9
-    //     }&slippageBps=300`
-    //   ).then((res) => res.json());
+      // Step 2: Get quote
+      const quoteStart = Date.now();
+      // Step 1: Get the quote from the Jupiter API
+      const quoteResponse = await fetch(
+        `https://quote-api.jup.ag/v6/quote?inputMint=So11111111111111111111111111111111111111112&outputMint=${tokenAddress}&amount=${
+          amount * 1e9
+        }&slippageBps=300`
+      ).then((res) => res.json());
+      // console.log(
+      //   `[Time: ${Date.now() - quoteStart}ms] Fetched quote from Jupiter API`
+      // );
 
-    //   // Step 2: Request serialized transaction from the backend
-    //   const getTransactionResponse = await fetch(
-    //     "/api/getSerializedTransaction",
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         quoteResponse,
-    //         userPublicKey: publicKey?.toString(),
-    //       }),
-    //     }
-    //   );
+      // Validate the quote response
+      if (
+        !quoteResponse ||
+        !quoteResponse.inAmount ||
+        !quoteResponse.outAmount
+      ) {
+        throw new Error(
+          `Failed to get quote from Jupiter API: ${
+            quoteResponse.error || "Invalid response"
+          }`
+        );
+      }
 
-    //   const { success, transaction } = await getTransactionResponse.json();
+      const serializeStart = Date.now();
+      // Step 2: Request serialized transaction from the backend
+      const getTransactionResponse = await fetch(
+        "/api/getSerializedTransaction",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quoteResponse,
+            userPublicKey: publicKey?.toString(),
+          }),
+        }
+      );
 
-    //   if (!success) {
-    //     throw new Error("Failed to create transaction");
-    //   }
+      // console.log(
+      //   `[Time: ${
+      //     Date.now() - serializeStart
+      //   }ms] Requested serialized transaction`
+      // );
 
-    //   // Step 3: Client signs the transaction
-    //   const transactionBuffer = Buffer.from(transaction, "base64");
-    //   const transactionUint8Array = new Uint8Array(transactionBuffer);
+      const { success, transaction, blockhashWithExpiryBlockHeight } =
+        await getTransactionResponse.json();
 
-    //   // Deserialize the transaction using the converted Uint8Array
-    //   const versionedTransaction = VersionedTransaction.deserialize(
-    //     transactionUint8Array
-    //   );
+      if (!success) {
+        throw new Error("Failed to create transaction");
+      }
 
-    //   // Sign the transaction with the connected wallet
-    //   const signedTransaction = await signTransaction(versionedTransaction);
+      const signStart = Date.now();
+      // Step 3: Client signs the transaction
+      const transactionBuffer = Buffer.from(transaction, "base64");
+      const transactionUint8Array = new Uint8Array(transactionBuffer);
 
-    //   // Step 4: Send the signed transaction back to the server for submission
-    //   const submitTransactionResponse = await fetch("/api/sendTransaction", {
-    //     method: "POST",
-    //     headers: { "Content-Type": "application/json" },
-    //     body: JSON.stringify({
-    //       signedTransaction: Buffer.from(
-    //         signedTransaction.serialize()
-    //       ).toString("base64"),
-    //     }),
-    //   });
-    //   // Handle the submission response
-    //   let txid;
-    //   try {
-    //     const submitResponse = await submitTransactionResponse.json();
-    //     txid = submitResponse.txid;
+      // Deserialize the transaction using the converted Uint8Array
+      const versionedTransaction = VersionedTransaction.deserialize(
+        transactionUint8Array
+      );
 
-    //     if (!txid) {
-    //       throw new Error("Failed to submit transaction");
-    //     }
-    //   } catch (parseError) {
-    //     console.error("Failed to parse response as JSON:", parseError);
-    //     const textResponse = await submitTransactionResponse.text();
-    //     console.error("Raw response:", textResponse);
-    //     throw new Error(
-    //       "Failed to submit transaction due to invalid response format."
-    //     );
-    //   }
+      // Sign the transaction with the connected wallet
+      const signedTransaction = await signTransaction(versionedTransaction);
+      console.log(`[Time: ${Date.now() - signStart}ms] Signed transaction`);
 
-    //   // Step 5: Request the backend to confirm the transaction
-    //   const confirmTransactionResponse = await fetch(
-    //     "/api/confirmTransaction",
-    //     {
-    //       method: "POST",
-    //       headers: { "Content-Type": "application/json" },
-    //       body: JSON.stringify({
-    //         txid,
-    //       }),
-    //     }
-    //   );
+      const sendStart = Date.now();
+      // Step 4: Send the signed transaction to the backend for submission and confirmation
+      const submitTransactionResponse = await fetch("/api/sendTransaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          signedTransaction: Buffer.from(
+            signedTransaction.serialize()
+          ).toString("base64"),
+          blockhashWithExpiryBlockHeight,
+        }),
+      });
+      // console.log(
+      //   `[Time: ${Date.now() - sendStart}ms] Sent transaction to backend`
+      // );
 
-    //   // Handle the confirmation response
-    //   try {
-    //     const { success } = await confirmTransactionResponse.json();
+      const submitResponse = await submitTransactionResponse.json();
 
-    //     if (success) {
-    //       toast.success("Transaction successful!");
-    //       console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
-    //     } else {
-    //       throw new Error("Transaction confirmation failed.");
-    //     }
-    //   } catch (parseError) {
-    //     console.error(
-    //       "Failed to parse confirmation response as JSON:",
-    //       parseError
-    //     );
-    //     const textResponse = await confirmTransactionResponse.text();
-    //     console.error("Raw confirmation response:", textResponse);
-    //     throw new Error(
-    //       "Failed to confirm transaction due to invalid response format."
-    //     );
-    //   }
-    // } catch (error) {
-    //   console.error("Error during the swap process:", error);
-    //   toast.error("Transaction failed!");
-    // }
+      if (!submitResponse.success) {
+        throw new Error(
+          submitResponse.error || "Failed to submit and confirm transaction"
+        );
+      }
+
+      const txid = submitResponse.txid;
+
+      toast.success("Transaction successful!");
+      // console.log(`Transaction successful: https://solscan.io/tx/${txid}`);
+      // console.log(
+      //   `[Total Time: ${Date.now() - start}ms] Transaction completed`
+      // );
+
+      // Re-fetch balances after successful transaction
+      // const balanceStart = Date.now();
+
+      await wait(1_000);
+
+      const updatedBalances = await fetchAllTokenBalances(publicKey.toString());
+      setTokenBalances(updatedBalances);
+      // console.log(`[Time: ${Date.now() - balanceStart}ms] Re-fetched balances`);
+    } catch (error) {
+      console.error("Error during the swap process:", error);
+      toast.error("Transaction failed!");
+    }
+  };
+
+  const sellToken = async (tokenMint: string, amount: number) => {
+    try {
+      if (!publicKey || !signTransaction) {
+        console.error("Wallet not connected or signTransaction not available");
+        return;
+      }
+
+      toast.info("Processing...");
+
+      const truncatedAmount = parseFloat(amount.toFixed(6));
+
+      // Step 1: Get the quote from the Jupiter API
+      const quoteResponse = await fetch(
+        `https://quote-api.jup.ag/v6/quote?inputMint=${tokenMint}&outputMint=So11111111111111111111111111111111111111112&amount=${
+          truncatedAmount * 1e6
+        }&slippageBps=800`
+      ).then((res) => res.json());
+
+      // Validate the quote response
+      if (
+        !quoteResponse ||
+        !quoteResponse.inAmount ||
+        !quoteResponse.outAmount
+      ) {
+        throw new Error(
+          `Failed to get quote from Jupiter API: ${
+            quoteResponse.error || "Invalid response"
+          }`
+        );
+      }
+
+      // Step 2: Request serialized transaction from the backend
+      const getTransactionResponse = await fetch(
+        "/api/getSerializedTransaction",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            quoteResponse,
+            userPublicKey: publicKey?.toString(),
+          }),
+        }
+      );
+
+      const { success, transaction, blockhashWithExpiryBlockHeight } =
+        await getTransactionResponse.json();
+
+      if (!success || !transaction || !blockhashWithExpiryBlockHeight) {
+        throw new Error("Failed to create sell transaction");
+      }
+
+      // Step 3: Client signs the transaction
+      const transactionBuffer = Buffer.from(transaction, "base64");
+      const transactionUint8Array = new Uint8Array(transactionBuffer);
+
+      const versionedTransaction = VersionedTransaction.deserialize(
+        transactionUint8Array
+      );
+
+      const signedTransaction = await signTransaction(versionedTransaction);
+
+      // Step 4: Send the signed transaction back to the server for submission and confirmation
+      const submitTransactionResponse = await fetch("/api/sendTransaction", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          signedTransaction: Buffer.from(
+            signedTransaction.serialize()
+          ).toString("base64"),
+          blockhashWithExpiryBlockHeight,
+        }),
+      });
+
+      const submitResponse = await submitTransactionResponse.json();
+
+      if (!submitResponse.success || !submitResponse.txid) {
+        throw new Error(
+          submitResponse.error || "Failed to submit and confirm transaction"
+        );
+      }
+
+      const txid = submitResponse.txid;
+
+      toast.success("Sell transaction successful!");
+      // console.log(`Sell transaction successful: https://solscan.io/tx/${txid}`);
+
+      await wait(1_000);
+
+      // Re-fetch balances after successful sell transaction
+      const updatedBalances = await fetchAllTokenBalances(publicKey.toString());
+      setTokenBalances(updatedBalances);
+    } catch (error) {
+      console.error("Error during the sell process:", error);
+      toast.error("Sell transaction failed!");
+    }
   };
 
   const extractInfo = (text: string) => {
@@ -231,6 +370,10 @@ export const TrendingView: FC = () => {
           );
           const scores = message.scores;
           const selectedAmount = amounts[index] || 0.1; // Default amount for each item
+          const balanceInfo = tokenBalances.find(
+            (b) => b.mint === tokenAddress
+          ); // Match balance with tokenAddress
+          const balance = balanceInfo?.balance || 0;
           return (
             <li
               key={index}
@@ -315,6 +458,16 @@ export const TrendingView: FC = () => {
                 </div>
               </div>
 
+              {/* Display Token Balance */}
+              {balance > 0 && (
+                <div
+                  className="absolute bottom-0 left-0 bg-[#ffeb99] text-black font-bold py-1 px-3 rounded-tr-lg shadow-lg text-sm"
+                  style={{ zIndex: 10 }}
+                >
+                  Balance: {balance} {token}
+                </div>
+              )}
+
               {/* Bottom Actions - Show Sentiments and Buy Button */}
               <div className="w-full">
                 <div className={styles.toggleButtonContainer}>
@@ -345,7 +498,7 @@ export const TrendingView: FC = () => {
                 </button>
 
                 {/* Buy Token Button and Amount Selection */}
-                <div className="flex items-center justify-center gap-10 mt-3">
+                <div className="flex items-center justify-center gap-4 mt-3">
                   {/* Predefined Amount Buttons */}
                   <div className="flex flex-col items-center justify-center gap-2">
                     <div className="flex items-center justify-center gap-2">
@@ -382,8 +535,7 @@ export const TrendingView: FC = () => {
 
                   {/* Buy Button */}
                   <button
-                    disabled={true}
-                    className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-[10px] sm:text-[12px] text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 cursor-not-allowed sm:w-[150px] sm:h-[50px] w-[120px] h-[40px]"
+                    className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-[10px] sm:text-[12px] text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 sm:w-[150px] sm:h-[40px] w-[120px] h-[40px]"
                     onClick={() => {
                       if (url) {
                         quoteAndSwap(index, url);
@@ -393,6 +545,24 @@ export const TrendingView: FC = () => {
                     Buy {selectedAmount} SOL {token}
                   </button>
                 </div>
+
+                {/* Sell Token Buttons */}
+                {balance > 0 && tokenAddress && (
+                  <div className="flex items-center justify-center gap-4 mt-3">
+                    <button
+                      className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-[10px] sm:text-[12px] text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 sm:w-[100px] sm:h-[30px] w-[120px] h-[40px]"
+                      onClick={() => sellToken(tokenAddress, balance / 2)}
+                    >
+                      Sell Half
+                    </button>
+                    <button
+                      className="bg-gradient-to-r from-[#fff7c0] to-[#ffeb99] text-[10px] sm:text-[12px] text-black font-semibold py-1 px-2 rounded-lg shadow-md hover:shadow-lg transform transition-all duration-300 ease-in-out hover:scale-105 sm:w-[100px] sm:h-[30px] w-[120px] h-[40px]"
+                      onClick={() => sellToken(tokenAddress, balance)}
+                    >
+                      Sell All
+                    </button>
+                  </div>
+                )}
               </div>
             </li>
           );

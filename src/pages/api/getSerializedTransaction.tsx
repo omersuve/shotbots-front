@@ -1,10 +1,9 @@
-// pages/api/getSerializedTransaction.ts
 import type { NextApiRequest, NextApiResponse } from "next";
-import { Connection, VersionedTransaction, PublicKey } from "@solana/web3.js";
 
 type ResponseData = {
   success: boolean;
   transaction?: string;
+  blockhashWithExpiryBlockHeight?: object;
   error?: string;
 };
 
@@ -12,7 +11,6 @@ export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse<ResponseData>
 ) {
-  console.log("Received request with body:", req.body);
   if (req.method !== "POST") {
     return res
       .status(405)
@@ -20,12 +18,6 @@ export default async function handler(
   }
 
   const { quoteResponse, userPublicKey } = req.body;
-  console.log(
-    "Parameters received - quoteResponse:",
-    quoteResponse,
-    "userPublicKey:",
-    userPublicKey
-  );
 
   if (!quoteResponse || !userPublicKey) {
     console.error("Missing parameters:", { quoteResponse, userPublicKey });
@@ -35,11 +27,6 @@ export default async function handler(
   }
 
   try {
-    console.log(
-      "Attempting to create transaction with quoteResponse:",
-      quoteResponse
-    );
-
     // Make a request to Jupiter's /swap endpoint to create a serialized transaction
     const swapResponse = await fetch("https://quote-api.jup.ag/v6/swap", {
       method: "POST",
@@ -54,21 +41,26 @@ export default async function handler(
     });
 
     const swapData = await swapResponse.json();
-    console.log("Response from Jupiter API:", swapData);
 
-    if (!swapData.swapTransaction) {
-      console.error("No swap transaction received:", swapData);
+    if (!swapData.swapTransaction || !swapData.lastValidBlockHeight) {
       return res.status(500).json({
         success: false,
         error: "Failed to create swap transaction",
       });
     }
 
-    const swapTransaction = swapData.swapTransaction;
+    const { swapTransaction, lastValidBlockHeight } = swapData;
+
+    // Include blockhash information
+    const blockhashWithExpiryBlockHeight = {
+      blockhash: swapData.blockhash,
+      lastValidBlockHeight,
+    };
 
     return res.status(200).json({
       success: true,
       transaction: swapTransaction,
+      blockhashWithExpiryBlockHeight,
     });
   } catch (error) {
     console.error("Error creating transaction:", error);
