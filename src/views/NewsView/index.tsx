@@ -49,6 +49,20 @@ export const NewsView: FC = () => {
   const newsBodyRef = useRef<HTMLDivElement | null>(null);
 
   useEffect(() => {
+    if (news.length > 0) {
+      setVotesOfNews((prevVotes) => {
+        const updatedVotes = { ...prevVotes };
+        news.forEach((n) => {
+          if (!(n._id.toString() in updatedVotes)) {
+            updatedVotes[n._id.toString()] = MarketSentiment.NEUTRAL;
+          }
+        });
+        return updatedVotes;
+      });
+    }
+  }, [news]);
+
+  useEffect(() => {
     const updatePosition = () => {
       const bodyElement = newsBodyRef.current;
       if (!bodyElement || !selectedNewsId[selectedTab]) return;
