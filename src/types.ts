@@ -182,6 +182,7 @@ export type TelegramMessage = {
   createdAt?: string; // New field for creation time (ISO string format)
   volume1h?: number; // New field for 1-hour trading volume
   blink_url: string;
+  holders?: number;
 };
 
 export enum MarketSentiment {

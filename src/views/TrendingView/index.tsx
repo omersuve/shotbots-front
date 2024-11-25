@@ -442,6 +442,11 @@ export const TrendingView: FC = () => {
                       </p>
                     </div>
                   )}
+                  {message.holders && (
+                    <p>
+                      <strong>Holder Count:</strong> {message.holders}
+                    </p>
+                  )}
                 </div>
 
                 <div className="flex-none w-28 h-28 flex justify-center items-center mt-3">
