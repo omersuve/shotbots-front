@@ -218,7 +218,7 @@ const Navbar: React.FC = () => {
                   <MyLoader size="small" inline /> // Use size="small" and inline prop
                 ) : (
                   <>
-                    <p className={`lg:px-1`}>{prices["bitcoin"].price}</p>
+                    <p className={`lg:px-1`}>${prices["bitcoin"].price}</p>
                     <p
                       className={`lg:px-1 ${getChangeClass(
                         prices["bitcoin"].change
@@ -240,7 +240,7 @@ const Navbar: React.FC = () => {
                   <MyLoader size="small" inline /> // Use size="small" and inline prop
                 ) : (
                   <>
-                    <p className={`lg:px-1`}>{prices["ethereum"].price}</p>
+                    <p className={`lg:px-1`}>${prices["ethereum"].price}</p>
                     <p
                       className={`lg:px-1 ${getChangeClass(
                         prices["ethereum"].change
@@ -262,7 +262,7 @@ const Navbar: React.FC = () => {
                   <MyLoader size="small" inline={true} /> // Use size="small" and inline prop
                 ) : (
                   <>
-                    <p className={`lg:px-1`}>{prices["solana"].price}</p>
+                    <p className={`lg:px-1`}>${prices["solana"].price}</p>
                     <p
                       className={`lg:px-1 ${getChangeClass(
                         prices["solana"].change
