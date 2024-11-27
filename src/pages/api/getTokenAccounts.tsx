@@ -1,5 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from "next";
 import { Connection, PublicKey } from "@solana/web3.js";
+import { createRpcConnection } from "utils/createRpcConnection";
 
 export default async function handler(
   req: NextApiRequest,
@@ -16,10 +17,7 @@ export default async function handler(
   }
 
   try {
-    const connection = new Connection(
-      `https://rpc.helius.xyz?api-key=${process.env.HELIUS_API_KEY!}`,
-      "confirmed"
-    );
+    const connection = createRpcConnection();
 
     // Fetch all token accounts owned by the wallet in one request
     const tokenAccounts = await connection.getParsedTokenAccountsByOwner(
