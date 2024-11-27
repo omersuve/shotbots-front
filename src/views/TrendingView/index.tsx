@@ -27,9 +27,24 @@ export const TrendingView: FC = () => {
   const [highlightedItems, setHighlightedItems] = useState<Set<number>>(
     new Set()
   );
+
   const [visibleGraphs, setVisibleGraphs] = useState<{
     [key: number]: boolean;
-  }>({});
+  }>(() =>
+    messages.reduce((acc, _, index) => {
+      acc[index] = index === 0; // Set true for the first item, false for others
+      return acc;
+    }, {} as { [key: number]: boolean })
+  );
+  const [visibleCharts, setVisibleCharts] = useState<{
+    [key: number]: boolean;
+  }>(() =>
+    messages.reduce((acc, _, index) => {
+      acc[index] = index === 0; // Set true for the first item, false for others
+      return acc;
+    }, {} as { [key: number]: boolean })
+  );
+
   const [amounts, setAmounts] = useState<{ [key: number]: number }>({}); // Track the amount for each item
   const [tokenBalances, setTokenBalances] = useState<
     { mint: string; balance: number }[]
@@ -59,6 +74,13 @@ export const TrendingView: FC = () => {
     setVisibleGraphs((prevState) => ({
       ...prevState,
       [index]: !prevState[index],
+    }));
+  };
+
+  const toggleChartVisibility = (index: number) => {
+    setVisibleCharts((prev) => ({
+      ...prev,
+      [index]: !prev[index],
     }));
   };
 
@@ -475,7 +497,7 @@ export const TrendingView: FC = () => {
 
               {/* Bottom Actions - Show Sentiments and Buy Button */}
               <div className="w-full">
-                <div className={styles.toggleButtonContainer}>
+                <div className="mt-2 text-center">
                   <button
                     className={styles.toggleButton}
                     onClick={() => toggleGraphVisibility(index)}
@@ -485,11 +507,37 @@ export const TrendingView: FC = () => {
                       : "Show Sentiments"}
                   </button>
                 </div>
+
                 {visibleGraphs[index] && (
                   <div className={styles.graphContainer}>
                     <GraphComponent scores={scores} startDate={message.date} />
                   </div>
                 )}
+
+                {/* Show DexScreener Chart */}
+                <div className="mt-2 text-center">
+                  <button
+                    className={`${styles.toggleButton}`}
+                    onClick={() => toggleChartVisibility(index)}
+                  >
+                    {visibleCharts[index] ? "Hide Chart" : "Show Chart"}
+                  </button>
+                  {visibleCharts[index] && tokenAddress && (
+                    <div className={styles.dexChartContainer}>
+                      <div className={styles.dexChart}>
+                        <iframe
+                          src={`https://dexscreener.com/solana/${tokenAddress}?embed=1&info=0&tabs=0&trades=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=60`}
+                          style={{
+                            width: "100%",
+                            height: "400px",
+                            border: "none",
+                          }}
+                          title={`DexScreener Chart - ${tokenAddress}`}
+                        ></iframe>
+                      </div>
+                    </div>
+                  )}
+                </div>
 
                 {/* Copy Blink URL Button */}
                 <button
