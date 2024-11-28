@@ -5,6 +5,15 @@ class MyDocument extends Document {
     return (
       <Html>
         <Head>
+          {/* App Title */}
+          <title>Shotbots - Stay Ahead of the Game</title>
+
+          {/* Open Graph Metadata */}
+          <meta property="og:title" content="Shotbots - Stay Ahead of the Game" />
+          <meta property="og:description" content="Part bot, part sniper, all alpha!" />
+          <meta property="og:image" content="/apple-touch-icon.png" />
+          <meta property="og:url" content="https://shotbots.app" />
+      
           {/* Primary Favicon Links for Modern Browsers */}
           <link rel="icon" href="/favicon-32x32.png" sizes="32x32" />
           <link rel="icon" href="/favicon-16x16.png" sizes="16x16" />
