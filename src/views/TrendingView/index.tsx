@@ -13,7 +13,7 @@ import {
   Tooltip,
   Legend,
 } from "chart.js";
-import { formatLargeNumber } from "../../utils/formatting";
+import { formatLargeNumber } from "utils/formatting";
 import { useWallet } from "@solana/wallet-adapter-react";
 import { VersionedTransaction } from "@solana/web3.js";
 import { toast } from "react-toastify";
@@ -27,28 +27,19 @@ export const TrendingView: FC = () => {
   const [highlightedItems, setHighlightedItems] = useState<Set<number>>(
     new Set()
   );
-
-  const [visibleGraphs, setVisibleGraphs] = useState<{
-    [key: number]: boolean;
-  }>(() =>
-    messages.reduce((acc, _, index) => {
-      acc[index] = index === 0; // Set true for the first item, false for others
-      return acc;
-    }, {} as { [key: number]: boolean })
-  );
-  const [visibleCharts, setVisibleCharts] = useState<{
-    [key: number]: boolean;
-  }>(() =>
-    messages.reduce((acc, _, index) => {
-      acc[index] = index === 0; // Set true for the first item, false for others
-      return acc;
-    }, {} as { [key: number]: boolean })
-  );
-
   const [amounts, setAmounts] = useState<{ [key: number]: number }>({}); // Track the amount for each item
   const [tokenBalances, setTokenBalances] = useState<
     { mint: string; balance: number }[]
   >([]);
+
+  const [visibleGraphAndChart, setVisibleGraphAndChart] = useState<{
+    [key: number]: boolean;
+  }>(() =>
+    messages.reduce((acc, _, index) => {
+      acc[index] = index === 0; // Only first item visible by default
+      return acc;
+    }, {} as { [key: number]: boolean })
+  );
 
   const fetchAllTokenBalances = async (walletAddress: string) => {
     try {
@@ -68,20 +59,6 @@ export const TrendingView: FC = () => {
       console.error("Error fetching token balances:", error);
       return [];
     }
-  };
-
-  const toggleGraphVisibility = (index: number) => {
-    setVisibleGraphs((prevState) => ({
-      ...prevState,
-      [index]: !prevState[index],
-    }));
-  };
-
-  const toggleChartVisibility = (index: number) => {
-    setVisibleCharts((prev) => ({
-      ...prev,
-      [index]: !prev[index],
-    }));
   };
 
   useEffect(() => {
@@ -438,13 +415,15 @@ export const TrendingView: FC = () => {
                   )}
                   {/* MarketCap, CreatedAt, and 1h Volume */}
                   <p>
-                    <strong>Market Cap:</strong> ${message.marketCap || "N/A"}
+                    <strong>Market Cap:</strong> $
+                    {formatLargeNumber(message.marketCap || "N/A")}
                   </p>
                   <p>
                     <strong>Created At:</strong> {message.createdAt || "N/A"}
                   </p>
                   <p>
-                    <strong>1H Volume:</strong> ${message.volume1h || "N/A"}
+                    <strong>1H Volume:</strong> $
+                    {formatLargeNumber(message.volume1h || "N/A")}
                   </p>
                   {message.rugcheck && (
                     <div className={styles.rugcheck}>
@@ -457,7 +436,8 @@ export const TrendingView: FC = () => {
                         {message.rugcheck.totalLPProviders}
                       </p>
                       <p>
-                        <strong>Total Market Liquidity:</strong>{" "}
+                        <strong>Total Market Liquidity:</strong>
+                        {" $"}
                         {formatLargeNumber(
                           message.rugcheck.totalMarketLiquidity
                         )}
@@ -497,47 +477,45 @@ export const TrendingView: FC = () => {
 
               {/* Bottom Actions - Show Sentiments and Buy Button */}
               <div className="w-full">
-                <div className="mt-2 text-center">
+                <div className="my-3 text-center">
                   <button
                     className={styles.toggleButton}
-                    onClick={() => toggleGraphVisibility(index)}
+                    onClick={() =>
+                      setVisibleGraphAndChart((prevState) => ({
+                        ...prevState,
+                        [index]: !prevState[index], // Toggle visibility for the current index
+                      }))
+                    }
                   >
-                    {visibleGraphs[index]
-                      ? "Hide Sentiments"
-                      : "Show Sentiments"}
+                    {visibleGraphAndChart[index]
+                      ? "Hide Sentiment & Chart"
+                      : "Show Sentiment & Chart"}
                   </button>
                 </div>
 
-                {visibleGraphs[index] && (
-                  <div className={styles.graphContainer}>
-                    <GraphComponent scores={scores} startDate={message.date} />
+                {visibleGraphAndChart[index] && (
+                  <div className={styles.graphAndChartContainer}>
+                    <div className={styles.graphContainer}>
+                      <GraphComponent
+                        scores={scores}
+                        startDate={message.date}
+                      />
+                    </div>
+                    <div className={styles.dexChartContainer}>
+                      <iframe
+                        src={`https://dexscreener.com/solana/${tokenAddress}?embed=1&info=0&tabs=0&trades=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=60`}
+                        style={{
+                          width: "100%",
+                          height: "300px",
+                          border: "0",
+                          borderRadius: "12px",
+                          boxShadow: "0 4px 8px rgba(0, 0, 0, 0.2)",
+                        }}
+                        title={`DexScreener Chart - ${tokenAddress}`}
+                      ></iframe>
+                    </div>
                   </div>
                 )}
-
-                {/* Show DexScreener Chart */}
-                <div className="mt-2 text-center">
-                  <button
-                    className={`${styles.toggleButton}`}
-                    onClick={() => toggleChartVisibility(index)}
-                  >
-                    {visibleCharts[index] ? "Hide Chart" : "Show Chart"}
-                  </button>
-                  {visibleCharts[index] && tokenAddress && (
-                    <div className={styles.dexChartContainer}>
-                      <div className={styles.dexChart}>
-                        <iframe
-                          src={`https://dexscreener.com/solana/${tokenAddress}?embed=1&info=0&tabs=0&trades=0&chartLeftToolbar=0&chartTimeframesToolbar=0&chartTheme=dark&theme=dark&chartStyle=1&chartType=usd&interval=60`}
-                          style={{
-                            width: "100%",
-                            height: "400px",
-                            border: "none",
-                          }}
-                          title={`DexScreener Chart - ${tokenAddress}`}
-                        ></iframe>
-                      </div>
-                    </div>
-                  )}
-                </div>
 
                 {/* Copy Blink URL Button */}
                 <button
@@ -653,10 +631,12 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
       {
         label: "Scores",
         data: scores,
-        borderColor: "rgba(75,192,192,1)",
-        backgroundColor: "rgba(75,192,192,0.2)",
+        borderColor: "rgba(255, 159, 64, 1)", // Subtle orange for the line
+        backgroundColor: "rgba(255, 159, 64, 0.2)", // Light orange fill
         pointRadius: 6, // Adjust point radius here
         pointHoverRadius: 8, // Adjust hover point radius here
+        pointBackgroundColor: "rgba(255, 255, 255, 1)", // White point color
+        pointBorderColor: "rgba(255, 159, 64, 1)", // Border matches line
       },
     ],
   };
@@ -698,10 +678,19 @@ const GraphComponent: FC<GraphComponentProps> = ({ scores, startDate }) => {
       },
     },
     maintainAspectRatio: false, // Allows for flexible resizing
+    responsive: true, // Ensures responsiveness
   };
 
   return (
-    <div style={{ height: "200px" }}>
+    <div
+      style={{
+        height: "300px",
+        background: "rgb(255 249 242)", // Slightly dark background
+        borderRadius: "8px",
+        padding: "8px",
+        boxShadow: "inset 0 0 10px rgb(165 76 29 / 20%)", // Subtle shadow for the container
+      }}
+    >
       <Line data={data} options={options} />
     </div>
   );
