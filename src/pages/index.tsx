@@ -13,7 +13,7 @@ const Home = () => {
   return (
     <>
       <Head>
-        <title>Shot Bots</title>
+        <title>Shotbots</title>
       </Head>
       <MainBody
         gradient={mainBody.gradientColors}

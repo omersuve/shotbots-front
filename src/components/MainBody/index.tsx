@@ -284,7 +284,7 @@ const MainBody = ({ gradient, message, message2 }: any) => {
         <p
           className={`${styles["rights"]} md:absolute md:right-10 md:bottom-10 text-center fs-6`}
         >
-          &copy; {new Date().getFullYear()} Shot Bots. All rights reserved.
+          &copy; {new Date().getFullYear()} Shotbots. All rights reserved.
         </p>
         <p
           className={`${styles["rights"]} md:absolute md:left-10 md:bottom-8 text-center fs-6 grid`}
