@@ -11,6 +11,21 @@ class MyDocument extends Document {
           <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
           <link rel="icon" href="/favicon.ico" />
 
+          <meta
+            name="description"
+            content="Part bot, part sniper, all alpha!"
+          />
+          <meta
+            property="og:title"
+            content="Shotbots - Stay Ahead of the Game"
+          />
+          <meta
+            property="og:description"
+            content="Part bot, part sniper, all alpha!"
+          />
+          <meta property="og:image" content="/apple-touch-icon.png" />
+          <meta property="og:url" content="https://shotbots.app" />
+
           {/* Manifest for PWA */}
           <link rel="manifest" href="/site.webmanifest" />
 

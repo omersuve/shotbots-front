@@ -1,5 +1,6 @@
 import React, { useMemo } from "react";
 import type { AppProps } from "next/app";
+import Head from "next/head";
 import {
   ConnectionProvider,
   WalletProvider,
@@ -67,6 +68,16 @@ function MyApp({ Component, pageProps }: AppProps) {
                                   "flex-grow mt-20 mb-2"
                                 }`}
                               >
+                                <Head>
+                                  {/* Dynamic Title and Metadata */}
+                                  <title>
+                                    Shotbots - Stay Ahead of the Game
+                                  </title>
+                                  <meta
+                                    name="viewport"
+                                    content="width=device-width, initial-scale=1.0"
+                                  />
+                                </Head>
                                 <Component {...pageProps} />
                               </div>
                               {router.pathname != "/" && <Footer />}
