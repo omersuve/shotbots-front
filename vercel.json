@@ -1,0 +1,10 @@
+{
+  "routes": [
+    {
+      "src": "/site.webmanifest",
+      "headers": {
+        "Content-Type": "application/manifest+json"
+      }
+    }
+  ]
+}
