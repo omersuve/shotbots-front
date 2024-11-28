@@ -12,6 +12,5 @@ export function createRpcConnection(): Connection {
   const rpcEndpoint =
     rpcEndpoints[Math.floor(Math.random() * rpcEndpoints.length)];
 
-  console.log(`Using RPC endpoint: ${rpcEndpoint}`);
   return new Connection(rpcEndpoint, { commitment: "confirmed" });
 }
