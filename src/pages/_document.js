@@ -18,6 +18,10 @@ class MyDocument extends Document {
             property="og:title"
             content="Shotbots - Stay Ahead of the Game"
           />
+          <meta property="og:image:alt" content="Shotbots" />
+          <meta property="og:site_name" content="Shotbots" />
+          <meta property="og:type" content="website" />
+          <meta property="og:locale" content="en" />
           <meta
             property="og:description"
             content="Part bot, part sniper, all alpha!"
