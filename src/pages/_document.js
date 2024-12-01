@@ -33,7 +33,11 @@ class MyDocument extends Document {
           <meta property="og:url" content="https://shotbots.app" />
 
           {/* Manifest for PWA */}
-          <link rel="manifest" href="/manifest.json" />
+          <link
+            rel="manifest"
+            href="/manifest.json"
+            crossOrigin="use-credentials"
+          />
 
           {/* FontAwesome (if needed globally) */}
           <link
