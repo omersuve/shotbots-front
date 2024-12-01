@@ -8,13 +8,6 @@
       ]
     },
     {
-      "source": "/android-launchericon-72-72.png",
-      "headers": [
-        { "key": "Content-Type", "value": "image/png" },
-        { "key": "Access-Control-Allow-Origin", "value": "*" }
-      ]
-    },
-    {
       "source": "/android-chrome-192x192.png",
       "headers": [
         { "key": "Content-Type", "value": "image/png" },

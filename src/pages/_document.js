@@ -6,12 +6,8 @@ class MyDocument extends Document {
       <Html>
         <Head>
           {/* Favicon Links */}
-          <link
-            rel="icon"
-            href="/android-launchericon-72-72.png"
-            sizes="72x72"
-          />
-          <link rel="apple-touch-icon" href="/144.png" />
+          <link rel="icon" href="/android-chrome-192x192.png" sizes="192x192" />
+          <link rel="apple-touch-icon" href="/android-chrome-192x192.png" />
 
           <meta
             name="description"
