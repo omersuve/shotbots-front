@@ -26,8 +26,8 @@ class MyDocument extends Document {
           <meta property="og:site_name" content="Shotbots" />
           <meta property="og:type" content="website" />
           <meta property="og:image:type" content="image/png" />
-          <meta property="og:image:width" content="512" />
-          <meta property="og:image:height" content="512" />
+          <meta property="og:image:width" content="192" />
+          <meta property="og:image:height" content="192" />
           <meta
             property="og:description"
             content="Part bot, part sniper, all alpha!"

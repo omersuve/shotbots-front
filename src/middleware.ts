@@ -12,6 +12,7 @@ export async function middleware(req: NextRequest) {
     pathname.includes("favicon.ico") || // Allow favicon requests
     pathname.includes("background.jpg") || // Allow fonts
     pathname.includes("manifest.json") ||
+    pathname.includes("android-chrome-192x192.png") ||
     pathname.includes("android-launchericon-72-72.png") ||
     pathname.includes("144.png")
   ) {
