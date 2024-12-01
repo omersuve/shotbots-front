@@ -6,15 +6,10 @@ class MyDocument extends Document {
       <Html>
         <Head>
           {/* Favicon Links */}
-          <link rel="icon" href="/android-chrome-512x512.png" sizes="512x512" />
-          <link rel="icon" href="/android-chrome-192x192.png" sizes="192x192" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <link rel="icon" href="/favicon.ico" />
+          <meta property="og:image" content="/android-chrome-192x192.png" />
+          <meta property="og:url" content="https://shotbots.app" />
+          <meta property="og:image:alt" content="Shotbots" />
 
-          <meta
-            name="description"
-            content="Part bot, part sniper, all alpha!"
-          />
           <meta
             property="og:title"
             content="Shotbots - Stay Ahead of the Game"
@@ -23,11 +18,18 @@ class MyDocument extends Document {
             property="og:description"
             content="Part bot, part sniper, all alpha!"
           />
-          <meta property="og:image" content="/android-chrome-512x512.png" />
-          <meta property="og:url" content="https://shotbots.app" />
 
+          <link rel="icon" href="/android-chrome-192x192.png" sizes="192x192" />
+          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+
+          <link rel="icon" href="/favicon.ico" />
+
+          <meta
+            name="description"
+            content="Part bot, part sniper, all alpha!"
+          />
           {/* Manifest for PWA */}
-          <link rel="manifest" href="/site.webmanifest" />
+          <link rel="manifest" href="/manifest.json" />
 
           {/* FontAwesome (if needed globally) */}
           <link
