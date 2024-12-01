@@ -6,9 +6,12 @@ class MyDocument extends Document {
       <Html>
         <Head>
           {/* Favicon Links */}
-          <link rel="icon" href="/android-chrome-96x96.png" sizes="96x96" />
-          <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
-          <link rel="icon" href="/favicon.ico" />
+          <link
+            rel="icon"
+            href="/android-launchericon-72-72.png"
+            sizes="72x72"
+          />
+          <link rel="apple-touch-icon" href="/144.png" />
 
           <meta
             name="description"
@@ -28,7 +31,7 @@ class MyDocument extends Document {
           />
           <meta
             property="og:image"
-            content="https://shotbots.app/android-chrome-96x96.png"
+            content="https://shotbots.app/android-launchericon-72-72.png"
           />
           <meta property="og:url" content="https://shotbots.app" />
 
