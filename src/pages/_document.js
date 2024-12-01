@@ -21,17 +21,20 @@ class MyDocument extends Document {
             property="og:title"
             content="Shotbots - Stay Ahead of the Game"
           />
+
           <meta property="og:image:alt" content="Shotbots" />
           <meta property="og:site_name" content="Shotbots" />
           <meta property="og:type" content="website" />
-          <meta property="og:locale" content="en" />
+          <meta property="og:image:type" content="image/png" />
+          <meta property="og:image:width" content="512" />
+          <meta property="og:image:height" content="512" />
           <meta
             property="og:description"
             content="Part bot, part sniper, all alpha!"
           />
           <meta
             property="og:image"
-            content="https://shotbots.app/android-launchericon-72-72.png"
+            content="https://shotbots.app/android-chrome-192x192.png"
           />
           <meta property="og:url" content="https://shotbots.app" />
 
