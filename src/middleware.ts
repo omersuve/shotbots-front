@@ -7,14 +7,12 @@ export async function middleware(req: NextRequest) {
   // Allow access to home page, specific API routes, and assets (like static files)
   if (
     pathname === "/" ||
-    pathname === "/favicon.ico" ||
-    pathname === "/manifest.json" ||
-    pathname === "/android-chrome-192x192.png" ||
-    pathname === "/apple-touch-icon.png" ||
-    pathname === "/background.jpg" ||
     pathname.startsWith("/api") || // Allow all API routes
     pathname.startsWith("/_next") || // Allow Next.js internal requests
-    pathname.startsWith("/static") // Allow static assets
+    pathname.startsWith("/favicon.ico") || // Allow favicon requests
+    pathname.startsWith("/background.jpg") || // Allow fonts
+    pathname.startsWith("/manifest.json") ||
+    pathname.startsWith("/android-chrome-96x96.png")
   ) {
     return NextResponse.next();
   }
