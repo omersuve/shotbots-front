@@ -22,7 +22,10 @@ class MyDocument extends Document {
             property="og:description"
             content="Part bot, part sniper, all alpha!"
           />
-          <meta property="og:image" content="/android-chrome-96x96.png" />
+          <meta
+            property="og:image"
+            content="https://shotbots.app/android-chrome-96x96.png"
+          />
           <meta property="og:url" content="https://shotbots.app" />
 
           {/* Manifest for PWA */}
