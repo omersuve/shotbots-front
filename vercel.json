@@ -1,7 +1,7 @@
 {
   "routes": [
     {
-      "src": "/site.webmanifest",
+      "src": "/manifest.json",
       "headers": {
         "Content-Type": "application/manifest+json"
       }
